@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  database:
+    image: postgres:15-alpine
+    container_name: elsayad-db
+    environment:
+      POSTGRES_USER: elsayad
+      POSTGRES_PASSWORD: elsayad2024
+      POSTGRES_DB: ecommerce
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - elsayad-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U elsayad"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API (Node.js + TypeScript)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: elsayad-backend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://elsayad:elsayad2024@database:5432/ecommerce
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      PORT: 3000
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - elsayad-network
+    command: npm run dev
+
+# Volumes for persistent data
+volumes:
+  postgres_data:
+    driver: local
+
+# Network for services to communicate
+networks:
+  elsayad-network:
+    driver: bridge
