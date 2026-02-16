@@ -1,9 +1,9 @@
-# AI Design Prompts for El Sayad Center E-Commerce App
+# AI Design Prompts for Center-ElSayad E-Commerce App
 
 ## 🎨 Brand Guidelines to Include in All Prompts
 - **Brand Colors**: Red (#DC1F2E) and Black
 - **Style**: Modern, clean, professional, educational
-- **App Name**: El Sayad Center
+- **App Name**: Center-ElSayad
 - **Products**: Office & School Supplies, Educational Books, Toys & Games
 
 ---
@@ -66,7 +66,7 @@ Mobile app profile screen. Top section with circular avatar placeholder, user na
 ### 7. Login Screen
 
 ```
-Mobile app login screen for e-commerce app "El Sayad Center". Top third shows app logo (red and black design). Below: "Welcome Back" heading, email input field, password input field with show/hide icon, red (#DC1F2E) "Login" button, "Forgot Password?" link in gray, "Don't have an account? Sign Up" text at bottom. Clean modern design, white background, rounded input fields, professional typography. Mobile screen, vertical format.
+Mobile app login screen for e-commerce app "Center-ElSayad". Top third shows app logo (red and black design). Below: "Welcome Back" heading, email input field, password input field with show/hide icon, red (#DC1F2E) "Login" button, "Forgot Password?" link in gray, "Don't have an account? Sign Up" text at bottom. Clean modern design, white background, rounded input fields, professional typography. Mobile screen, vertical format.
 ```
 
 ---

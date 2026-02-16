@@ -1,10 +1,10 @@
-# El Sayad Center E-Commerce App
+# Center-ElSayad E-Commerce App
 
 > Mobile e-commerce application for office & school supplies, educational books, and toys & games.
 
 ## 🎯 Project Overview
 
-**El Sayad Center** is a full-stack mobile e-commerce application built with React Native for the frontend and Node.js/TypeScript for the backend. The app supports both B2C (individual customers) and B2B (wholesale/business customers) with a 20% discount for verified businesses.
+**Center-ElSayad** is a full-stack mobile e-commerce application built with React Native for the frontend and Node.js/TypeScript for the backend. The app supports both B2C (individual customers) and B2B (wholesale/business customers) with a 20% discount for verified businesses.
 
 ### Key Features
 - 🛒 Product browsing and search

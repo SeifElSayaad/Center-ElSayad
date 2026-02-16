@@ -1,6 +1,6 @@
-# El Sayad Center - Backend
+# Center-ElSayad - Backend
 
-Node.js + TypeScript + Express + Prisma backend for El Sayad Center e-commerce app.
+Node.js + TypeScript + Express + Prisma backend for Center-ElSayad e-commerce app.
 
 ## 🚀 Quick Start
 

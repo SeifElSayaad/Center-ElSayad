@@ -1,4 +1,4 @@
-# El Sayad Center - Brand Colors & Design System
+# Center-ElSayad - Brand Colors & Design System
 
 ## 🎨 Extracted Brand Colors from Logo
 

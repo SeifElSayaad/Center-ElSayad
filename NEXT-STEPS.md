@@ -134,7 +134,7 @@ app.use(express.json());
 // Test routes
 app.get('/', (req, res) => {
   res.json({ 
-    message: 'El Sayad Center API is running!',
+    message: 'Center-ElSayad API is running!',
     version: '1.0.0'
   });
 });

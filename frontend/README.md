@@ -1,6 +1,6 @@
-# El Sayad Center - Frontend
+# Center-ElSayad - Frontend
 
-React Native mobile application for El Sayad Center e-commerce.
+React Native mobile application for Center-ElSayad e-commerce.
 
 ## 🚀 Coming Soon
 

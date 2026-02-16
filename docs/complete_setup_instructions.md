@@ -2,7 +2,7 @@
 
 ## 🎯 Overview
 
-This guide will walk you through setting up the complete El Sayad Center e-commerce project from scratch. Follow each step carefully!
+This guide will walk you through setting up the complete Center-ElSayad e-commerce project from scratch. Follow each step carefully!
 
 ---
 
@@ -53,8 +53,8 @@ mkdir backend
 mkdir frontend
 mkdir docs
 
-echo "# El Sayad Center Backend" > backend\README.md
-echo "# El Sayad Center Frontend" > frontend\README.md
+echo "# Center-ElSayad Backend" > backend\README.md
+echo "# Center-ElSayad Frontend" > frontend\README.md
 ```
 
 ---
@@ -168,7 +168,7 @@ app.use(express.json());
 
 // Test route
 app.get('/', (req, res) => {
-  res.json({ message: 'El Sayad Center API is running!' });
+  res.json({ message: 'Center-ElSayad API is running!' });
 });
 
 app.get('/health', (req, res) => {
@@ -232,7 +232,7 @@ Open browser or use PowerShell:
 # Test if API is running
 curl http://localhost:3000
 
-# Should return: {"message":"El Sayad Center API is running!"}
+# Should return: {"message":"Center-ElSayad API is running!"}
 ```
 
 ---
