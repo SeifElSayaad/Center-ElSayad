@@ -5,6 +5,7 @@ Your repository is now organized! Here's what you need to do next.
 ## ✅ What's Already Done
 
 Your repository now has:
+
 ```
 Center-ElSayad/
 ├── backend/
@@ -12,7 +13,7 @@ Center-ElSayad/
 │   ├── .env.example
 │   └── README.md
 ├── frontend/
-│   └── README.md  
+│   └── README.md
 ├── docs/
 │   ├── implementation_plan.md
 │   ├── features_and_requirements.md
@@ -88,6 +89,7 @@ npx prisma init
 ```
 
 This creates:
+
 - `prisma/schema.prisma` - Database schema file
 - `.env` - Environment variables
 
@@ -118,9 +120,9 @@ Open `backend\package.json` and replace the `"scripts"` section with:
 Create `backend\src\server.ts` with this content:
 
 ```typescript
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -132,17 +134,17 @@ app.use(cors());
 app.use(express.json());
 
 // Test routes
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Center-ElSayad API is running!',
-    version: '1.0.0'
+app.get("/", (req, res) => {
+  res.json({
+    message: "Center-ElSayad API is running!",
+    version: "1.0.0",
   });
 });
 
-app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'healthy', 
-    timestamp: new Date().toISOString() 
+app.get("/health", (req, res) => {
+  res.json({
+    status: "healthy",
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -168,6 +170,7 @@ npm run dev
 ```
 
 You should see:
+
 ```
 🚀 Server running on http://localhost:3000
 ```
@@ -211,6 +214,7 @@ git push origin main
 ## ✅ Success Checklist
 
 After completing all steps, you should have:
+
 - [ ] Backend runs locally with `npm run dev`
 - [ ] API responds at http://localhost:3000
 - [ ] Docker containers start successfully
@@ -219,6 +223,7 @@ After completing all steps, you should have:
 ## 🆘 Common Issues
 
 ### Port Already in Use
+
 ```powershell
 # Find what's using port 3000
 netstat -ano | findstr :3000
@@ -228,6 +233,7 @@ taskkill /PID <PID> /F
 ```
 
 ### Docker Not Starting
+
 ```powershell
 # Stop all containers
 docker-compose down
@@ -237,7 +243,9 @@ docker-compose up --build -d
 ```
 
 ### npm install Errors
+
 Make sure you have:
+
 - Node.js v18+ installed
 - Internet connection
 - No VPN blocking npm registry
@@ -245,6 +253,7 @@ Make sure you have:
 ## 🎯 After Backend is Set Up
 
 Next we'll:
+
 1. Setup database schema with Prisma
 2. Create authentication endpoints
 3. Build product management API

@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    // Language and Environment
+    "target": "ES2020", // Modern JavaScript features
+    "module": "commonjs", // Node.js module system
+    "lib": [
+      "ES2020"
+    ], // Standard library
+    // Module Resolution
+    "moduleResolution": "node", // Use Node.js resolution
+    "esModuleInterop": true, // Better compatibility with ES modules
+    "allowSyntheticDefaultImports": true, // Allow default imports
+    // File Structure
+    "rootDir": "./src", // Source files location
+    "outDir": "./dist", // Compiled output location
+    // Type Checking
+    "strict": true, // Enable all strict type checks
+    "noImplicitAny": true, // Error on expressions with implied 'any'
+    "strictNullChecks": true, // Check for null/undefined
+    "strictFunctionTypes": true, // Check function types strictly
+    "strictPropertyInitialization": true, // Check property initialization
+    "noUnusedLocals": true, // Error on unused variables
+    "noUnusedParameters": true, // Error on unused parameters
+    "noImplicitReturns": true, // All code paths must return
+    "noFallthroughCasesInSwitch": true, // Prevent switch fallthrough
+    // Other Options
+    "skipLibCheck": true, // Skip type checking of .d.ts files
+    "forceConsistentCasingInFileNames": true, // Ensure file name casing consistency
+    "resolveJsonModule": true, // Allow importing .json files
+    "sourceMap": true, // Generate source maps for debugging
+    "declaration": true, // Generate .d.ts files
+    "removeComments": true // Remove comments in output
+  },
+  "include": [
+    "src/**/*"
+  ], // Include all files in src
+  "exclude": [
+    "node_modules",
+    "dist"
+  ] // Exclude these folders
+}
