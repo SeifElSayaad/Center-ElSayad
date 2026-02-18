@@ -7,6 +7,7 @@
 For a junior developer learning, here's the optimal workflow:
 
 ### **Phase 1: Design Critical Screens First** (Week 1-2)
+
 Design these **5-7 essential screens** before coding:
 
 1. ✅ **Home Screen** (You already have this! ✓)
@@ -18,13 +19,16 @@ Design these **5-7 essential screens** before coding:
 7. 🎨 **User Profile** (Account management)
 
 **Why only these?**
+
 - These form the **core user journey**: Browse → View → Add to Cart → Checkout
 - You'll learn faster by seeing the complete flow before coding
 - You can validate the design with others first
 - Easier to maintain consistency
 
 ### **Phase 2: Start Coding Incrementally** (Week 3+)
+
 Once you have those 5-7 designs:
+
 1. Setup project (Git, Docker, React Native, Backend)
 2. Code Home Screen (your first design)
 3. Code Product Listing
@@ -32,6 +36,7 @@ Once you have those 5-7 designs:
 5. And so on...
 
 **Don't wait to design ALL pages!** Here's why:
+
 - ❌ Admin pages can be designed later when you reach backend
 - ❌ B2B registration screens can wait
 - ❌ You'll learn what works/doesn't work while coding
@@ -42,12 +47,14 @@ Once you have those 5-7 designs:
 ## 📊 Development Phases Breakdown
 
 ### **✅ Current Status**
+
 - [x] Planning complete
 - [x] Requirements finalized
 - [x] Brand colors extracted
 - [x] Home page designed
 
 ### **🎨 Phase 2A: Design Core UI (Week 1-2)**
+
 - [x] Home Screen
 - [ ] Product Listing Screen
 - [ ] Product Details Screen
@@ -57,8 +64,9 @@ Once you have those 5-7 designs:
 - [ ] User Profile Screen
 
 ### **💻 Phase 2B: Project Setup (Week 2-3)**
-- [ ] Initialize Git repository
-- [ ] Create GitHub repo
+
+- [x] Initialize Git repository
+- [x] Create GitHub repo
 - [ ] Setup project structure (monorepo or separate repos)
 - [ ] Setup Docker containers
 - [ ] Initialize React Native project
@@ -67,6 +75,7 @@ Once you have those 5-7 designs:
 - [ ] Create initial README and documentation
 
 ### **⚙️ Phase 3: Development (Week 4+)**
+
 - [ ] Code Home Screen (Frontend)
 - [ ] Setup backend API structure
 - [ ] Code authentication endpoints
@@ -96,6 +105,7 @@ ecommerce-app/
 ```
 
 **Advantages:**
+
 - Everything in one place
 - Easy to manage for learning
 - Single Docker Compose file
@@ -109,6 +119,7 @@ ecommerce-app-backend/        # Separate GitHub repo
 ```
 
 **Advantages:**
+
 - Separate deployment
 - Better for team collaboration
 - More professional approach
@@ -129,7 +140,7 @@ ecommerce-app-backend/        # Separate GitHub repo
 ### **Docker Compose Structure:**
 
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   # PostgreSQL Database
@@ -193,23 +204,27 @@ volumes:
    - Click "Create Repository"
 
 3. **Clone to Your Computer**
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/elsayad-center-ecommerce.git
    cd elsayad-center-ecommerce
    ```
 
 4. **Create Project Structure**
+
    ```bash
    mkdir frontend backend
    ```
 
 5. **Initialize Frontend (React Native)**
+
    ```bash
    cd frontend
    npx react-native init ElSayadApp --template react-native-template-typescript
    ```
 
 6. **Initialize Backend (Node.js)**
+
    ```bash
    cd ../backend
    npm init -y
@@ -235,12 +250,14 @@ volumes:
 ### **Here's what you should do RIGHT NOW:**
 
 ### **This Week (Week 1):**
+
 1. ✅ Design remaining 4-5 critical screens (Product Listing, Details, Cart, Checkout, Login)
    - Use Stitch with your prompts
    - Keep the same style as your home page
    - Should take 3-5 days
 
 ### **Next Week (Week 2):**
+
 2. 🔧 **Let me help you** setup:
    - GitHub repository
    - Project structure (React Native + Node.js)
@@ -248,12 +265,14 @@ volumes:
    - Initial code scaffolding
 
 ### **Week 3-4:**
+
 3. 💻 Start coding the Home Screen
    - I'll guide you through React Native components
    - Implement the design you created
    - Connect to mock data first
 
 ### **Week 5+:**
+
 4. 📱 Continue with other screens incrementally
 
 ---
@@ -261,18 +280,21 @@ volumes:
 ## ❓ What Do You Want to Do First?
 
 **Option A: Design Remaining Screens** (Recommended)
+
 - I'll help you create prompts for the other 5 screens
 - You generate them with Stitch
 - Review and adjust
 - **Then** we setup the project
 
 **Option B: Setup GitHub & Docker Now**
+
 - We initialize the project structure now
 - Setup GitHub repo
 - Configure Docker
 - **But** you'll need the designs to code later
 
 **Option C: Hybrid**
+
 - I create a basic project setup NOW
 - You design screens in parallel
 - We start coding when designs are ready
@@ -284,6 +306,7 @@ volumes:
 ## 💡 Quick Tips
 
 ### For Learning Success:
+
 1. **Don't rush** - Take time to understand each piece
 2. **Commit often** - Save your progress to GitHub frequently
 3. **One screen at a time** - Don't try to build everything at once
@@ -291,6 +314,7 @@ volumes:
 5. **Test as you go** - Run the app frequently to see changes
 
 ### For Your Specific Workflow:
+
 - ✅ Your home page design is excellent - use it as a reference for consistency
 - ✅ Design 4-5 more screens before coding
 - ✅ Setup GitHub and Docker together (I'll help)

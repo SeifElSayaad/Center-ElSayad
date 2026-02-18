@@ -165,15 +165,18 @@ The `.env` file is already configured with default values, but you can change th
 
 ### Step 10: Test the Backend
 
-```powershell
+```powershell`
 npm run dev
+
 ```
 
 You should see:
 
 ```
+
 🚀 Server running on http://localhost:3000
-```
+
+````
 
 Open your browser to http://localhost:3000 - you should see the API message!
 
@@ -196,7 +199,7 @@ docker-compose logs backend
 
 # View database logs
 docker-compose logs database
-```
+````
 
 ### Step 12: Commit Your Progress
 
