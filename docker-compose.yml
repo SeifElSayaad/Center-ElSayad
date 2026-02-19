@@ -15,7 +15,7 @@ services:
     networks:
       - elsayad-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U elsayad"]
+      test: ["CMD-SHELL", "pg_isready -U elsayad -d ecommerce"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -42,6 +42,26 @@ services:
     networks:
       - elsayad-network
     command: sh -c "npx prisma generate && npm run dev"
+
+  # Prisma Studio - Visual database browser
+  prisma-studio:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: elsayad-prisma-studio
+    ports:
+      - "5555:5555"
+    environment:
+      DATABASE_URL: postgresql://elsayad:elsayad2024@database:5432/ecommerce
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - elsayad-network
+    command: sh -c "npx prisma generate && npx prisma studio --port 5555 --browser none"
 
 # Volumes for persistent data
 volumes:
