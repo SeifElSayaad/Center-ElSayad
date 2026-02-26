@@ -3,6 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 import authRouter from './routes/auth.routes';
+import productRouter from './routes/product.routes';
+import categoryRouter from './routes/category.routes';
+import orderRouter from './routes/order.routes';
 
 dotenv.config();
 
@@ -25,6 +28,9 @@ app.get('/health', (_req, res) => {
 });
 
 app.use('/auth', authRouter);
+app.use('/products', productRouter);
+app.use('/categories', categoryRouter);
+app.use('/orders', orderRouter);
 
 // ─── Global Error Handler ─────────────────────────────────────────────────────
 
