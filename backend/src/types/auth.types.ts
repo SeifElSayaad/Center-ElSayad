@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { UserType } from '@prisma/client';
+import { UserType, Gender } from '@prisma/client';
 
 // ─── Request Bodies ───────────────────────────────────────────────────────────
 
@@ -9,14 +9,7 @@ export interface RegisterB2CBody {
   firstName: string;
   lastName: string;
   phone?: string;
-}
-
-export interface RegisterB2BBody extends RegisterB2CBody {
-  businessName: string;
-  taxId: string;
-  businessAddress: string;
-  contactPerson: string;
-  businessLicenseUrl?: string;
+  gender?: Gender;
 }
 
 export interface LoginBody {

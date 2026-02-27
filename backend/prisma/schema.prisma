@@ -15,7 +15,6 @@ datasource db {
 
 enum UserType {
   B2C // Individual customer
-  B2B // Business / store customer
   ADMIN
 }
 
@@ -23,6 +22,11 @@ enum B2BStatus {
   PENDING // Submitted, waiting for admin review
   APPROVED // Approved, wholesale pricing active
   REJECTED // Rejected by admin
+}
+
+enum Gender {
+  MALE
+  FEMALE
 }
 
 enum AdminRole {
@@ -63,16 +67,14 @@ model User {
   firstName    String
   lastName     String
   phone        String?
+  gender       Gender?
   avatarUrl    String?
   userType     UserType @default(B2C)
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  // B2B-specific fields (null for B2C/Admin)
-  b2bProfile B2BProfile?
-
-  // Admin-specific fields (null for B2C/B2B)
+  // Admin-specific fields (null for B2C)
   adminProfile AdminProfile?
 
   // Relations
@@ -84,31 +86,6 @@ model User {
   reviews          Review[]
 
   @@map("users")
-}
-
-// ─────────────────────────────────────────────
-// B2B PROFILE
-// ─────────────────────────────────────────────
-
-model B2BProfile {
-  id     String @id @default(cuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  businessName       String
-  taxId              String
-  businessAddress    String
-  contactPerson      String
-  businessLicenseUrl String? // Uploaded document URL
-  status             B2BStatus @default(PENDING)
-  discountPercent    Float     @default(20.0) // Default 20% wholesale discount
-  reviewedBy         String? // Admin user ID who approved/rejected
-  reviewedAt         DateTime?
-  rejectionReason    String?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-
-  @@map("b2b_profiles")
 }
 
 // ─────────────────────────────────────────────
@@ -252,10 +229,6 @@ model Order {
   shippingAmount Float @default(0)
   taxAmount      Float @default(0)
   totalAmount    Float // Final amount paid
-
-  // B2B tracking
-  isB2BOrder      Boolean @default(false)
-  discountPercent Float   @default(0)
 
   notes     String?
   createdAt DateTime @default(now())

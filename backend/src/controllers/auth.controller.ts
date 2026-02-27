@@ -13,17 +13,6 @@ export async function registerB2C(req: Request, res: Response, next: NextFunctio
   }
 }
 
-// ─── POST /auth/register/b2b ──────────────────────────────────────────────────
-
-export async function registerB2B(req: Request, res: Response, next: NextFunction) {
-  try {
-    const result = await authService.registerB2B(req.body);
-    res.status(201).json(result);
-  } catch (err) {
-    next(err);
-  }
-}
-
 // ─── POST /auth/login ─────────────────────────────────────────────────────────
 
 export async function login(req: Request, res: Response, next: NextFunction) {
