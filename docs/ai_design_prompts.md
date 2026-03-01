@@ -1,6 +1,7 @@
 # AI Design Prompts for Center-ElSayad E-Commerce App
 
 ## 🎨 Brand Guidelines to Include in All Prompts
+
 - **Brand Colors**: Red (#DC1F2E) and Black
 - **Style**: Modern, clean, professional, educational
 - **App Name**: Center-ElSayad
@@ -17,6 +18,7 @@ Mobile app UI design for an e-commerce store selling office supplies, school sup
 ```
 
 **Alternative Shorter Version:**
+
 ```
 Modern mobile e-commerce app home screen, red and black color scheme, category grid for office supplies and educational products, featured products section, clean white background, professional design, iPhone screen mockup
 ```
@@ -71,15 +73,7 @@ Mobile app login screen for e-commerce app "Center-ElSayad". Top third shows app
 
 ---
 
-### 8. Registration Screen (B2B Business Account)
-
-```
-Mobile app registration screen for business/wholesale account. Top shows "Register as Business" heading. Form fields: Business Name, Tax ID Number, Contact Person Name, Email, Phone, Password, document upload section showing "Upload Business License" with upload icon. Toggle switch for "I agree to terms". Large red "Submit for Approval" button at bottom. Note text: "Account will be activated after verification". Clean modern design, white background, organized form layout. Mobile screen, vertical format.
-```
-
----
-
-### 9. Order History Screen
+### 8. Order History Screen
 
 ```
 Mobile app order history screen. List of past orders, each order card shows: Order #12345, date, order status badge (Delivered in green, Pending in orange), total amount, small thumbnails of ordered items, "View Details" button. Filter tabs at top: All, Pending, Delivered, Cancelled. Clean white background, modern card design with subtle shadows, organized layout, status badges in appropriate colors. Mobile interface, vertical format.
@@ -87,15 +81,15 @@ Mobile app order history screen. List of past orders, each order card shows: Ord
 
 ---
 
-### 10. Admin Dashboard Screen (Mobile)
+### 9. Admin Dashboard Screen (Mobile)
 
 ```
-Mobile app admin dashboard screen for e-commerce management. Top section shows key metrics in cards: Total Sales ($12,450), Active Orders (23), Low Stock Items (5), New B2B Requests (3). Quick action buttons grid below: Manage Products, Manage Orders, Customer Management, Analytics. Modern professional design, clean white background, colorful metric cards, red (#DC1F2E) primary accent, organized dashboard layout. Mobile screen, vertical format.
+Mobile app admin dashboard screen for e-commerce management. Top section shows key metrics in cards: Total Sales ($12,450), Active Orders (23), Low Stock Items (5). Quick action buttons grid below: Manage Products, Manage Orders, Customer Management, Analytics. Modern professional design, clean white background, colorful metric cards, red (#DC1F2E) primary accent, organized dashboard layout. Mobile screen, vertical format.
 ```
 
 ---
 
-### 11. Admin Product Management Screen
+### 10. Admin Product Management Screen
 
 ```
 Mobile app admin screen for managing products. Search bar at top, "+ Add Product" button in red (#DC1F2E). List of products below, each showing small product thumbnail, product name, category label, stock quantity, price, edit and delete icons. Clean modern design, white background, organized list with alternating subtle gray backgrounds, professional interface. Mobile screen, vertical format.
@@ -103,7 +97,7 @@ Mobile app admin screen for managing products. Search bar at top, "+ Add Product
 
 ---
 
-### 12. Search Results Screen
+### 11. Search Results Screen
 
 ```
 Mobile app search results screen. Search bar at top with "notebooks" search query. Filter button on right. Results showing product grid (2 columns) with product images, names, prices in red, ratings. "24 results found" text below search bar. Clean modern e-commerce design, white background, product cards with subtle shadows. Mobile interface, vertical format.
@@ -116,9 +110,9 @@ Mobile app search results screen. Search bar at top with "notebooks" search quer
 If you want to create your own prompts for other screens:
 
 ```
-[Screen Type] for mobile e-commerce app, [describe key elements and layout], 
-modern clean design, red (#DC1F2E) and black color scheme, white background, 
-professional typography, [specific features], mobile phone screen, vertical format, 
+[Screen Type] for mobile e-commerce app, [describe key elements and layout],
+modern clean design, red (#DC1F2E) and black color scheme, white background,
+professional typography, [specific features], mobile phone screen, vertical format,
 iOS/Android style, high quality UI/UX design
 ```
 
@@ -127,6 +121,7 @@ iOS/Android style, high quality UI/UX design
 ## 💡 Tips for Better Results
 
 ### Add These Keywords for Quality:
+
 - "modern mobile UI design"
 - "clean interface"
 - "professional e-commerce"
@@ -135,12 +130,14 @@ iOS/Android style, high quality UI/UX design
 - "behance quality"
 
 ### Specify Style:
+
 - "minimalist design"
 - "flat design"
 - "material design"
 - "iOS human interface guidelines"
 
 ### Avoid:
+
 - Don't say "realistic product photos" - keep it UI focused
 - Don't ask for too many screens in one prompt
 - Keep brand colors consistent
@@ -150,8 +147,9 @@ iOS/Android style, high quality UI/UX design
 ## 🚀 Ready to Use
 
 **Copy any of these prompts and paste them into:**
+
 - Midjourney
-- DALL-E 
+- DALL-E
 - Stable Diffusion
 - Any AI image generator
 

@@ -1,6 +1,14 @@
 /// <reference types="nativewind/types" />
-import LoginScreen from './src/screens/LoginScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import AppNavigator from './src/navigation/AppNavigator';
+import { AuthProvider } from './src/auth/AuthContext';
 
 export default function App() {
-  return <LoginScreen />;
+  return (
+    <AuthProvider>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </AuthProvider>
+  );
 }

@@ -63,6 +63,26 @@ services:
       - elsayad-network
     command: sh -c "npx prisma generate && npx prisma studio --port 5555 --browser none"
 
+  # Frontend App (Expo React Native)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: elsayad-frontend
+    ports:
+      - "8081:8081"
+    environment:
+      - NODE_ENV=development
+      # For Expo to work correctly inside Docker, it needs to bind to 0.0.0.0
+      - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+      - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.109 # Change this to your machine's local IP (e.g., 192.168.1.x) to test on a physical device over Wi-Fi
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - elsayad-network
+    command: npm start
+
 # Volumes for persistent data
 volumes:
   postgres_data:

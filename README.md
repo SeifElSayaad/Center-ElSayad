@@ -4,13 +4,13 @@
 
 ## 🎯 Project Overview
 
-**Center-ElSayad** is a full-stack mobile e-commerce application built with React Native for the frontend and Node.js/TypeScript for the backend. The app supports both B2C (individual customers) and B2B (wholesale/business customers) with a 20% discount for verified businesses.
+**Center-ElSayad** is a full-stack mobile e-commerce application built with React Native for the frontend and Node.js/TypeScript for the backend.
 
 ### Key Features
+
 - 🛒 Product browsing and search
 - 📱 Mobile-first design (iOS & Android)
-- 👥 Multiple user types (B2C customers, B2B customers, Admins)
-- 🏢 B2B wholesale pricing (20% discount)
+- 👥 Multiple user types (Customers, Admins)
 - ⭐ Product reviews and ratings
 - 🔔 Push notifications
 - 👨‍💼 Admin dashboard with role-based permissions
@@ -22,7 +22,7 @@
 elsayad-center-ecommerce/
 ├── frontend/                 # React Native mobile app
 │   ├── src/
-│   │   ├── screens/         # App screens
+│   │   ├── pages/         # App screens
 │   │   ├── components/      # Reusable components
 │   │   ├── navigation/      # Navigation configuration
 │   │   ├── services/        # API calls
@@ -52,6 +52,7 @@ elsayad-center-ecommerce/
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **React Native** - Cross-platform mobile framework
 - **TypeScript** - Type safety
 - **React Navigation** - Navigation
@@ -60,6 +61,7 @@ elsayad-center-ecommerce/
 - **React Native Paper** - UI components
 
 ### Backend
+
 - **Node.js** - Runtime
 - **Express.js** - Web framework
 - **TypeScript** - Type safety
@@ -69,6 +71,7 @@ elsayad-center-ecommerce/
 - **bcrypt** - Password hashing
 
 ### DevOps
+
 - **Docker** - Containerization
 - **Docker Compose** - Multi-container orchestration
 - **Git** - Version control
@@ -77,6 +80,7 @@ elsayad-center-ecommerce/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - **Node.js** v18+ installed
 - **Docker** and **Docker Compose** installed
 - **Git** installed
@@ -86,12 +90,14 @@ elsayad-center-ecommerce/
 ### Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/elsayad-center-ecommerce.git
    cd elsayad-center-ecommerce
    ```
 
 2. **Setup Backend:**
+
    ```bash
    cd backend
    npm install
@@ -102,48 +108,48 @@ elsayad-center-ecommerce/
    ```
 
 3. **Setup Frontend:**
+
    ```bash
    cd ../frontend
    npm install
    ```
 
 4. **Run with Docker (Recommended):**
+
    ```bash
    # From project root
    docker-compose up -d
    ```
 
 5. **Run Backend Locally (Alternative):**
+
    ```bash
    cd backend
    npm run dev
    ```
 
 6. **Run Mobile App:**
+
    ```bash
    cd frontend
    # For Android
    npm run android
-   
+
    # For iOS (Mac only)
    npm run ios
    ```
 
 ## 📱 User Types
 
-### 1. Individual Customers (B2C)
-- Browse and purchase products at retail price
+### 1. Customers
+
+- Browse and purchase products
 - Product reviews and ratings
 - Order tracking
 - Wishlist management
 
-### 2. Store Customers (B2B)
-- Automatic 20% discount on all products
-- Bulk ordering capabilities
-- Business invoices
-- Requires admin approval after registration
-
 ### 3. Admins
+
 - **Super Admin** - Full system access
 - **Inventory Manager** - Product and category management
 - **Order Manager** - Order processing
@@ -164,10 +170,10 @@ elsayad-center-ecommerce/
 - [x] UI/UX design (Home screen)
 - [x] Project setup and Docker configuration
 - [ ] Remaining UI/UX screens
-- [ ] Frontend development (React Native)
-- [ ] Backend API development
-- [ ] Database setup and migrations
-- [ ] Authentication system
+- [x] Frontend development (React Native)
+- [x] Backend API development
+- [x] Database setup and migrations
+- [x] Authentication system
 - [ ] Product management
 - [ ] Order processing
 - [ ] Admin dashboard
@@ -177,6 +183,7 @@ elsayad-center-ecommerce/
 ## 🔒 Environment Variables
 
 ### Backend (.env)
+
 ```env
 DATABASE_URL=postgresql://elsayad:elsayad2024@localhost:5432/ecommerce
 JWT_SECRET=your-super-secret-jwt-key

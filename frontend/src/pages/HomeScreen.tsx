@@ -7,13 +7,18 @@ import {
   TouchableOpacity,
   ImageBackground,
   Image,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   Dimensions,
   Platform,
 } from 'react-native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
+import BottomNav from '../components/BottomNav';
+import SearchBar from '../components/SearchBar';
+import ProductCard, { Product } from '../components/ProductCard';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -50,22 +55,22 @@ const CATEGORIES = [
 const PRODUCTS = [
   {
     id: '1',
-    brand: 'PARKER',
     name: 'Vector Gold Trim Rollerball Pen',
+    brand: 'PARKER',
     price: '$45.00',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCjY1Rl4QUSHC7tdJN1TrTlyU111pyR4bmJvZMAZ-RACDRDEo_UzHoic26QNK436wrDYWzPK80f7Qas0fL9vSHGPpfmanz524Qs_jrdvhCb9yNLJ1BIc6ksqhQ7g8mzAdjcg0_pKaQ_LAapqHMhomyhtIWpNKa_SrEsIlKj84UNEXwbtxhV5Ob3cyOLmIpeh4jytANdN3YyEB5eIV-upOCYkiYgy_WfBaaBJTdN8DDKi6DRk-63AZfbWx0_VFGMyzP4_DTolJwlmH0',
   },
   {
     id: '2',
-    brand: 'MOLESKINE',
     name: 'Hard Cover Classic Notebook - L',
+    brand: 'MOLESKINE',
     price: '$22.50',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuANHTvG-Sla_vBnsGx2ClDeDAGGqK38AUxPh_zb36qKKpmtQ3FdMq2LjThBxXqhILVTIQOGBgDBzt1LGcRu4wYoix0rwKaIaLgi_7stEy2qhdKPyN3ltEGTGG5CJni8NiJH97UYRvJ1z6ESKQESM4omfaVbxHe9_UCDtjcpvQ6bLgArCUXxLkg1-0bH-8C1NGTm0UimRj_zVoQdhCPWTa8nzLmGyvrnySCPsStVqdkQ--cqAx3KuYasvOuY4uw1Uixvtxu1FQNunas',
   },
   {
     id: '3',
-    brand: 'CASIO',
     name: 'FX-991EX Scientific Classwiz',
+    brand: 'CASIO',
     price: '$38.00',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAVBpUfLsix3-ZeR4TUkwCqTg4WsgjdJSyqXvF34CTPAw8cOjHfWvHaKOniVBdNFsVS1qSJh8bqTFM6f7RWAXfGgelKA0QQ7TmSjhtTqPe9vd0mZU2Ol-Q7X9uxmDC6YENgrzm1v9ftvcqr_vIV8yBXiyMg3m1I9NLorE0MEGQR0j6HXZ9RDY9buSTOwscvVmkUvlP3WDxiBE8_tTm_gEMxWP8gpaT8KRQ-7QKQ_awW5ioT2Aqrwe8Bg4lRg_asHNDYTZ0NSS3RiT8',
   },
@@ -73,8 +78,10 @@ const PRODUCTS = [
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
+
 export default function HomeScreen() {
-  const [activeNav, setActiveNav] = useState('home');
+  const navigation = useNavigation<NavigationProp>();
 
   return (
     <View style={styles.root}>
@@ -85,7 +92,7 @@ export default function HomeScreen() {
         <View style={styles.headerTop}>
           {/* Logo */}
           <Image
-            source={require('../../assets/logo.png')}
+            source={require('../assets/logo.png')}
             style={styles.logo}
             resizeMode="contain"
           />
@@ -98,15 +105,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Search Bar */}
-        <View style={styles.searchBar}>
-          <MaterialIcons name="search" size={20} color="#db1f2f" style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search office, school, books..."
-            placeholderTextColor="#9ca3af"
-          />
-        </View>
+        {/* Search Bar Place */}  
       </View>
 
       <ScrollView
@@ -161,13 +160,17 @@ export default function HomeScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Categories</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Categories')}>
               <Text style={styles.seeAll}>See All</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.categoryGrid}>
             {CATEGORIES.map((cat) => (
-              <TouchableOpacity key={cat.id} style={styles.categoryItem}>
+              <TouchableOpacity 
+                key={cat.id} 
+                style={styles.categoryItem}
+                onPress={() => navigation.navigate('Categories')}
+              >
                 <View style={styles.categoryIconBox}>
                   <MaterialIcons name={cat.icon as any} size={32} color="#db1f2f" />
                 </View>
@@ -196,24 +199,16 @@ export default function HomeScreen() {
             contentContainerStyle={styles.productsRow}
           >
             {PRODUCTS.map((product) => (
-              <View key={product.id} style={styles.productCard}>
-                <TouchableOpacity style={styles.favoriteBtn}>
-                  <MaterialIcons name="favorite-border" size={20} color="#9ca3af" />
-                </TouchableOpacity>
-                <Image
-                  source={{ uri: product.image }}
-                  style={styles.productImage}
-                  resizeMode="cover"
+              <TouchableOpacity
+                key={product.id}
+                activeOpacity={0.85}
+                onPress={() => navigation.navigate('ProductDetails', { product })}
+              >
+                <ProductCard
+                  product={product}
+                  containerStyle={{ width: 155 }}
                 />
-                <Text style={styles.productBrand}>{product.brand}</Text>
-                <Text style={styles.productName} numberOfLines={2}>{product.name}</Text>
-                <View style={styles.productFooter}>
-                  <Text style={styles.productPrice}>{product.price}</Text>
-                  <TouchableOpacity style={styles.addBtn}>
-                    <MaterialIcons name="add" size={18} color="#fff" />
-                  </TouchableOpacity>
-                </View>
-              </View>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
@@ -242,34 +237,7 @@ export default function HomeScreen() {
       </ScrollView>
 
       {/* ── Bottom Navigation ── */}
-      <View style={styles.bottomNav}>
-        {[
-          { key: 'home', icon: 'home', label: 'Home' },
-          { key: 'categories', icon: 'grid-view', label: 'Categories' },
-          { key: 'favorites', icon: 'favorite-border', label: 'Favorites' },
-          { key: 'account', icon: 'person-outline', label: 'Account' },
-        ].map((item) => (
-          <TouchableOpacity
-            key={item.key}
-            style={styles.navItem}
-            onPress={() => setActiveNav(item.key)}
-          >
-            <MaterialIcons
-              name={item.icon as any}
-              size={26}
-              color={activeNav === item.key ? '#db1f2f' : '#9ca3af'}
-            />
-            <Text
-              style={[
-                styles.navLabel,
-                { color: activeNav === item.key ? '#db1f2f' : '#9ca3af' },
-              ]}
-            >
-              {item.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <BottomNav activeTab="Home" />
     </View>
   );
 }
@@ -321,19 +289,9 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '700',
   },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(219,31,47,0.05)',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  searchIcon: { marginRight: 8 },
-  searchInput: {
-    flex: 1,
-    fontSize: 14,
-    color: '#1b0e0f',
+  searchBarContainer: {
+    paddingHorizontal: 0,
+    paddingTop: 8,
   },
   // Scroll
   scrollView: { flex: 1 },
@@ -461,65 +419,6 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     gap: 12,
   },
-  productCard: {
-    width: 155,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#f3f4f6',
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  favoriteBtn: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    zIndex: 10,
-  },
-  productImage: {
-    width: '100%',
-    aspectRatio: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    backgroundColor: '#f9fafb',
-  },
-  productBrand: {
-    fontSize: 9,
-    fontWeight: '700',
-    letterSpacing: 1,
-    color: '#6b7280',
-    marginBottom: 2,
-    textTransform: 'uppercase',
-  },
-  productName: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#1b0e0f',
-    lineHeight: 16,
-    marginBottom: 8,
-  },
-  productFooter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 8,
-  },
-  productPrice: {
-    color: '#db1f2f',
-    fontWeight: '800',
-    fontSize: 14,
-  },
-  addBtn: {
-    backgroundColor: '#db1f2f',
-    width: 28,
-    height: 28,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   // Promo Banner
   promoBanner: {
     backgroundColor: '#111',
@@ -561,25 +460,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 12,
     bottom: -10,
-  },
-  // Bottom Nav
-  bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
-    paddingTop: 10,
-    paddingBottom: Platform.OS === 'ios' ? 24 : 12,
-    paddingHorizontal: 16,
-  },
-  navItem: {
-    alignItems: 'center',
-    gap: 2,
-  },
-  navLabel: {
-    fontSize: 10,
-    fontWeight: '700',
   },
 });
