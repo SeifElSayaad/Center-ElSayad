@@ -13,7 +13,7 @@ import {
   Platform,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import BottomNav from '../components/BottomNav';
@@ -82,10 +82,16 @@ const PRODUCTS = [
 // ─── Component ────────────────────────────────────────────────────────────────
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Categories'>;
+type CategoriesRouteProp = RouteProp<RootStackParamList, 'Categories'>;
 
 export default function CategoriesScreen() {
   const navigation = useNavigation<NavigationProp>();
-  const [activeFilter, setActiveFilter] = useState('All');
+  const route = useRoute<CategoriesRouteProp>();
+  const categoryName = route.params?.categoryName ?? 'All Products';
+
+  // Seed the active filter from the selected category if it matches a pill
+  const matchedFilter = FILTERS.find((f) => categoryName.includes(f)) ?? 'All';
+  const [activeFilter, setActiveFilter] = useState(matchedFilter);
 
   return (
     <View style={styles.root}>
@@ -101,7 +107,7 @@ export default function CategoriesScreen() {
           >
             <MaterialIcons name="arrow-back" size={24} color="#1b0e0f" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Office Supplies</Text>
+          <Text style={styles.headerTitle}>{categoryName}</Text>
           <TouchableOpacity 
             style={styles.iconBtn}
             accessibilityLabel="View cart"

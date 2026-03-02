@@ -160,7 +160,7 @@ export default function HomeScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Categories</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('Categories')}>
+            <TouchableOpacity onPress={() => navigation.navigate('Categories', {})}>
               <Text style={styles.seeAll}>See All</Text>
             </TouchableOpacity>
           </View>
@@ -169,7 +169,7 @@ export default function HomeScreen() {
               <TouchableOpacity 
                 key={cat.id} 
                 style={styles.categoryItem}
-                onPress={() => navigation.navigate('Categories')}
+              onPress={() => navigation.navigate('Categories', { categoryName: cat.label.replace('\n', ' ') })}
               >
                 <View style={styles.categoryIconBox}>
                   <MaterialIcons name={cat.icon as any} size={32} color="#db1f2f" />

@@ -10,20 +10,14 @@ export class OrderService {
       throw new Error('Order must contain at least one item');
     }
 
-    // 1. Fetch user to check B2B status
+    // 1. Verify user exists
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: { b2bProfile: true },
     });
 
     if (!user) {
       throw new Error('User not found');
     }
-
-    const isB2BOrder = user.userType === 'B2B' && user.b2bProfile?.status === 'APPROVED';
-    
-    // Fetch store setting for global B2B discount fallback (optional, relying on profile for now)
-    const discountPercent = isB2BOrder && user.b2bProfile ? user.b2bProfile.discountPercent : 0;
 
     return prisma.$transaction(async (tx) => {
       // 2. Fetch all products and validate stock/existence
@@ -56,37 +50,25 @@ export class OrderService {
           data: { stockQuantity: { decrement: requestedQuantity } },
         });
 
-        const unitRetailPrice = product.retailPrice;
-        let finalUnitPrice = unitRetailPrice;
-
-        if (isB2BOrder) {
-          finalUnitPrice = unitRetailPrice * (1 - discountPercent / 100);
-        }
-
-        const totalPrice = finalUnitPrice * requestedQuantity;
-        subtotal += unitRetailPrice * requestedQuantity; // raw subtotal before discounting
+        const unitPrice = product.retailPrice;
+        const totalPrice = unitPrice * requestedQuantity;
+        subtotal += totalPrice;
 
         orderItemsData.push({
           productId: product.id,
           productName: product.name,
-          unitPrice: finalUnitPrice,
+          unitPrice,
           quantity: requestedQuantity,
           totalPrice,
         });
       }
 
       // Calculate totals
-      let totalAmount = 0;
-      let discountAmount = 0;
-      
       const taxAmount = 0;      // Hardcoded for now. Can pull from StoreSetting
       const shippingAmount = 0; // Hardcoded.
+      const discountAmount = 0;
 
-      if (isB2BOrder) {
-         discountAmount = subtotal * (discountPercent / 100);
-      }
-      
-      totalAmount = subtotal - discountAmount + taxAmount + shippingAmount;
+      const totalAmount = subtotal - discountAmount + taxAmount + shippingAmount;
 
       // 4. Create Order
       const order = await tx.order.create({
@@ -99,8 +81,6 @@ export class OrderService {
           shippingAmount,
           taxAmount,
           totalAmount,
-          isB2BOrder,
-          discountPercent,
           notes,
           items: {
             create: orderItemsData,
