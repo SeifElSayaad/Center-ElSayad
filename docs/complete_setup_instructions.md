@@ -9,6 +9,7 @@ This guide will walk you through setting up the complete Center-ElSayad e-commer
 ## 📋 Step 1: Create GitHub Repository
 
 ### 1.1 Create Repository on GitHub
+
 1. Go to **https://github.com**
 2. Click **"New repository"** (green button or + icon)
 3. Settings:
@@ -91,6 +92,7 @@ npx tsc --init
 ```
 
 Edit `tsconfig.json` and update:
+
 ```json
 {
   "compilerOptions": {
@@ -115,6 +117,7 @@ npx prisma init
 ```
 
 This creates:
+
 - `prisma/schema.prisma` - Database schema
 - `.env` - Environment variables
 
@@ -125,7 +128,7 @@ This creates:
 mkdir src
 mkdir src\controllers
 mkdir src\routes
-mkdir src\services  
+mkdir src\services
 mkdir src\middleware
 mkdir src\types
 mkdir src\utils
@@ -153,9 +156,9 @@ Open `backend\package.json` and add:
 Create `backend\src\server.ts`:
 
 ```typescript
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -167,12 +170,12 @@ app.use(cors());
 app.use(express.json());
 
 // Test route
-app.get('/', (req, res) => {
-  res.json({ message: 'Center-ElSayad API is running!' });
+app.get("/", (req, res) => {
+  res.json({ message: "Center-ElSayad API is running!" });
 });
 
-app.get('/health', (req, res) => {
-  res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+app.get("/health", (req, res) => {
+  res.json({ status: "healthy", timestamp: new Date().toISOString() });
 });
 
 // Start server
@@ -268,7 +271,6 @@ model User {
 
 enum Role {
   CUSTOMER_B2C
-  CUSTOMER_B2B
   SUPER_ADMIN
   INVENTORY_MANAGER
   ORDER_MANAGER
@@ -301,6 +303,7 @@ npx prisma generate
 ### 6.1 Copy Project Files
 
 Copy all the setup files:
+
 - `PROJECT-README.md` → Rename to `README.md` in project root
 - Planning documents to `docs/` folder
 
@@ -355,6 +358,7 @@ Visit http://localhost:3000 - should show API message
 ## 🎯 Next Steps
 
 After completing this setup, you'll have:
+
 - ✅ GitHub repository configured
 - ✅ Backend project initialized
 - ✅ Docker containers running
@@ -362,6 +366,7 @@ After completing this setup, you'll have:
 - ✅ Initial Git commit
 
 **Next phases:**
+
 1. **Setup React Native frontend**
 2. **Design remaining app screens**
 3. **Build API endpoints**
@@ -410,6 +415,7 @@ npx prisma generate
 ## 📞 Need Help?
 
 If you encounter any issues:
+
 1. Check error messages carefully
 2. Verify all files are in correct locations
 3. Ensure Docker is running

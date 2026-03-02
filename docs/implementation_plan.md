@@ -16,14 +16,15 @@
 
 ### ✅ Your Choices (Approved!)
 
-| Technology | Why It's Good | Learning Curve |
-|------------|---------------|----------------|
-| **React Native** | Cross-platform (iOS + Android), large community, reusable code | Medium |
-| **Node.js + TypeScript** | Type safety, great for scalability, JavaScript everywhere | Medium |
+| Technology               | Why It's Good                                                  | Learning Curve |
+| ------------------------ | -------------------------------------------------------------- | -------------- |
+| **React Native**         | Cross-platform (iOS + Android), large community, reusable code | Medium         |
+| **Node.js + TypeScript** | Type safety, great for scalability, JavaScript everywhere      | Medium         |
 
 ### 💡 Recommended Additions
 
 #### Frontend Stack
+
 - **Navigation**: React Navigation (industry standard for React Native)
 - **State Management**: Redux Toolkit or Zustand (Zustand is simpler for beginners)
 - **UI Component Library**: React Native Paper or NativeBase
@@ -32,6 +33,7 @@
 - **Image Handling**: react-native-fast-image
 
 #### Backend Stack
+
 - **Framework**: Express.js (simple) or NestJS (more structured, better for learning TypeScript patterns)
 - **Database**: PostgreSQL (relational, great for e-commerce) + Prisma ORM (type-safe, easy to use)
 - **Authentication**: JWT (JSON Web Tokens) + bcrypt for password hashing
@@ -40,6 +42,7 @@
 - **API Documentation**: Swagger/OpenAPI
 
 #### DevOps & Tools
+
 - **Version Control**: Git + GitHub
 - **API Testing**: Postman or Insomnia
 - **Code Quality**: ESLint + Prettier
@@ -55,6 +58,7 @@
 ### Phase 1: Planning & Design (Week 1-2)
 
 #### 1.1 Define Requirements
+
 - [ ] List all features (MVP vs Future features)
 - [ ] Define user types (Customer, Admin)
 - [ ] Create user stories (e.g., "As a customer, I want to browse products by category")
@@ -104,6 +108,7 @@
    - Share with friends/family for feedback
 
 **Design Tools:**
+
 - **Figma** (UI/UX design) - FREE
 - **Coolors.co** (color palette generator)
 - **Icons**: Feather Icons, Material Icons
@@ -116,6 +121,7 @@
 #### 2.1 Setup Development Environment
 
 **Frontend Setup:**
+
 ```bash
 # Install Node.js (v18 or higher recommended)
 # Install React Native CLI
@@ -136,6 +142,7 @@ npm install react-native-paper
 ```
 
 **Backend Setup:**
+
 ```bash
 # Create backend folder
 mkdir ecommerce-backend
@@ -163,6 +170,7 @@ npx prisma init
 #### 2.2 Project Structure
 
 **Frontend Structure:**
+
 ```
 ECommerceApp/
 ├── src/
@@ -180,6 +188,7 @@ ECommerceApp/
 ```
 
 **Backend Structure:**
+
 ```
 ecommerce-backend/
 ├── src/
@@ -205,9 +214,10 @@ ecommerce-backend/
 #### 3.1 Database Schema
 
 **Core Tables:**
-- **Users** (id, email, password, name, phone, role, account_status, business_documents, created_at)
-  - role: CUSTOMER_B2C, CUSTOMER_B2B, SUPER_ADMIN, INVENTORY_MANAGER, ORDER_MANAGER, CUSTOMER_SERVICE
-  - account_status: ACTIVE, PENDING_APPROVAL, REJECTED (for B2B)
+
+- **Users** (id, email, password, name, phone, role, account_status, created_at)
+  - role: CUSTOMER_B2C, SUPER_ADMIN, INVENTORY_MANAGER, ORDER_MANAGER, CUSTOMER_SERVICE
+  - account_status: ACTIVE, PENDING_APPROVAL, REJECTED
 - **Categories** (id, name, description, image_url, parent_id)
 - **Products** (id, name, description, price, stock, category_id, images, created_at)
 - **Cart** (id, user_id, product_id, quantity)
@@ -219,6 +229,7 @@ ecommerce-backend/
 - **Settings** (id, key, value) - For shipping rates, app settings, etc.
 
 **Prisma Schema Example:**
+
 ```prisma
 model User {
   id                String        @id @default(uuid())
@@ -228,7 +239,6 @@ model User {
   phone             String?
   role              Role          @default(CUSTOMER_B2C)
   accountStatus     AccountStatus @default(ACTIVE)
-  businessDocuments String[]      // URLs to uploaded documents (B2B only)
   orders            Order[]
   reviews           Review[]
   addresses         Address[]
@@ -258,7 +268,6 @@ model Product {
 
 enum Role {
   CUSTOMER_B2C
-  CUSTOMER_B2B
   SUPER_ADMIN
   INVENTORY_MANAGER
   ORDER_MANAGER
@@ -273,6 +282,7 @@ enum AccountStatus {
 ```
 
 #### 3.2 Setup Database
+
 - Create PostgreSQL database (use Supabase free tier or local PostgreSQL)
 - Run Prisma migrations
 - Seed initial data (categories, sample products)
@@ -284,11 +294,13 @@ enum AccountStatus {
 #### 4.1 Core API Endpoints
 
 **Authentication:**
+
 - POST `/api/auth/register` - User registration
 - POST `/api/auth/login` - User login
 - GET `/api/auth/me` - Get current user (protected)
 
 **Products:**
+
 - GET `/api/products` - Get all products (with pagination, filters)
 - GET `/api/products/:id` - Get single product
 - GET `/api/products/category/:categoryId` - Get products by category
@@ -297,16 +309,19 @@ enum AccountStatus {
 - DELETE `/api/products/:id` - Delete product (admin only)
 
 **Categories:**
+
 - GET `/api/categories` - Get all categories
 - GET `/api/categories/:id` - Get single category
 
 **Cart:**
+
 - GET `/api/cart` - Get user's cart
 - POST `/api/cart` - Add item to cart
 - PUT `/api/cart/:itemId` - Update cart item quantity
 - DELETE `/api/cart/:itemId` - Remove from cart
 
 **Orders:**
+
 - POST `/api/orders` - Create order (with COD/mock payment)
 - GET `/api/orders` - Get user's orders
 - GET `/api/orders/:id` - Get order details
@@ -314,24 +329,23 @@ enum AccountStatus {
 - PUT `/api/admin/orders/:id/status` - Update order status (admin only)
 
 **Reviews:**
+
 - POST `/api/reviews` - Create product review
 - GET `/api/products/:id/reviews` - Get product reviews
 - PUT `/api/reviews/:id` - Update own review
 - DELETE `/api/reviews/:id` - Delete own review
 
-**Admin - B2B Approval:**
-- GET `/api/admin/b2b-requests` - Get pending B2B registrations
-- PUT `/api/admin/b2b-requests/:userId/approve` - Approve B2B account
-- PUT `/api/admin/b2b-requests/:userId/reject` - Reject B2B account
-
 **Admin - User Management:**
+
 - GET `/api/admin/users` - Get all users (role-based access)
 - PUT `/api/admin/users/:id/role` - Update user role (super admin only)
 
 **Search:**
+
 - GET `/api/search?q=query` - Search products
 
 #### 4.2 Implementation Priority
+
 1. Setup Express server
 2. Database connection (Prisma)
 3. Authentication (JWT middleware)
@@ -348,6 +362,7 @@ enum AccountStatus {
 #### 5.1 Development Order
 
 **Week 8: Core Setup & Navigation**
+
 1. Setup navigation (Stack, Tab, Drawer)
 2. Create basic screen structure
 3. Setup API service layer
@@ -355,6 +370,7 @@ enum AccountStatus {
 5. Create design system (colors, typography, spacing)
 
 **Week 9: Product Browsing**
+
 1. Home Screen
    - Featured products
    - Categories grid
@@ -372,6 +388,7 @@ enum AccountStatus {
    - Reviews section
 
 **Week 10: Cart & Checkout**
+
 1. Shopping Cart Screen
    - Item list
    - Quantity controls
@@ -383,6 +400,7 @@ enum AccountStatus {
    - Order confirmation
 
 **Week 11: User Features**
+
 1. Authentication Screens
    - Login
    - Register
@@ -395,6 +413,7 @@ enum AccountStatus {
    - Order tracking
 
 **Week 12: Polish & Additional Features**
+
 1. Search functionality
 2. Wishlist/Favorites
 3. Product reviews
@@ -406,6 +425,7 @@ enum AccountStatus {
 #### 5.2 Component Examples
 
 **Key Components to Build:**
+
 - `ProductCard` - Reusable product display
 - `CategoryCard` - Category display
 - `CartItem` - Cart item row
@@ -422,6 +442,7 @@ enum AccountStatus {
 ### Phase 6: Integration & Testing (Week 13-14)
 
 #### 6.1 Connect Frontend to Backend
+
 - Configure API base URL
 - Test all API endpoints
 - Handle authentication tokens
@@ -431,6 +452,7 @@ enum AccountStatus {
 #### 6.2 Testing Strategy
 
 **Manual Testing:**
+
 - Test all user flows
 - Test on both iOS and Android
 - Test different screen sizes
@@ -438,6 +460,7 @@ enum AccountStatus {
 - Test offline behavior
 
 **Automated Testing (Optional for learning):**
+
 - Unit tests (Jest)
 - Component tests (React Native Testing Library)
 - API tests (Supertest)
@@ -447,6 +470,7 @@ enum AccountStatus {
 ### Phase 7: Advanced Features (Week 15-16)
 
 #### Optional Enhancements:
+
 - Push notifications (Firebase Cloud Messaging)
 - Payment gateway integration (Stripe)
 - Admin dashboard (React Native or Web app)
@@ -460,24 +484,30 @@ enum AccountStatus {
 ### Phase 8: Deployment (Week 17)
 
 #### 8.1 Backend Deployment
+
 **Options:**
+
 - **Render** (Free tier, easy setup)
 - **Railway** (Free tier)
 - **Heroku** (Paid)
 - **AWS/DigitalOcean** (More control, steeper learning curve)
 
 #### 8.2 Database Hosting
+
 - **Supabase** (PostgreSQL, free tier)
 - **Neon** (PostgreSQL, free tier)
 - **PlanetScale** (MySQL, free tier)
 
 #### 8.3 Mobile App Deployment
+
 **Android:**
+
 - Generate signed APK
 - Create Google Play Console account
 - Upload to Play Store (Manual review process)
 
 **iOS:**
+
 - Requires Apple Developer Account ($99/year)
 - Build with Xcode
 - Upload to App Store Connect
@@ -488,22 +518,26 @@ enum AccountStatus {
 ## 📚 Learning Resources
 
 ### React Native
+
 - [Official React Native Docs](https://reactnative.dev)
 - [React Navigation Docs](https://reactnavigation.org)
 - YouTube: "The Net Ninja - React Native Tutorial"
 - YouTube: "Academind - React Native Course"
 
 ### Node.js + TypeScript
+
 - [Node.js Docs](https://nodejs.org/docs)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs)
 - [Express.js Guide](https://expressjs.com)
 - YouTube: "Traversy Media - Node.js Crash Course"
 
 ### Database & Prisma
+
 - [Prisma Docs](https://www.prisma.io/docs)
 - [PostgreSQL Tutorial](https://www.postgresqltutorial.com)
 
 ### UI/UX Design
+
 - [Figma Tutorial](https://www.figma.com/resources/learn-design/)
 - YouTube: "DesignCourse - Figma for Beginners"
 - Book: "Don't Make Me Think" by Steve Krug
@@ -515,6 +549,7 @@ enum AccountStatus {
 For your first version, focus on these core features:
 
 ### Must-Have Features (MVP)
+
 1. ✅ User registration & login
 2. ✅ Browse products by category
 3. ✅ Search products
@@ -524,6 +559,7 @@ For your first version, focus on these core features:
 7. ✅ View order history
 
 ### Nice-to-Have (Version 2)
+
 - User reviews & ratings
 - Wishlist
 - Payment integration
@@ -532,6 +568,7 @@ For your first version, focus on these core features:
 - Social sharing
 
 ### Future Features (Version 3+)
+
 - Admin mobile app
 - Live chat support
 - Loyalty program
@@ -542,16 +579,16 @@ For your first version, focus on these core features:
 
 ## ⏱️ Realistic Timeline
 
-| Phase | Duration | Difficulty |
-|-------|----------|------------|
-| Planning & Design | 2 weeks | ⭐⭐ |
-| Project Setup | 1 week | ⭐⭐ |
-| Database Design | 1 week | ⭐⭐⭐ |
-| Backend Development | 3 weeks | ⭐⭐⭐⭐ |
-| Frontend Development | 5 weeks | ⭐⭐⭐⭐ |
-| Integration & Testing | 2 weeks | ⭐⭐⭐ |
-| Advanced Features | 2 weeks | ⭐⭐⭐⭐⭐ |
-| Deployment | 1 week | ⭐⭐⭐ |
+| Phase                 | Duration | Difficulty |
+| --------------------- | -------- | ---------- |
+| Planning & Design     | 2 weeks  | ⭐⭐       |
+| Project Setup         | 1 week   | ⭐⭐       |
+| Database Design       | 1 week   | ⭐⭐⭐     |
+| Backend Development   | 3 weeks  | ⭐⭐⭐⭐   |
+| Frontend Development  | 5 weeks  | ⭐⭐⭐⭐   |
+| Integration & Testing | 2 weeks  | ⭐⭐⭐     |
+| Advanced Features     | 2 weeks  | ⭐⭐⭐⭐⭐ |
+| Deployment            | 1 week   | ⭐⭐⭐     |
 
 **Total: ~17 weeks (4 months)** for MVP with learning
 

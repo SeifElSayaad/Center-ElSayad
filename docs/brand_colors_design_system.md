@@ -5,6 +5,7 @@
 ### Primary Colors
 
 #### Brand Red
+
 - **Hex**: `#DC1F2E`
 - **RGB**: rgb(220, 31, 46)
 - **Usage**: Primary brand color, main CTAs, important highlights
@@ -13,9 +14,9 @@
   - Active navigation items
   - Sale/discount badges
   - Important notifications
-  - B2B discount indicators
 
 #### Brand Black
+
 - **Hex**: `#000000`
 - **RGB**: rgb(0, 0, 0)
 - **Usage**: Text, icons, logo elements
@@ -33,31 +34,31 @@ Based on your logo, here's a complete color system for your app:
 
 ### Primary Colors
 
-| Color Name | Hex Code | Preview | Usage |
-|------------|----------|---------|-------|
-| **Primary Red** | `#DC1F2E` | 🔴 | Main brand color, primary buttons |
-| **Primary Red Dark** | `#B01824` | 🔴 | Button hover/pressed states |
-| **Primary Red Light** | `#FFE5E8` | 🌸 | Background tints, badges |
+| Color Name            | Hex Code  | Preview | Usage                             |
+| --------------------- | --------- | ------- | --------------------------------- |
+| **Primary Red**       | `#DC1F2E` | 🔴      | Main brand color, primary buttons |
+| **Primary Red Dark**  | `#B01824` | 🔴      | Button hover/pressed states       |
+| **Primary Red Light** | `#FFE5E8` | 🌸      | Background tints, badges          |
 
 ### Neutral Colors (Grays)
 
-| Color Name | Hex Code | Preview | Usage |
-|------------|----------|---------|-------|
-| **Black** | `#000000` | ⚫ | Primary text, headings |
-| **Dark Gray** | `#1A1A1A` | ⚫ | Body text (easier on eyes) |
-| **Medium Gray** | `#6B6B6B` | ⚫ | Secondary text, captions |
-| **Light Gray** | `#E5E5E5` | ⚪ | Borders, dividers |
-| **Background Gray** | `#F5F5F5` | ⚪ | Screen backgrounds |
-| **White** | `#FFFFFF` | ⚪ | Cards, inputs, buttons |
+| Color Name          | Hex Code  | Preview | Usage                      |
+| ------------------- | --------- | ------- | -------------------------- |
+| **Black**           | `#000000` | ⚫      | Primary text, headings     |
+| **Dark Gray**       | `#1A1A1A` | ⚫      | Body text (easier on eyes) |
+| **Medium Gray**     | `#6B6B6B` | ⚫      | Secondary text, captions   |
+| **Light Gray**      | `#E5E5E5` | ⚪      | Borders, dividers          |
+| **Background Gray** | `#F5F5F5` | ⚪      | Screen backgrounds         |
+| **White**           | `#FFFFFF` | ⚪      | Cards, inputs, buttons     |
 
 ### Semantic Colors (System Colors)
 
-| Color Name | Hex Code | Preview | Usage |
-|------------|----------|---------|-------|
-| **Success Green** | `#10B981` | 🟢 | Order confirmed, in stock |
-| **Warning Orange** | `#F59E0B` | 🟠 | Low stock, pending |
-| **Error Red** | `#EF4444` | 🔴 | Errors, out of stock |
-| **Info Blue** | `#3B82F6` | 🔵 | Information, links |
+| Color Name         | Hex Code  | Preview | Usage                     |
+| ------------------ | --------- | ------- | ------------------------- |
+| **Success Green**  | `#10B981` | 🟢      | Order confirmed, in stock |
+| **Warning Orange** | `#F59E0B` | 🟠      | Low stock, pending        |
+| **Error Red**      | `#EF4444` | 🔴      | Errors, out of stock      |
+| **Info Blue**      | `#3B82F6` | 🔵      | Information, links        |
 
 ---
 
@@ -68,6 +69,7 @@ Based on your logo's clean, modern style:
 ### Recommended Font Pairings
 
 #### Option 1: Modern & Professional
+
 - **Primary Font**: **Inter** (Google Fonts - FREE)
   - Headings: Inter Bold (700)
   - Body text: Inter Regular (400)
@@ -75,12 +77,14 @@ Based on your logo's clean, modern style:
 - **Why**: Clean, modern, excellent readability on mobile
 
 #### Option 2: Friendly & Approachable
+
 - **Primary Font**: **Poppins** (Google Fonts - FREE)
   - Headings: Poppins SemiBold (600)
   - Body text: Poppins Regular (400)
   - Excellent for educational products
 
 #### Option 3: Professional & Elegant
+
 - **Primary Font**: **Roboto** (Google Fonts - FREE)
   - Most widely used mobile font
   - Great performance in React Native
@@ -92,6 +96,7 @@ Based on your logo's clean, modern style:
 ## 📐 Spacing & Sizing System
 
 ### Spacing Scale (8pt Grid System)
+
 ```
 4px  = 0.5 unit (xs)
 8px  = 1 unit (sm)
@@ -103,6 +108,7 @@ Based on your logo's clean, modern style:
 ```
 
 ### Font Sizes
+
 ```
 Display (Product titles): 32px
 H1 (Screen titles): 24px
@@ -114,6 +120,7 @@ Small: 12px
 ```
 
 ### Border Radius (Rounded Corners)
+
 ```
 Small (buttons): 8px
 Medium (cards): 12px
@@ -128,22 +135,26 @@ Circular (avatars): 50%
 ### Buttons
 
 **Primary Button** (Add to Cart, Buy Now)
+
 - Background: `#DC1F2E`
 - Text: `#FFFFFF`
 - Pressed: `#B01824`
 
 **Secondary Button** (View Details)
+
 - Background: `#FFFFFF`
 - Border: `#DC1F2E` (1px)
 - Text: `#DC1F2E`
 
 **Disabled Button**
+
 - Background: `#E5E5E5`
 - Text: `#6B6B6B`
 
 ### Cards & Products
 
 **Product Card**
+
 - Background: `#FFFFFF`
 - Border: `#E5E5E5` (1px)
 - Shadow: subtle gray shadow
@@ -153,6 +164,7 @@ Circular (avatars): 50%
 ### Navigation
 
 **Bottom Tab Navigation**
+
 - Active: `#DC1F2E`
 - Inactive: `#6B6B6B`
 - Background: `#FFFFFF`
@@ -162,7 +174,6 @@ Circular (avatars): 50%
 **In Stock**: Green `#10B981`
 **Low Stock**: Orange `#F59E0B`
 **Out of Stock**: Red `#EF4444`
-**B2B Discount**: Red `#DC1F2E`
 
 ---
 
@@ -181,18 +192,21 @@ Based on your brand (educational, professional, trustworthy):
 ## 🛠️ How to Remove Logo Background Yourself
 
 ### Method 1: Online Tool (Easiest)
+
 1. Go to **remove.bg** (https://www.remove.bg)
 2. Upload your logo
 3. Download the PNG with transparent background
 4. **FREE** for standard resolution
 
 ### Method 2: Canva (Free)
+
 1. Go to canva.com
 2. Upload your logo
 3. Click "Edit Image" → "Background Remover"
 4. Download as PNG
 
 ### Method 3: Figma (You'll Learn This)
+
 1. Import your logo to Figma
 2. Use the "Remove Background" plugin
 3. Or manually trace over it with vector shapes

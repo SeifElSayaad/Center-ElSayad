@@ -14,8 +14,7 @@ The schema is defined in `backend/prisma/schema.prisma` and covers:
 
 | Model          | Purpose                                           |
 | -------------- | ------------------------------------------------- |
-| `User`         | All users — B2C, B2B, and Admin                   |
-| `B2BProfile`   | Business details + approval status                |
+| `User`         | All users — B2C and Admin                         |
 | `AdminProfile` | Admin role (Super Admin, Inventory Manager, etc.) |
 | `Address`      | Saved shipping addresses per user                 |
 | `Category`     | Product categories (Office, School, Books, Toys)  |
@@ -26,15 +25,7 @@ The schema is defined in `backend/prisma/schema.prisma` and covers:
 | `OrderItem`    | Line items within an order                        |
 | `Review`       | Product ratings (1–5 stars)                       |
 | `WishlistItem` | Saved products per user                           |
-| `StoreSetting` | Global config (B2B discount %, shipping, tax)     |
-
-### B2B Pricing Logic
-
-- Only **retail price** is stored in the database
-- B2B price is calculated at runtime: `retailPrice × (1 - discountPercent / 100)`
-- Default discount: **20%** (configurable per B2B customer or globally)
-
----
+| `StoreSetting` | Global config (shipping, tax)                     |
 
 ## 🚀 Next Steps (Follow in Order)
 
@@ -78,7 +69,6 @@ Now that the schema is ready, build these endpoints:
 
 ```
 POST /auth/register     → Create B2C account
-POST /auth/register/b2b → Create B2B account (pending approval)
 POST /auth/login        → Login, returns JWT token
 POST /auth/logout       → Invalidate token
 GET  /auth/me           → Get current user profile

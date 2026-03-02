@@ -38,7 +38,6 @@ Once you have those 5-7 designs:
 **Don't wait to design ALL pages!** Here's why:
 
 - ❌ Admin pages can be designed later when you reach backend
-- ❌ B2B registration screens can wait
 - ❌ You'll learn what works/doesn't work while coding
 - ❌ Designing 20+ pages upfront is overwhelming
 
