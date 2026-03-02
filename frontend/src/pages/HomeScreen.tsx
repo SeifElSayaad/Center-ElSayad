@@ -97,7 +97,7 @@ export default function HomeScreen() {
             resizeMode="contain"
           />
           {/* Cart Button */}
-          <TouchableOpacity style={styles.cartBtn}>
+          <TouchableOpacity style={styles.cartBtn} onPress={() => navigation.navigate('Cart')}>
             <MaterialIcons name="shopping-cart" size={26} color="#1b0e0f" />
             <View style={styles.cartBadge}>
               <Text style={styles.cartBadgeText}>3</Text>

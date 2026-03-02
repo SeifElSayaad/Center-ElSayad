@@ -9,24 +9,24 @@ import { useAuth } from '../auth/AuthContext';
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 interface BottomNavProps {
-  activeTab: 'Home' | 'Categories' | 'Cart' | 'Profile';
+  activeTab: 'Home' | 'Categories' | 'Favorites' | 'Profile';
 }
 
 export default function BottomNav({ activeTab }: BottomNavProps) {
   const navigation = useNavigation<NavigationProp>();
   const { isLoggedIn } = useAuth();
 
-  const handlePress = (tabName: 'Home' | 'Categories' | 'Cart' | 'Profile') => {
+  const handlePress = (tabName: 'Home' | 'Categories' | 'Favorites' | 'Profile') => {
     if (tabName === activeTab) return;
 
     if (tabName === 'Home') {
       navigation.navigate('Home');
     } else if (tabName === 'Categories') {
-      navigation.navigate('Categories');
+      navigation.navigate('Categories', {});
     } else if (tabName === 'Profile') {
       navigation.navigate(isLoggedIn ? 'Profile' : 'Login');
-    } else if (tabName === 'Cart') {
-      // navigation.navigate('Cart');
+    } else if (tabName === 'Favorites') {
+      // TODO: Navigate to Favorites screen
     }
   };
 
@@ -35,7 +35,7 @@ export default function BottomNav({ activeTab }: BottomNavProps) {
       {[
         { key: 'Home' as const, icon: 'home', label: 'Home' },
         { key: 'Categories' as const, icon: 'grid-view', label: 'Categories' },
-        { key: 'Cart' as const, icon: 'shopping-cart', label: 'Cart' },
+        { key: 'Favorites' as const, icon: 'favorite-border', label: 'Favorites' },
         { key: 'Profile' as const, icon: 'person', label: 'Profile' },
       ].map((item) => (
         <TouchableOpacity
@@ -48,11 +48,6 @@ export default function BottomNav({ activeTab }: BottomNavProps) {
             size={26}
             color={activeTab === item.key ? '#db1f2f' : '#9ca3af'}
           />
-          {item.key === 'Cart' && (
-            <View style={styles.navBadge}>
-              <Text style={styles.navBadgeText}>2</Text>
-            </View>
-          )}
           <Text
             style={[
               styles.navLabel,

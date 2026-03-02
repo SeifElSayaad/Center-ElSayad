@@ -179,16 +179,11 @@ export default function ProductDetailsScreen() {
         {/* ── Attributes Row ── */}
         <View style={styles.attributesRow}>
           <View style={styles.attributeCard}>
-            <MaterialIcons name="straighten" size={24} color="#D32F2F" style={styles.attrIcon} />
-            <Text style={styles.attrLabel}>SIZE</Text>
-            <Text style={styles.attrValue}>A5 Standard</Text>
-          </View>
-          <View style={styles.attributeCard}>
             <MaterialIcons name="category" size={24} color="#D32F2F" style={styles.attrIcon} />
             <Text style={styles.attrLabel}>CATEGORY</Text>
             <Text style={styles.attrValue}>Stationery</Text>
           </View>
-        </View>
+        </View> 
 
         {/* ── User Reviews ── */}
         <View style={styles.section}>

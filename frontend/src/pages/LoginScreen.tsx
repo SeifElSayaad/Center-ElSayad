@@ -23,6 +23,7 @@ import { PasswordInput } from '../components/PasswordInput';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { ErrorBox } from '../components/ErrorBox';
 import { SocialButtons } from '../components/SocialButtons';
+import { AuthDivider } from '../components/AuthDivider';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -108,17 +109,12 @@ export default function LoginScreen() {
           />
 
           {/* Forgot Password */}
-          <TouchableOpacity style={styles.forgotBtn}>
+          <TouchableOpacity style={styles.forgotBtn} onPress={() => navigation.navigate('ForgotPassword')}>
             <Text style={styles.forgotText}>Forgot Password?</Text>
           </TouchableOpacity>
         </View>
 
-        {/* ── Divider ── */}
-        <View style={styles.dividerRow}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>or</Text>
-          <View style={styles.dividerLine} />
-        </View>
+        <AuthDivider />
 
         <SocialButtons textPrefix="Sign in" />
 
@@ -153,9 +149,6 @@ const styles = StyleSheet.create({
   form: { marginBottom: 24 },
   forgotBtn: { alignItems: 'center', marginTop: 12, paddingVertical: 4 },
   forgotText: { color: '#64748b', fontSize: 14, fontWeight: '500' },
-  dividerRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
-  dividerLine: { flex: 1, height: 1, backgroundColor: '#e2e8f0' },
-  dividerText: { marginHorizontal: 16, color: '#64748b', fontSize: 14, fontWeight: '500' },
   footer: { alignItems: 'center', gap: 16 },
   footerText: { color: '#64748b', fontSize: 14, fontWeight: '500' },
   signUpLink: { color: '#E31E24', fontWeight: '700' },

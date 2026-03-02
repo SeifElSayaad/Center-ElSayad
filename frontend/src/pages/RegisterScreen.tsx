@@ -23,6 +23,7 @@ import { PasswordInput } from '../components/PasswordInput';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { ErrorBox } from '../components/ErrorBox';
 import { SocialButtons } from '../components/SocialButtons';
+import { AuthDivider } from '../components/AuthDivider';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Register'>;
 
@@ -199,12 +200,7 @@ export default function RegisterScreen() {
           />
         </View>
 
-        {/* ── Divider ── */}
-        <View style={styles.dividerRow}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>Or continue with</Text>
-          <View style={styles.dividerLine} />
-        </View>
+        <AuthDivider label="Or continue with" />
 
         <SocialButtons textPrefix="Sign up" />
 
@@ -253,7 +249,6 @@ const styles = StyleSheet.create({
   termsLink: { color: '#E31E24', fontWeight: '700' },
   dividerRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
   dividerLine: { flex: 1, height: 1, backgroundColor: '#e2e8f0' },
-  dividerText: { marginHorizontal: 16, color: '#64748b', fontSize: 14, fontWeight: '500' },
   footer: { alignItems: 'center', marginBottom: 32 },
   footerText: { color: '#475569', fontSize: 15, fontWeight: '500' },
   logInLink: { color: '#E31E24', fontWeight: '700' },

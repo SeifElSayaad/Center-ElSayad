@@ -7,6 +7,9 @@ import RegisterScreen from '../pages/RegisterScreen';
 import ProfileScreen from '../pages/ProfileScreen';
 import CategoriesScreen from '../pages/CategoriesScreen';
 import ProductDetailsScreen from '../pages/ProductDetailsScreen';
+import ForgotPasswordScreen from '../pages/ForgotPasswordScreen';
+import CartScreen from '../pages/CartScreen';
+import CustomerOrderScreen from '../pages/CustomerOrderScreen';
 import { Product } from '../components/ProductCard';
 
 // ─── Route Types ──────────────────────────────────────────────────────────────
@@ -18,6 +21,9 @@ export type RootStackParamList = {
   Profile: undefined;
   Categories: { categoryName?: string };
   ProductDetails: { product: Product };
+  ForgotPassword: undefined;
+  Cart: undefined;
+  CustomerOrder: undefined;
 };
 
 // ─── Navigator ────────────────────────────────────────────────────────────────
@@ -36,6 +42,9 @@ export default function AppNavigator() {
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="Categories" component={CategoriesScreen} />
       <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+      <Stack.Screen name="Cart" component={CartScreen} />
+      <Stack.Screen name="CustomerOrder" component={CustomerOrderScreen} />
     </Stack.Navigator>
   );
 }
