@@ -121,8 +121,20 @@ docker exec -it elsayad-backend npx prisma generate
 
 Next we'll build:
 
-1. ✅ Database schema ← **You are here**
+1. ✅ Database schema
 2. 🔐 Authentication (JWT)
 3. 🛍️ Product & Category API
 4. 📦 Order management API
 5. 📱 React Native frontend
+6. 🔑 **Social Auth Credentials (Pending)**
+
+### Step 7: Social Auth Credentials (Pending)
+
+Before testing Google and Facebook sign-in on a real device, you need to set up OAuth keys:
+
+1. **Google Cloud Console** ([Go to console](https://console.cloud.google.com/apis/credentials)):
+   - Create Web, Android, and iOS Client IDs.
+   - Paste them into `frontend/src/components/SocialButtons.tsx`.
+2. **Facebook Developers** ([Go to console](https://developers.facebook.com/apps/)):
+   - Create an app with Facebook Login enabled.
+   - Paste the App ID into `frontend/src/components/SocialButtons.tsx`.

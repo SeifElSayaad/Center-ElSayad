@@ -202,7 +202,14 @@ export default function RegisterScreen() {
 
         <AuthDivider label="Or continue with" />
 
-        <SocialButtons textPrefix="Sign up" />
+        <SocialButtons
+          textPrefix="Sign up"
+          onSuccess={async ({ token, user }) => {
+            await signIn(token, user);
+            navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+          }}
+          onError={(msg) => setError(msg)}
+        />
 
         {/* ── Footer ── */}
         <View style={styles.footer}>

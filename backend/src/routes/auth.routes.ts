@@ -7,6 +7,7 @@ const router = Router();
 // Public routes
 router.post('/register', authController.registerB2C);
 router.post('/login',    authController.login);
+router.post('/social',   authController.socialLogin);
 
 // Protected routes (require valid JWT)
 router.post('/logout', requireAuth, authController.logout);

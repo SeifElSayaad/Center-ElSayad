@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import prisma from '../lib/prisma';
 import { signToken } from '../utils/jwt';
-import { RegisterB2CBody, LoginBody } from '../types/auth.types';
+import { RegisterB2CBody, LoginBody, SocialLoginBody } from '../types/auth.types';
 
 const SALT_ROUNDS = 12;
 
@@ -74,4 +74,71 @@ export async function getMe(userId: string) {
   }
 
   return excludePassword(user);
+}
+
+// ─── Social Login ─────────────────────────────────────────────────────────────
+
+interface SocialUserInfo {
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
+async function verifyGoogleToken(idToken: string): Promise<SocialUserInfo> {
+  const res = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`);
+  if (!res.ok) throw Object.assign(new Error('Invalid Google token'), { status: 401 });
+  const data: any = await res.json();
+  if (!data.email) throw Object.assign(new Error('Google token missing email'), { status: 401 });
+  return {
+    email: data.email,
+    firstName: data.given_name || data.email.split('@')[0],
+    lastName: data.family_name || '',
+  };
+}
+
+async function verifyFacebookToken(accessToken: string): Promise<SocialUserInfo> {
+  const res = await fetch(
+    `https://graph.facebook.com/me?fields=id,email,first_name,last_name&access_token=${accessToken}`
+  );
+  if (!res.ok) throw Object.assign(new Error('Invalid Facebook token'), { status: 401 });
+  const data: any = await res.json();
+  if (!data.email) throw Object.assign(new Error('Facebook token missing email'), { status: 401 });
+  return {
+    email: data.email,
+    firstName: data.first_name || data.email.split('@')[0],
+    lastName: data.last_name || '',
+  };
+}
+
+export async function socialLogin(body: SocialLoginBody) {
+  const { provider, idToken } = body;
+
+  // 1. Verify with provider
+  const info = provider === 'google'
+    ? await verifyGoogleToken(idToken)
+    : await verifyFacebookToken(idToken);
+
+  // 2. Find or create user
+  let user = await prisma.user.findUnique({ where: { email: info.email } });
+
+  if (!user) {
+    user = await prisma.user.create({
+      data: {
+        email: info.email,
+        firstName: info.firstName,
+        lastName: info.lastName,
+        authProvider: provider,
+        userType: 'B2C',
+      },
+    });
+  }
+
+  if (!user.isActive) {
+    throw Object.assign(new Error('Account is deactivated'), { status: 403 });
+  }
+
+  // 3. Issue JWT
+  const token = signToken({ userId: user.id, email: user.email, userType: user.userType });
+
+  return { token, user: excludePassword(user) };
 }

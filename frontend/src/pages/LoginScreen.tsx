@@ -116,7 +116,14 @@ export default function LoginScreen() {
 
         <AuthDivider />
 
-        <SocialButtons textPrefix="Sign in" />
+        <SocialButtons
+          textPrefix="Sign in"
+          onSuccess={async ({ token, user }) => {
+            await signIn(token, user);
+            navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+          }}
+          onError={(msg) => setError(msg)}
+        />
 
         {/* ── Footer ── */}
         <View style={styles.footer}>

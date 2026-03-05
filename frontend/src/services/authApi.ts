@@ -45,3 +45,15 @@ export async function login(data: LoginPayload): Promise<AuthResponse> {
   const response = await apiClient.post<AuthResponse>('/auth/login', data);
   return response.data;
 }
+
+// ─── Social Login ─────────────────────────────────────────────────────────────
+
+export interface SocialLoginPayload {
+  provider: 'google' | 'facebook';
+  idToken: string;
+}
+
+export async function socialLogin(data: SocialLoginPayload): Promise<AuthResponse> {
+  const response = await apiClient.post<AuthResponse>('/auth/social', data);
+  return response.data;
+}

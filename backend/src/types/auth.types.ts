@@ -17,6 +17,11 @@ export interface LoginBody {
   password: string;
 }
 
+export interface SocialLoginBody {
+  provider: 'google' | 'facebook';
+  idToken: string;                    // Google id_token or Facebook access_token
+}
+
 // ─── JWT ─────────────────────────────────────────────────────────────────────
 
 export interface JwtPayload {
