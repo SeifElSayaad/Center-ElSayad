@@ -71,17 +71,41 @@ services:
     container_name: elsayad-frontend
     ports:
       - "8081:8081"
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
     environment:
       - NODE_ENV=development
       # For Expo to work correctly inside Docker, it needs to bind to 0.0.0.0
       - EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
-      - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.109 # Change this to your machine's local IP (e.g., 192.168.1.x) to test on a physical device over Wi-Fi
+      - REACT_NATIVE_PACKAGER_HOSTNAME=localhost # Change this to your machine's local IP (e.g., 192.168.1.x) to test on a physical device over Wi-Fi
+    depends_on:
+      - backend
     volumes:
       - ./frontend:/app
       - /app/node_modules
     networks:
       - elsayad-network
     command: npm start
+
+  # Admin Panel (Vite + React)
+  admin-panel:
+    build:
+      context: ./admin-panel
+      dockerfile: Dockerfile
+    container_name: elsayad-admin-panel
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - backend
+    volumes:
+      - ./admin-panel:/app
+      - /app/node_modules
+    networks:
+      - elsayad-network
+    command: npm run dev -- --host 0.0.0.0
 
 # Volumes for persistent data
 volumes:

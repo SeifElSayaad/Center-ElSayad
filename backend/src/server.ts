@@ -7,6 +7,7 @@ import productRouter from './routes/product.routes';
 import categoryRouter from './routes/category.routes';
 import orderRouter from './routes/order.routes';
 import addressRouter from './routes/address.routes';
+import adminRouter from './routes/admin.routes';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use('/products', productRouter);
 app.use('/categories', categoryRouter);
 app.use('/orders', orderRouter);
 app.use('/addresses', addressRouter);
+app.use('/admin', adminRouter);
 
 // ─── Global Error Handler ─────────────────────────────────────────────────────
 

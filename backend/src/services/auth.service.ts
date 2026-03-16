@@ -19,7 +19,7 @@ export async function registerB2C(body: RegisterB2CBody) {
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
-    throw Object.assign(new Error('Email already in use'), { status: 409 });
+    throw Object.assign(new Error('Account with this email already exists'), { status: 409 });
   }
 
   const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
