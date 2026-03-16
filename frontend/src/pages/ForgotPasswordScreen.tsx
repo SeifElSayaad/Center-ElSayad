@@ -7,18 +7,43 @@ import {
   StyleSheet,
   StatusBar,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import ScreenHeader from '../components/ScreenHeader';
+import { forgotPassword } from '../services/authApi';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ForgotPassword'>;
 
 export default function ForgotPasswordScreen() {
   const navigation = useNavigation<NavigationProp>();
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSendCode() {
+    setError(null);
+
+    if (!email.trim()) {
+      setError('Please enter your email address.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await forgotPassword(email.trim());
+      navigation.navigate('ResetPassword', { email: email.trim() });
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.error ?? 'Something went wrong. Please try again.';
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <View style={styles.root}>
@@ -37,7 +62,7 @@ export default function ForgotPasswordScreen() {
         {/* ── Text ── */}
         <Text style={styles.heading}>Recover Access</Text>
         <Text style={styles.description}>
-          Enter your email and we'll send a link to reset your password.
+          Enter your email and we'll send a 6-digit code to reset your password.
         </Text>
 
         {/* ── Form ── */}
@@ -52,23 +77,33 @@ export default function ForgotPasswordScreen() {
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
+            editable={!loading}
           />
         </View>
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Send Reset Link</Text>
+        {/* ── Error ── */}
+        {error ? (
+          <View style={styles.errorBox}>
+            <MaterialIcons name="error-outline" size={16} color="#DC2626" />
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        ) : null}
+
+        <TouchableOpacity
+          style={[styles.button, loading && styles.buttonDisabled]}
+          onPress={handleSendCode}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#FFFFFF" />
+          ) : (
+            <Text style={styles.buttonText}>Send Reset Code</Text>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.loginLink} onPress={() => navigation.navigate('Login')}>
           <Text style={styles.loginLinkText}>Back to Login</Text>
         </TouchableOpacity>
-      </View>
-
-      {/* ── Footer ── */}
-      <View style={styles.footer}>
-        <View style={styles.line} />
-        <Text style={styles.brandText}>EL SAYAD CENTER</Text>
-        <View style={styles.line} />
       </View>
     </View>
   );
@@ -78,25 +113,6 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#F9F9FB',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 8,
-    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight ?? 24) + 8 : 52,
-    paddingBottom: 12,
-  },
-  backBtn: {
-    width: 44,
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#000000',
   },
   content: {
     flex: 1,
@@ -160,6 +176,22 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#000000',
   },
+  errorBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FEF2F2',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    width: '100%',
+    marginBottom: 16,
+    gap: 8,
+  },
+  errorText: {
+    color: '#DC2626',
+    fontSize: 13,
+    flex: 1,
+  },
   button: {
     width: '100%',
     backgroundColor: '#DC2626',
@@ -174,6 +206,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 4,
   },
+  buttonDisabled: {
+    opacity: 0.7,
+  },
   buttonText: {
     color: '#FFFFFF',
     fontSize: 16,
@@ -186,22 +221,5 @@ const styles = StyleSheet.create({
     color: '#DC2626',
     fontSize: 14,
     fontWeight: '600',
-  },
-  footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 40,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 24,
-  },
-  line: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#E5E7EB',
-  },
-  brandText: {
-    marginHorizontal: 12,
-    fontSize: 10,
-    color: '#9CA3AF',
-    letterSpacing: 1,
   },
 });

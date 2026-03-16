@@ -57,3 +57,23 @@ export async function socialLogin(data: SocialLoginPayload): Promise<AuthRespons
   const response = await apiClient.post<AuthResponse>('/auth/social', data);
   return response.data;
 }
+
+// ─── Forgot / Reset Password ──────────────────────────────────────────────────
+
+export async function forgotPassword(email: string): Promise<{ message: string }> {
+  const response = await apiClient.post<{ message: string }>('/auth/forgot-password', { email });
+  return response.data;
+}
+
+export async function resetPassword(
+  email: string,
+  code: string,
+  newPassword: string
+): Promise<{ message: string }> {
+  const response = await apiClient.post<{ message: string }>('/auth/reset-password', {
+    email,
+    code,
+    newPassword,
+  });
+  return response.data;
+}

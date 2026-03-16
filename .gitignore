@@ -143,3 +143,5 @@ vite.config.ts.timestamp-*
 
 # Expo
 .expo
+.specify
+.gemini

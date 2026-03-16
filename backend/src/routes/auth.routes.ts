@@ -8,6 +8,8 @@ const router = Router();
 router.post('/register', authController.registerB2C);
 router.post('/login',    authController.login);
 router.post('/social',   authController.socialLogin);
+router.post('/forgot-password', authController.forgotPassword);
+router.post('/reset-password',  authController.resetPassword);
 
 // Protected routes (require valid JWT)
 router.post('/logout', requireAuth, authController.logout);

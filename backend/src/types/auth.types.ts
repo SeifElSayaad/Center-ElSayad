@@ -22,6 +22,16 @@ export interface SocialLoginBody {
   idToken: string;                    // Google id_token or Facebook access_token
 }
 
+export interface ForgotPasswordBody {
+  email: string;
+}
+
+export interface ResetPasswordBody {
+  email: string;
+  code: string;
+  newPassword: string;
+}
+
 // ─── JWT ─────────────────────────────────────────────────────────────────────
 
 export interface JwtPayload {

@@ -52,3 +52,25 @@ export async function socialLogin(req: Request, res: Response, next: NextFunctio
     next(err);
   }
 }
+
+// ─── POST /auth/forgot-password ──────────────────────────────────────────────
+
+export async function forgotPassword(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await authService.forgotPassword(req.body);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
+// ─── POST /auth/reset-password ───────────────────────────────────────────────
+
+export async function resetPassword(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = await authService.resetPassword(req.body);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+}

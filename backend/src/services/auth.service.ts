@@ -1,13 +1,13 @@
 import bcrypt from 'bcrypt';
 import prisma from '../lib/prisma';
 import { signToken } from '../utils/jwt';
-import { RegisterB2CBody, LoginBody, SocialLoginBody } from '../types/auth.types';
+import { RegisterB2CBody, LoginBody, SocialLoginBody, ForgotPasswordBody, ResetPasswordBody } from '../types/auth.types';
 
 const SALT_ROUNDS = 12;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function excludePassword<T extends { passwordHash: string }>(user: T) {
+function excludePassword<T extends { passwordHash: string | null }>(user: T) {
   const { passwordHash: _, ...safe } = user;
   return safe;
 }
@@ -49,6 +49,10 @@ export async function login(body: LoginBody) {
 
   if (!user.isActive) {
     throw Object.assign(new Error('Account is deactivated'), { status: 403 });
+  }
+
+  if (!user.passwordHash) {
+    throw Object.assign(new Error('Invalid email or password. Please use social login if you registered with an external provider.'), { status: 401 });
   }
 
   const passwordMatch = await bcrypt.compare(password, user.passwordHash);
@@ -141,4 +145,81 @@ export async function socialLogin(body: SocialLoginBody) {
   const token = signToken({ userId: user.id, email: user.email, userType: user.userType });
 
   return { token, user: excludePassword(user) };
+}
+
+// ─── Forgot Password ──────────────────────────────────────────────────────────
+
+export async function forgotPassword(body: ForgotPasswordBody) {
+  const { email } = body;
+
+  const user = await prisma.user.findUnique({ where: { email } });
+
+  // Always return success to prevent email enumeration
+  if (!user) {
+    return { message: 'If that email exists, a reset code has been sent.' };
+  }
+
+  // Generate 6-digit OTP
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+  // Expire in 15 minutes
+  const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+  // Invalidate any existing unused codes for this user
+  await prisma.passwordReset.updateMany({
+    where: { userId: user.id, used: false },
+    data: { used: true },
+  });
+
+  // Create new reset record
+  await prisma.passwordReset.create({
+    data: { userId: user.id, code, expiresAt },
+  });
+
+  // TODO: Replace with real email service (SendGrid, Resend, etc.)
+  console.log(`\n🔑 Password reset code for ${email}: ${code}\n`);
+
+  return { message: 'If that email exists, a reset code has been sent.' };
+}
+
+// ─── Reset Password ───────────────────────────────────────────────────────────
+
+export async function resetPassword(body: ResetPasswordBody) {
+  const { email, code, newPassword } = body;
+
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
+    throw Object.assign(new Error('Invalid email or reset code'), { status: 400 });
+  }
+
+  // Find valid, unused, non-expired code
+  const resetRecord = await prisma.passwordReset.findFirst({
+    where: {
+      userId: user.id,
+      code,
+      used: false,
+      expiresAt: { gt: new Date() },
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  if (!resetRecord) {
+    throw Object.assign(new Error('Invalid or expired reset code'), { status: 400 });
+  }
+
+  // Hash new password and update user
+  const passwordHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: user.id },
+      data: { passwordHash },
+    }),
+    prisma.passwordReset.update({
+      where: { id: resetRecord.id },
+      data: { used: true },
+    }),
+  ]);
+
+  return { message: 'Password has been reset successfully.' };
 }
