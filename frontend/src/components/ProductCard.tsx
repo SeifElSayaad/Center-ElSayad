@@ -2,15 +2,9 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export interface Product {
-  id: string;
-  name: string;
-  brand: string;
-  price: string;
-  originalPrice?: string;
-  image: string;
-  sale?: boolean;
-}
+import { Product } from '../store/productStore';
+
+export type { Product };
 
 interface ProductCardProps {
   product: Product;
@@ -28,13 +22,13 @@ export default function ProductCard({
   return (
     <View style={[styles.productCard, containerStyle]}>
       <View style={styles.imageContainer}>
-        {product.sale && (
+        {product.isFeatured && (
           <View style={styles.saleBadge}>
-            <Text style={styles.saleBadgeText}>SALE</Text>
+            <Text style={styles.saleBadgeText}>HOT</Text>
           </View>
         )}
         <Image
-          source={{ uri: product.image }}
+          source={{ uri: product.images?.[0]?.url || 'https://placehold.co/400x400?text=No+Image' }}
           style={styles.productImage}
           resizeMode="cover"
         />
@@ -48,15 +42,12 @@ export default function ProductCard({
       </View>
       
       <View style={styles.productInfo}>
-        <Text style={styles.productBrand}>{product.brand}</Text>
+        <Text style={styles.productBrand}>Center-ElSayad</Text>
         <Text style={styles.productName} numberOfLines={2}>{product.name}</Text>
         
         <View style={styles.productFooter}>
           <View>
-            {product.originalPrice && (
-              <Text style={styles.originalPrice}>{product.originalPrice}</Text>
-            )}
-            <Text style={styles.productPrice}>{product.price}</Text>
+            <Text style={styles.productPrice}>EGP {product.retailPrice.toFixed(2)}</Text>
           </View>
           <TouchableOpacity 
             style={styles.addBtn}

@@ -19,65 +19,14 @@ import { RootStackParamList } from '../navigation/AppNavigator';
 import BottomNav from '../components/BottomNav';
 import SearchBar from '../components/SearchBar';
 import ProductCard from '../components/ProductCard';
+import { useCategoryStore } from '../store/categoryStore';
+import { useProductStore } from '../store/productStore';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
-const FILTERS = ['All', 'Notebooks', 'Pens & Pencils', 'Organizers', 'Paper'];
-
-const PRODUCTS = [
-  {
-    id: '1',
-    name: 'Premium Hardcover Notebook, A5 Black',
-    brand: 'Stationery Co.',
-    price: '$18.99',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCbLfZuoEzdjeSNlgWTj4u61KpPPSBZ9e8TjFK8kAvzWSbKwxGKzfBdqBCg6QXF2n3D2ddRcKUHP8E-X7XBrrHq16EBnbWQXmORn3Vhp5-Ijg2L8TqSM9bdyShmKR1nuQjhV3BhTqgDeLh8t66qmZDetcYhQgFaxfwif5lDpZHw6xTQ0qw9E_zAYRPuGlnA2LT1IYXvsJ5BIXGv4cx68xwgR3rmRniV1wH6zWKCY_QMSdyTb9X4cYfpeHWTjdcsbov_Kp1PA4DZ2iw',
-    favorite: false,
-  },
-  {
-    id: '2',
-    name: 'Gel Pen Set, 12 Colors Fine Point',
-    brand: 'ArtMate',
-    price: '$12.50',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCV4ZA4kw3-vwhsIfrvMJHbMFOa-kaxrZXJIN6KfG1JI2DWyrfZDNeJW-TJEMh2JkOPT2XJg4ULupZJaaf8QEvADXsAzhgP6kld3KEJygMZMVxDh2tfPm2aAB0gR_cK5exz05fchQKI8yQcGS8N6gS-WQHYr5gK_KUT8sv7vtLo2cm3zp3YvOz7-C_vPVXDcKDGN5AdED2kQHIWVlwKiBzT7QR6hoW8O_WI2KfEN5wiOLjRtpJU4r_Fhzf4H2qmC7CxbTtRscK9RlA',
-    favorite: false,
-  },
-  {
-    id: '3',
-    name: 'Urban Commuter Backpack, 20L Grey',
-    brand: 'TravelGear',
-    price: '$45.00',
-    originalPrice: '$55.00',
-    sale: true,
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDf82Hb6ZDUt8XcojDPZPxyEPgljt-A29SLU_0efiYUU0SHJ05Vm3sxL7ZkMcQaNMTPOahj4H9KYVdtcyIM6KoltYimhv7U78Wr9cKw7v6Z0DOIQ5_RW8dg8Jjue2YTEcPbFtJyii_HJ_QevX2Z5l7fel-xazDfhrQuJyEVC6Nra6xSFVF6RdxygirBx8WSmk1WWgLdPTi_hG6ZDZ9NWtP0bcWxbg_S30wnO7xjOKAWMC-4GqUhe65xdX5QPXl8nTnuMqbI4saUpfA',
-    favorite: false,
-  },
-  {
-    id: '4',
-    name: 'Mesh Desk Organizer Set, Silver',
-    brand: 'OfficePro',
-    price: '$24.99',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDLwCvxkNVQ_jbvzYvYfLJWuwfrYFZK18oj5ZJi-jRh3WbcyGehmQlh_E8egvu7ehIxlr85S_mes-r-UAwrkKsDCiI6Zh41e6T1B5u8UKX9U177JexsVNhbTym5GplxOhiVHOMbJ0-aslY-D3hvxQ7OL3WKmC63e1rc2d0968Ex3pMxuJupcXeOtPsflSaP2T3Vai1IGN61eJgbqX8Fu6dtPqsegcue2gJGR-oxztLF1H66ixfBOqE_HhbSsCLk4uL9le7RyHGyv5E',
-    favorite: false,
-  },
-  {
-    id: '5',
-    name: 'Heavy Duty Stapler, 50 Sheets',
-    brand: 'OfficePro',
-    price: '$15.49',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB0rjggE6qb38V0ERe34RzRQx-suKJvOeLcGKcvL3f9e_au0ERHNKIk0Y-BZ5ddQHyCvSxkJ2-2UQUi0vGaXGehi0zvrvm3wtKOWPIVHe8WBBOcaTlx7f8H7lwHivGzWySi67GnlfhkvQ81NcA7MKo6tsYUSvT5jv0DB1hKzeT2J2-GqjAtHnBY0YzF-dgXnn-cKhDAVkwjtoeYv4yNwq5UluCE3a9GJSF44t_3mrNyY3KFhyOZ9ppPGNPWpe3n8c1lAHVNUbbYXq0',
-    favorite: false,
-  },
-  {
-    id: '6',
-    name: 'Sticky Notes Value Pack, 12 Pads',
-    brand: 'PaperMate',
-    price: '$8.99',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDcwHXp1DL-o5WTwMch9N1DGPyO6cg-72PiW0ctiVw-4HvqwIPUGQ3qeesYNLaN60w8ke7dpcI8RgRTNS6RVvttzG4jqYky0Y_5Kocatl-SLxqMBdAxBL6BtpBF9diFBekj2M8xzsUoQbkmOGAzmxfXgUheNaXTtXWmEvPiArv5v_HHU7Y9DyqsLyZ97-rB4n2fRzljES04vkelXRRJWuSy1CS5N_LEtrcn24YdA3ZX8xhWULpT0uIfErz3ETgEMAnsIKZbuxFgqnA',
-    favorite: false,
-  },
-];
+// Removed static FILTERS and PRODUCTS
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -89,9 +38,23 @@ export default function CategoriesScreen() {
   const route = useRoute<CategoriesRouteProp>();
   const categoryName = route.params?.categoryName ?? 'All Products';
 
-  // Seed the active filter from the selected category if it matches a pill
-  const matchedFilter = FILTERS.find((f) => categoryName.includes(f)) ?? 'All';
+  const { categories, fetchCategories } = useCategoryStore();
+  const { products, fetchProducts, isLoading } = useProductStore();
+
+  React.useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // Update filter logic when the list of categories is ready
+  const filters = ['All', ...categories.map(c => c.name)];
+  const matchedFilter = filters.find((f) => categoryName.includes(f)) ?? 'All';
   const [activeFilter, setActiveFilter] = useState(matchedFilter);
+
+  React.useEffect(() => {
+    // If "All", pass no category filter, otherwise pass the category id
+    const c = categories.find(cat => cat.name === activeFilter);
+    fetchProducts(c ? { category: c.id } : {});
+  }, [activeFilter, categories]);
 
   return (
     <View style={styles.root}>
@@ -139,7 +102,7 @@ export default function CategoriesScreen() {
           style={styles.filterScroll}
           contentContainerStyle={styles.filterContent}
         >
-          {FILTERS.map((item) => (
+          {filters.map((item) => (
             <TouchableOpacity 
               key={item} 
               style={[
@@ -191,18 +154,19 @@ export default function CategoriesScreen() {
 
         {/* ── Product Grid ── */}
         <View style={styles.productGrid}>
-          {PRODUCTS.map((product) => (
-            <TouchableOpacity
-              key={product.id}
-              activeOpacity={0.85}
-              onPress={() => navigation.navigate('ProductDetails', { product })}
-            >
-              <ProductCard
-                product={product}
-                containerStyle={{ width: (SCREEN_WIDTH - 32 - 12) / 2 }}
-              />
-            </TouchableOpacity>
-          ))}
+            {isLoading ? <Text style={{ padding: 16 }}>Loading products...</Text> : products.map((product) => (
+              <TouchableOpacity
+                key={product.id}
+                activeOpacity={0.85}
+                onPress={() => navigation.navigate('ProductDetails', { product })}
+              >
+                <ProductCard
+                  product={product as any}
+                  containerStyle={{ width: (SCREEN_WIDTH - 32 - 12) / 2 }}
+                />
+              </TouchableOpacity>
+            ))}
+            {!isLoading && products.length === 0 && <Text style={{ padding: 16 }}>No products found.</Text>}
         </View>
 
       </ScrollView>

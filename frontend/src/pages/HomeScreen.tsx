@@ -18,7 +18,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import BottomNav from '../components/BottomNav';
 import SearchBar from '../components/SearchBar';
-import ProductCard, { Product } from '../components/ProductCard';
+import ProductCard from '../components/ProductCard';
+import { useCategoryStore } from '../store/categoryStore';
+import { useProductStore } from '../store/productStore';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -45,43 +47,19 @@ const BANNERS = [
   },
 ];
 
-const CATEGORIES = [
-  { id: '1', icon: 'business-center', label: 'Office\nSupplies', lib: 'material' },
-  { id: '2', icon: 'school', label: 'School\nSupplies', lib: 'material' },
-  { id: '3', icon: 'menu-book', label: 'Books\n& Novels', lib: 'material' },
-  { id: '4', icon: 'toys', label: 'Toys\n& Games', lib: 'material' },
-];
-
-const PRODUCTS = [
-  {
-    id: '1',
-    name: 'Vector Gold Trim Rollerball Pen',
-    brand: 'PARKER',
-    price: '$45.00',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCjY1Rl4QUSHC7tdJN1TrTlyU111pyR4bmJvZMAZ-RACDRDEo_UzHoic26QNK436wrDYWzPK80f7Qas0fL9vSHGPpfmanz524Qs_jrdvhCb9yNLJ1BIc6ksqhQ7g8mzAdjcg0_pKaQ_LAapqHMhomyhtIWpNKa_SrEsIlKj84UNEXwbtxhV5Ob3cyOLmIpeh4jytANdN3YyEB5eIV-upOCYkiYgy_WfBaaBJTdN8DDKi6DRk-63AZfbWx0_VFGMyzP4_DTolJwlmH0',
-  },
-  {
-    id: '2',
-    name: 'Hard Cover Classic Notebook - L',
-    brand: 'MOLESKINE',
-    price: '$22.50',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuANHTvG-Sla_vBnsGx2ClDeDAGGqK38AUxPh_zb36qKKpmtQ3FdMq2LjThBxXqhILVTIQOGBgDBzt1LGcRu4wYoix0rwKaIaLgi_7stEy2qhdKPyN3ltEGTGG5CJni8NiJH97UYRvJ1z6ESKQESM4omfaVbxHe9_UCDtjcpvQ6bLgArCUXxLkg1-0bH-8C1NGTm0UimRj_zVoQdhCPWTa8nzLmGyvrnySCPsStVqdkQ--cqAx3KuYasvOuY4uw1Uixvtxu1FQNunas',
-  },
-  {
-    id: '3',
-    name: 'FX-991EX Scientific Classwiz',
-    brand: 'CASIO',
-    price: '$38.00',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAVBpUfLsix3-ZeR4TUkwCqTg4WsgjdJSyqXvF34CTPAw8cOjHfWvHaKOniVBdNFsVS1qSJh8bqTFM6f7RWAXfGgelKA0QQ7TmSjhtTqPe9vd0mZU2Ol-Q7X9uxmDC6YENgrzm1v9ftvcqr_vIV8yBXiyMg3m1I9NLorE0MEGQR0j6HXZ9RDY9buSTOwscvVmkUvlP3WDxiBE8_tTm_gEMxWP8gpaT8KRQ-7QKQ_awW5ioT2Aqrwe8Bg4lRg_asHNDYTZ0NSS3RiT8',
-  },
-];
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 export default function HomeScreen() {
   const navigation = useNavigation<NavigationProp>();
+  const { categories, fetchCategories } = useCategoryStore();
+  const { featuredProducts, fetchFeaturedProducts } = useProductStore();
+
+  React.useEffect(() => {
+    fetchCategories();
+    fetchFeaturedProducts();
+  }, []);
 
   return (
     <View style={styles.root}>
@@ -165,18 +143,29 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
           <View style={styles.categoryGrid}>
-            {CATEGORIES.map((cat) => (
-              <TouchableOpacity 
-                key={cat.id} 
-                style={styles.categoryItem}
-              onPress={() => navigation.navigate('Categories', { categoryName: cat.label.replace('\n', ' ') })}
-              >
-                <View style={styles.categoryIconBox}>
-                  <MaterialIcons name={cat.icon as any} size={32} color="#db1f2f" />
-                </View>
-                <Text style={styles.categoryLabel}>{cat.label}</Text>
-              </TouchableOpacity>
-            ))}
+            {categories.slice(0, 4).map((cat) => {
+              // Map category names to material icons just for nice visual
+              const iconMap: Record<string, any> = {
+                'Office Supplies': 'business-center',
+                'School Supplies': 'school',
+                'Educational Books': 'menu-book',
+                'Toys & Games': 'toys'
+              };
+              const iconName = iconMap[cat.name] || 'category';
+              
+              return (
+                <TouchableOpacity 
+                  key={cat.id} 
+                  style={styles.categoryItem}
+                  onPress={() => navigation.navigate('Categories', { categoryName: cat.name })}
+                >
+                  <View style={styles.categoryIconBox}>
+                    <MaterialIcons name={iconName} size={32} color="#db1f2f" />
+                  </View>
+                  <Text style={styles.categoryLabel}>{cat.name.replace(' ', '\n')}</Text>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
 
@@ -198,18 +187,18 @@ export default function HomeScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.productsRow}
           >
-            {PRODUCTS.map((product) => (
+            {featuredProducts.length > 0 ? featuredProducts.map((product) => (
               <TouchableOpacity
                 key={product.id}
                 activeOpacity={0.85}
                 onPress={() => navigation.navigate('ProductDetails', { product })}
               >
                 <ProductCard
-                  product={product}
+                  product={product as any}
                   containerStyle={{ width: 155 }}
                 />
               </TouchableOpacity>
-            ))}
+            )) : <Text style={{ padding: 16 }}>Loading featured products...</Text>}
           </ScrollView>
         </View>
 

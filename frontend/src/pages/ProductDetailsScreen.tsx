@@ -57,9 +57,8 @@ export default function ProductDetailsScreen() {
   const incrementQty = () => setSelectedQty(prev => prev + 1);
   const decrementQty = () => setSelectedQty(prev => (prev > 1 ? prev - 1 : 1));
 
-  // Extract numeric price for total calculation
-  const numericPrice = parseFloat(product.price.replace(/[^0-9.]/g, '')) || 0;
-  const totalPrice = (numericPrice * selectedQty).toFixed(2);
+  // Calculate total price
+  const totalPrice = (product.retailPrice * selectedQty).toFixed(2);
 
   return (
     <View style={styles.root}>
@@ -111,7 +110,7 @@ export default function ProductDetailsScreen() {
         <View style={styles.imageContainer}>
           <View style={styles.imageWrapper}>
             <Image
-              source={{ uri: product.image }}
+              source={{ uri: product.images?.[0]?.url || 'https://placehold.co/400x400?text=No+Image' }}
               style={styles.productImage}
               resizeMode="contain"
             />
@@ -126,7 +125,7 @@ export default function ProductDetailsScreen() {
 
         {/* ── Product Info ── */}
         <View style={styles.infoSection}>
-          <Text style={styles.brandText}>{product.brand || 'PREMIUM COLLECTION'}</Text>
+          <Text style={styles.brandText}>{'PREMIUM COLLECTION'}</Text>
           
           <View style={styles.titleRow}>
             <Text style={styles.productName}>{product.name}</Text>

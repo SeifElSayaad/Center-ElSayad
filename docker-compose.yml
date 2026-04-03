@@ -61,7 +61,7 @@ services:
       - /app/node_modules
     networks:
       - elsayad-network
-    command: sh -c "npx prisma generate && npx prisma studio --port 5555 --browser none"
+    command: sh -c "npx prisma generate && HOST=0.0.0.0 npx prisma studio --port 5555 --browser none"
 
   # Frontend App (Expo React Native)
   frontend:

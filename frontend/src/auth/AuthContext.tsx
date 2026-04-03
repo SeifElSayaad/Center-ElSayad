@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { authStorage } from './storage';
 import { AuthUser } from '../services/authApi';
+import { useCartStore } from '../store/cartStore';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -43,6 +44,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           token: stored,
           user: null, // We don't persist the user object (could be added later)
         });
+        if (stored) {
+          useCartStore.getState().fetchCart();
+        }
       } catch {
         setState({ isLoading: false, isLoggedIn: false, token: null, user: null });
       }
@@ -52,11 +56,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function signIn(token: string, user: AuthUser) {
     await authStorage.saveToken(token);
     setState({ isLoading: false, isLoggedIn: true, token, user });
+    useCartStore.getState().fetchCart();
   }
 
   async function signOut() {
     await authStorage.removeToken();
     setState({ isLoading: false, isLoggedIn: false, token: null, user: null });
+    useCartStore.setState({ items: [] }); // Clear local cart only
   }
 
   return (

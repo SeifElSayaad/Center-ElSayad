@@ -1,6 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
@@ -19,7 +22,6 @@ async function main() {
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
   await prisma.address.deleteMany();
-  await prisma.b2BProfile.deleteMany();
   await prisma.adminProfile.deleteMany();
   await prisma.user.deleteMany();
   await prisma.storeSetting.deleteMany();
@@ -34,7 +36,6 @@ async function main() {
       storeName: 'Center-ElSayad',
       contactEmail: 'info@center-elsayad.com',
       contactPhone: '+20 100 000 0000',
-      b2bDiscountPercent: 20.0,
       shippingFlatRate: 50.0,
       freeShippingThreshold: 500.0,
       taxPercent: 14.0,
@@ -85,7 +86,7 @@ async function main() {
     },
   });
 
-  // B2B Customer (Approved)
+  // B2B Customer (Approved) -> Converted to B2C
   const b2bUser = await prisma.user.create({
     data: {
       email: 'store@example.com',
@@ -93,19 +94,7 @@ async function main() {
       firstName: 'Mohamed',
       lastName: 'Ali',
       phone: '+20 100 000 0003',
-      userType: 'B2B',
-      b2bProfile: {
-        create: {
-          businessName: 'Ali Stationery Store',
-          taxId: 'TAX-123456789',
-          businessAddress: '7 Nasr City, Cairo, Egypt',
-          contactPerson: 'Mohamed Ali',
-          status: 'APPROVED',
-          discountPercent: 20.0,
-          reviewedBy: superAdmin.id,
-          reviewedAt: new Date(),
-        },
-      },
+      userType: 'B2C',
       addresses: {
         create: {
           label: 'Store',
@@ -170,135 +159,80 @@ async function main() {
   // ─────────────────────────────────────────────
   // PRODUCTS
   // ─────────────────────────────────────────────
-  const products = await Promise.all([
+  const dummyProductsData = [
     // Office Supplies
-    prisma.product.create({
-      data: {
-        categoryId: officeSupplies.id,
-        name: 'Heavy Duty Stapler',
-        slug: 'heavy-duty-stapler',
-        description: 'Professional stapler, handles up to 50 sheets. Ideal for office use.',
-        retailPrice: 120.00,
-        stockQuantity: 85,
-        isFeatured: true,
-        images: { create: [{ url: 'https://placehold.co/400x400?text=Stapler', sortOrder: 0 }] },
-      },
-    }),
-    prisma.product.create({
-      data: {
-        categoryId: officeSupplies.id,
-        name: 'Whiteboard Markers Set (12 Colors)',
-        slug: 'whiteboard-markers-12-colors',
-        description: 'Dry-erase markers in 12 vibrant colors. Low odor formula.',
-        retailPrice: 85.00,
-        stockQuantity: 200,
-        isFeatured: false,
-        images: { create: [{ url: 'https://placehold.co/400x400?text=Markers', sortOrder: 0 }] },
-      },
-    }),
-    prisma.product.create({
-      data: {
-        categoryId: officeSupplies.id,
-        name: 'A4 Copy Paper (500 Sheets)',
-        slug: 'a4-copy-paper-500',
-        description: '80 gsm A4 white copy paper, suitable for all printers and copiers.',
-        retailPrice: 65.00,
-        stockQuantity: 500,
-        isFeatured: true,
-        images: { create: [{ url: 'https://placehold.co/400x400?text=A4+Paper', sortOrder: 0 }] },
-      },
-    }),
+    { categoryId: officeSupplies.id, name: 'Heavy Duty Stapler', desc: 'Professional stapler, handles up to 50 sheets.', price: 120, stock: 85, feat: true },
+    { categoryId: officeSupplies.id, name: 'Whiteboard Markers Set', desc: '12 vibrant colors. Low odor.', price: 85, stock: 200, feat: false },
+    { categoryId: officeSupplies.id, name: 'A4 Copy Paper (500 Sheets)', desc: '80 gsm A4 white copy paper.', price: 65, stock: 500, feat: true },
+    { categoryId: officeSupplies.id, name: 'Ergonomic Office Chair', desc: 'Lumbar support and breathable mesh.', price: 2500, stock: 25, feat: true },
+    { categoryId: officeSupplies.id, name: 'Wireless Ergonomic Mouse', desc: 'Reduces wrist strain. Long battery life.', price: 450, stock: 60, feat: false },
+    { categoryId: officeSupplies.id, name: 'Mechanical Keyboard (Brown Switches)', desc: 'Tactile feel for typing productivity.', price: 1200, stock: 40, feat: false },
+    { categoryId: officeSupplies.id, name: 'Desk Organizer Mesh', desc: 'Keep your pens and clips sorted.', price: 120, stock: 150, feat: false },
+    { categoryId: officeSupplies.id, name: 'File Cabinet (3 Drawers)', desc: 'Lockable metal filing cabinet.', price: 1800, stock: 15, feat: false },
+    { categoryId: officeSupplies.id, name: 'Gel Pen Pack (10 Black)', desc: 'Smooth writing gel pens.', price: 50, stock: 300, feat: false },
+    { categoryId: officeSupplies.id, name: 'Correction Fluid (3 Pack)', desc: 'Fast drying white-out.', price: 45, stock: 250, feat: false },
 
     // School Supplies
-    prisma.product.create({
-      data: {
-        categoryId: schoolSupplies.id,
-        name: 'A4 Spiral Notebook (200 Pages)',
-        slug: 'a4-spiral-notebook-200-pages',
-        description: 'Durable spiral-bound notebook with 200 ruled pages. Perfect for students.',
-        retailPrice: 35.00,
-        stockQuantity: 350,
-        isFeatured: true,
-        images: { create: [{ url: 'https://placehold.co/400x400?text=Notebook', sortOrder: 0 }] },
-      },
-    }),
-    prisma.product.create({
-      data: {
-        categoryId: schoolSupplies.id,
-        name: 'Colored Pencils Set (24 Colors)',
-        slug: 'colored-pencils-24-colors',
-        description: 'High-quality colored pencils with smooth, vibrant pigments.',
-        retailPrice: 45.00,
-        stockQuantity: 180,
-        isFeatured: false,
-        images: { create: [{ url: 'https://placehold.co/400x400?text=Pencils', sortOrder: 0 }] },
-      },
-    }),
-    prisma.product.create({
-      data: {
-        categoryId: schoolSupplies.id,
-        name: 'Clear Ruler 30cm',
-        slug: 'clear-ruler-30cm',
-        description: 'Transparent ruler with metric and imperial markings.',
-        retailPrice: 10.00,
-        stockQuantity: 400,
-        isFeatured: false,
-        images: { create: [{ url: 'https://placehold.co/400x400?text=Ruler', sortOrder: 0 }] },
-      },
-    }),
+    { categoryId: schoolSupplies.id, name: 'A4 Spiral Notebook (200 Pages)', desc: 'Durable notebook for students.', price: 35, stock: 350, feat: true },
+    { categoryId: schoolSupplies.id, name: 'Colored Pencils Set (24)', desc: 'High-quality pigments.', price: 45, stock: 180, feat: false },
+    { categoryId: schoolSupplies.id, name: 'Clear Ruler 30cm', desc: 'Transparent ruler with metric markings.', price: 10, stock: 400, feat: false },
+    { categoryId: schoolSupplies.id, name: 'Scientific Calculator classwiz', desc: 'advanced functions for high school.', price: 550, stock: 120, feat: true },
+    { categoryId: schoolSupplies.id, name: 'Geometry Set', desc: 'Compass, protractor, and rulers in a tin case.', price: 85, stock: 200, feat: false },
+    { categoryId: schoolSupplies.id, name: 'Highlighter Pack (5 Colors)', desc: 'Chisel tip fluorescent highlighters.', price: 60, stock: 320, feat: false },
+    { categoryId: schoolSupplies.id, name: 'Eraser Set (4 Pack)', desc: 'Dust-free soft erasers.', price: 20, stock: 500, feat: false },
+    { categoryId: schoolSupplies.id, name: 'Pencil Case (Large Capacity)', desc: 'Multiple compartments for all stationery.', price: 150, stock: 90, feat: true },
+    { categoryId: schoolSupplies.id, name: 'Sticky Notes (Neon Colors)', desc: '3x3 inch, 4 pads.', price: 40, stock: 450, feat: false },
+    { categoryId: schoolSupplies.id, name: 'Backpack (Water Resistant)', desc: 'Spacious compartments for books and laptops.', price: 650, stock: 50, feat: true },
 
     // Educational Books
-    prisma.product.create({
-      data: {
-        categoryId: educationalBooks.id,
-        name: 'Mathematics Workbook - Grade 5',
-        slug: 'mathematics-workbook-grade-5',
-        description: 'Comprehensive math workbook covering all Grade 5 topics.',
-        retailPrice: 95.00,
-        stockQuantity: 120,
-        isFeatured: true,
-        images: { create: [{ url: 'https://placehold.co/400x400?text=Math+Book', sortOrder: 0 }] },
-      },
-    }),
-    prisma.product.create({
-      data: {
-        categoryId: educationalBooks.id,
-        name: 'Arabic Language Workbook - Grade 3',
-        slug: 'arabic-language-workbook-grade-3',
-        description: 'Arabic grammar and writing workbook for Grade 3 students.',
-        retailPrice: 80.00,
-        stockQuantity: 95,
-        isFeatured: false,
-        images: { create: [{ url: 'https://placehold.co/400x400?text=Arabic+Book', sortOrder: 0 }] },
-      },
-    }),
+    { categoryId: educationalBooks.id, name: 'Mathematics Workbook - Grade 5', desc: 'Comprehensive math exercises.', price: 95, stock: 120, feat: true },
+    { categoryId: educationalBooks.id, name: 'Arabic Language Workbook - Grade 3', desc: 'Arabic grammar and writing.', price: 80, stock: 95, feat: false },
+    { categoryId: educationalBooks.id, name: 'Physics For Beginners', desc: 'An introductory guide to classical mechanics.', price: 150, stock: 70, feat: true },
+    { categoryId: educationalBooks.id, name: 'World History Atlas', desc: 'Detailed maps and historical events.', price: 220, stock: 45, feat: false },
+    { categoryId: educationalBooks.id, name: 'English Grammar in Use', desc: 'Self-study reference and practice book.', price: 300, stock: 65, feat: true },
+    { categoryId: educationalBooks.id, name: 'Biology Fundamentals', desc: 'Cellular biology and genetics explained.', price: 180, stock: 80, feat: false },
+    { categoryId: educationalBooks.id, name: 'Periodic Table Poster', desc: 'Laminated large periodic table.', price: 50, stock: 150, feat: false },
+    { categoryId: educationalBooks.id, name: 'French Dictionary', desc: 'French-English translation dictionary.', price: 120, stock: 110, feat: false },
+    { categoryId: educationalBooks.id, name: 'Programming in Python 101', desc: 'Learn algorithms and data structures.', price: 250, stock: 55, feat: true },
+    { categoryId: educationalBooks.id, name: 'Art History Overview', desc: 'From Renaissance to Modern Art.', price: 280, stock: 30, feat: false },
 
     // Toys & Games
-    prisma.product.create({
-      data: {
-        categoryId: toysGames.id,
-        name: 'Wooden Building Blocks (100 Pieces)',
-        slug: 'wooden-building-blocks-100-pieces',
-        description: 'Natural wood blocks in various shapes. Develops creativity. Ages 3+.',
-        retailPrice: 250.00,
-        stockQuantity: 60,
-        isFeatured: true,
-        images: { create: [{ url: 'https://placehold.co/400x400?text=Blocks', sortOrder: 0 }] },
-      },
-    }),
-    prisma.product.create({
-      data: {
-        categoryId: toysGames.id,
-        name: 'Educational Puzzle - World Map (100 Pieces)',
-        slug: 'educational-puzzle-world-map',
-        description: 'Colorful world map jigsaw puzzle with country names. Ages 6+.',
-        retailPrice: 180.00,
-        stockQuantity: 75,
-        isFeatured: true,
-        images: { create: [{ url: 'https://placehold.co/400x400?text=Puzzle', sortOrder: 0 }] },
-      },
-    }),
-  ]);
+    { categoryId: toysGames.id, name: 'Wooden Building Blocks (100 Pcs)', desc: 'Natural wood blocks. Ages 3+.', price: 250, stock: 60, feat: true },
+    { categoryId: toysGames.id, name: 'Educational Puzzle - World Map', desc: 'Colorful world map jigsaw puzzle.', price: 180, stock: 75, feat: true },
+    { categoryId: toysGames.id, name: 'Rubik\'s Cube 3x3', desc: 'Classic color-matching puzzle.', price: 90, stock: 140, feat: false },
+    { categoryId: toysGames.id, name: 'Chemistry Set for Kids', desc: 'Safe experiments for young scientists.', price: 450, stock: 40, feat: true },
+    { categoryId: toysGames.id, name: 'Lego Creator Robot', desc: '3-in-1 building set.', price: 650, stock: 25, feat: true },
+    { categoryId: toysGames.id, name: 'Board Game: Settlers of Catan', desc: 'Strategy trading game.', price: 850, stock: 15, feat: false },
+    { categoryId: toysGames.id, name: 'Magnetic Tiles Set (60 Pcs)', desc: 'Creative building tiles.', price: 350, stock: 50, feat: false },
+    { categoryId: toysGames.id, name: 'Plush Toy Elephant', desc: 'Soft and cuddly companion.', price: 200, stock: 85, feat: false },
+    { categoryId: toysGames.id, name: 'Remote Control Car', desc: 'Off-road 4x4 RC car.', price: 550, stock: 35, feat: true },
+    { categoryId: toysGames.id, name: 'Play-Doh Mega Pack', desc: '20 colors of modeling compound.', price: 280, stock: 65, feat: false },
+  ];
+
+  const products = await Promise.all(
+    dummyProductsData.map((p, i) => {
+      const slug = p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + i;
+      return prisma.product.create({
+        data: {
+          categoryId: p.categoryId,
+          name: p.name,
+          slug: slug,
+          description: p.desc,
+          retailPrice: p.price,
+          stockQuantity: p.stock,
+          isFeatured: p.feat,
+          images: {
+            create: [
+              {
+                url: `https://placehold.co/400x400?text=${encodeURIComponent(p.name.split(' ')[0])}`,
+                sortOrder: 0
+              }
+            ]
+          }
+        }
+      });
+    })
+  );
 
   console.log(`📦 ${products.length} products created`);
 
