@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import prisma from '../lib/prisma';
 import { signToken } from '../utils/jwt';
+import { sendOtpEmail } from '../utils/email';
 import { RegisterB2CBody, LoginBody, SocialLoginBody, ForgotPasswordBody, ResetPasswordBody } from '../types/auth.types';
 
 const SALT_ROUNDS = 12;
@@ -176,8 +177,17 @@ export async function forgotPassword(body: ForgotPasswordBody) {
     data: { userId: user.id, code, expiresAt },
   });
 
-  // TODO: Replace with real email service (SendGrid, Resend, etc.)
-  console.log(`\n🔑 Password reset code for ${email}: ${code}\n`);
+  // Send the OTP via email.
+  // We use try/catch here so that if the email service is temporarily down,
+  // the user still gets a 200 response (to prevent email enumeration)
+  // but we log the error for debugging.
+  try {
+    await sendOtpEmail(email, code);
+  } catch (emailError) {
+    console.error('⚠️  Failed to send OTP email:', emailError);
+    // In production you might want to alert your team via Sentry here,
+    // but we don't crash the request — the user can try again.
+  }
 
   return { message: 'If that email exists, a reset code has been sent.' };
 }
