@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { Product } from '../store/productStore';
+import { useFavoritesStore } from '../store/favoritesStore';
 
 export type { Product };
 
@@ -19,6 +20,14 @@ export default function ProductCard({
   onPressFavorite,
   onPressAdd
 }: ProductCardProps) {
+  const isFav = useFavoritesStore(state => state.isFavorite(product.id));
+  const toggleFavorite = useFavoritesStore(state => state.toggleFavorite);
+
+  const handleFavorite = () => {
+    toggleFavorite(product);
+    if (onPressFavorite) onPressFavorite();
+  };
+
   return (
     <View style={[styles.productCard, containerStyle]}>
       <View style={styles.imageContainer}>
@@ -28,16 +37,20 @@ export default function ProductCard({
           </View>
         )}
         <Image
-          source={{ uri: product.images?.[0]?.url || 'https://placehold.co/400x400?text=No+Image' }}
+          source={{ uri: product.images?.[0]?.url || 'https://picsum.photos/seed/default/400/400' }}
           style={styles.productImage}
           resizeMode="cover"
         />
         <TouchableOpacity 
           style={styles.favoriteBtn}
-          onPress={onPressFavorite}
+          onPress={handleFavorite}
           accessibilityLabel="Add to wishlist"
         >
-          <MaterialIcons name="favorite-border" size={20} color="#9ca3af" />
+          <MaterialIcons 
+            name={isFav ? "favorite" : "favorite-border"} 
+            size={20} 
+            color={isFav ? "#db1f2f" : "#9ca3af"} 
+          />
         </TouchableOpacity>
       </View>
       

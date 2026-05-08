@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { authStorage } from './storage';
 import { AuthUser } from '../services/authApi';
 import { useCartStore } from '../store/cartStore';
+import { useFavoritesStore } from '../store/favoritesStore';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -46,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
         if (stored) {
           useCartStore.getState().fetchCart();
+          useFavoritesStore.getState().fetchFavorites();
         }
       } catch {
         setState({ isLoading: false, isLoggedIn: false, token: null, user: null });
@@ -57,12 +59,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await authStorage.saveToken(token);
     setState({ isLoading: false, isLoggedIn: true, token, user });
     useCartStore.getState().fetchCart();
+    useFavoritesStore.getState().fetchFavorites();
   }
 
   async function signOut() {
     await authStorage.removeToken();
     setState({ isLoading: false, isLoggedIn: false, token: null, user: null });
     useCartStore.setState({ items: [] }); // Clear local cart only
+    useFavoritesStore.getState().clearFavorites(); // Clear local favorites
   }
 
   return (

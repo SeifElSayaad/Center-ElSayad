@@ -15,6 +15,7 @@ async function main() {
   // CLEAR EXISTING DATA (order matters for FK constraints)
   // ─────────────────────────────────────────────
   await prisma.review.deleteMany();
+  await prisma.favorite.deleteMany();
   await prisma.cartItem.deleteMany();
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
@@ -224,7 +225,7 @@ async function main() {
           images: {
             create: [
               {
-                url: `https://placehold.co/400x400?text=${encodeURIComponent(p.name.split(' ')[0])}`,
+                url: `https://picsum.photos/seed/${i + 1}/400/400`,
                 sortOrder: 0
               }
             ]

@@ -21,6 +21,7 @@ import SearchBar from '../components/SearchBar';
 import ProductCard from '../components/ProductCard';
 import { useCategoryStore } from '../store/categoryStore';
 import { useProductStore } from '../store/productStore';
+import { useCartStore } from '../store/cartStore';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -40,21 +41,49 @@ export default function CategoriesScreen() {
 
   const { categories, fetchCategories } = useCategoryStore();
   const { products, fetchProducts, isLoading } = useProductStore();
+  const { addItem, totalItems } = useCartStore();
+
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [userChangedFilter, setUserChangedFilter] = useState(false);
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
   React.useEffect(() => {
     fetchCategories();
   }, []);
 
-  // Update filter logic when the list of categories is ready
-  const filters = ['All', ...categories.map(c => c.name)];
-  const matchedFilter = filters.find((f) => categoryName.includes(f)) ?? 'All';
-  const [activeFilter, setActiveFilter] = useState(matchedFilter);
-
+  // Once categories load, auto-select the one matching the navigation param
+  // (only if the user hasn't manually picked a filter yet)
   React.useEffect(() => {
-    // If "All", pass no category filter, otherwise pass the category id
+    if (categories.length === 0 || userChangedFilter) return;
+    const match = categories.find((c) => c.name === categoryName);
+    if (match) setActiveFilter(match.name);
+  }, [categories]);
+
+  // Debounce search input — wait 400ms after user stops typing
+  React.useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Fetch products whenever the active filter OR search query changes
+  React.useEffect(() => {
     const c = categories.find(cat => cat.name === activeFilter);
-    fetchProducts(c ? { category: c.id } : {});
-  }, [activeFilter, categories]);
+    fetchProducts({
+      ...(c ? { category: c.id } : {}),
+      ...(debouncedSearch ? { search: debouncedSearch } : {}),
+    });
+  }, [activeFilter, categories, debouncedSearch]);
+
+  const filters = ['All', ...categories.map(c => c.name)];
+
+  const handleFilterPress = (filter: string) => {
+    setUserChangedFilter(true);
+    setActiveFilter(filter);
+    setSearchQuery(''); // clear search when switching category
+  };
+
 
   return (
     <View style={styles.root}>
@@ -74,11 +103,14 @@ export default function CategoriesScreen() {
           <TouchableOpacity 
             style={styles.iconBtn}
             accessibilityLabel="View cart"
+            onPress={() => navigation.navigate('Cart')}
           >
             <MaterialIcons name="shopping-cart" size={24} color="#1b0e0f" />
-            <View style={styles.cartBadge}>
-              <Text style={styles.cartBadgeText}>2</Text>
-            </View>
+            {totalItems() > 0 && (
+              <View style={styles.cartBadge}>
+                <Text style={styles.cartBadgeText}>{totalItems()}</Text>
+              </View>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -86,6 +118,8 @@ export default function CategoriesScreen() {
         <View style={styles.searchRow}>
           <SearchBar 
             placeholder="Search notebooks, pens..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
           />
           <TouchableOpacity 
             style={styles.filterBtn}
@@ -109,7 +143,7 @@ export default function CategoriesScreen() {
                 styles.filterPill, 
                 activeFilter === item ? styles.filterPillActive : styles.filterPillInactive
               ]}
-              onPress={() => setActiveFilter(item)}
+              onPress={() => handleFilterPress(item)}
             >
               <Text style={[
                 styles.filterPillText,
@@ -128,20 +162,7 @@ export default function CategoriesScreen() {
         contentContainerStyle={styles.scrollContent}
       >
         {/* ── Promo Banner ── */}
-        <ImageBackground 
-          style={styles.promoBanner}
-          source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAXnTv_5FIT8DLpwTNgqaNHNE9GUy515RXG4peJCl8nKJMaEUv6UMT1boAL0UhrxA0xascSrW_z9PfFRUDAHIku7v2wdj049-tBKqHYupPBUL7F2Oj2IC-QWRBFJ8eH89SsJ6afxnHuWERNniP7ngySnkesZ64cqGfOTbHWBOMTr17_1rSsentflc-TMimw-75sIGw_CvRq0-LDkO56QSld5IOSv5FqamVS3k7FNEHVMwwFJWWQKB30v4z97RVYw5FQ6IG-wnH7zXA' }}
-          imageStyle={{ opacity: 0.2 }}
-        >
-          <View style={styles.promoContent}>
-            <Text style={styles.promoEyebrow}>BACK TO SCHOOL</Text>
-            <Text style={styles.promoTitle}>Get 20% Off</Text>
-            <Text style={styles.promoSubtitle}>On all premium stationery items this week.</Text>
-            <TouchableOpacity style={styles.promoBtn}>
-              <Text style={styles.promoBtnText}>Shop Now</Text>
-            </TouchableOpacity>
-          </View>
-        </ImageBackground>
+        
 
         {/* ── Popular Items Header ── */}
         <View style={styles.sectionHeader}>
@@ -163,6 +184,7 @@ export default function CategoriesScreen() {
                 <ProductCard
                   product={product as any}
                   containerStyle={{ width: (SCREEN_WIDTH - 32 - 12) / 2 }}
+                  onPressAdd={() => addItem({ productId: product.id, name: product.name, price: product.retailPrice, imageUrl: product.images?.[0]?.url })}
                 />
               </TouchableOpacity>
             ))}

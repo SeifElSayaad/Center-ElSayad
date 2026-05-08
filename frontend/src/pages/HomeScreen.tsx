@@ -21,6 +21,7 @@ import SearchBar from '../components/SearchBar';
 import ProductCard from '../components/ProductCard';
 import { useCategoryStore } from '../store/categoryStore';
 import { useProductStore } from '../store/productStore';
+import { useCartStore } from '../store/cartStore';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -55,6 +56,7 @@ export default function HomeScreen() {
   const navigation = useNavigation<NavigationProp>();
   const { categories, fetchCategories } = useCategoryStore();
   const { featuredProducts, fetchFeaturedProducts } = useProductStore();
+  const { addItem, totalItems } = useCartStore();
 
   React.useEffect(() => {
     fetchCategories();
@@ -77,9 +79,11 @@ export default function HomeScreen() {
           {/* Cart Button */}
           <TouchableOpacity style={styles.cartBtn} onPress={() => navigation.navigate('Cart')}>
             <MaterialIcons name="shopping-cart" size={26} color="#1b0e0f" />
-            <View style={styles.cartBadge}>
-              <Text style={styles.cartBadgeText}>3</Text>
-            </View>
+            {totalItems() > 0 && (
+              <View style={styles.cartBadge}>
+                <Text style={styles.cartBadgeText}>{totalItems()}</Text>
+              </View>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -196,6 +200,7 @@ export default function HomeScreen() {
                 <ProductCard
                   product={product as any}
                   containerStyle={{ width: 155 }}
+                  onPressAdd={() => addItem({ productId: product.id, name: product.name, price: product.retailPrice, imageUrl: product.images?.[0]?.url })}
                 />
               </TouchableOpacity>
             )) : <Text style={{ padding: 16 }}>Loading featured products...</Text>}

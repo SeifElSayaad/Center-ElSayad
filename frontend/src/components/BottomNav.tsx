@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Platform, Keyboard } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -15,6 +15,23 @@ interface BottomNavProps {
 export default function BottomNav({ activeTab }: BottomNavProps) {
   const navigation = useNavigation<NavigationProp>();
   const { isLoggedIn } = useAuth();
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      () => setKeyboardVisible(true)
+    );
+    const hideSubscription = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => setKeyboardVisible(false)
+    );
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const handlePress = (tabName: 'Home' | 'Categories' | 'Favorites' | 'Profile') => {
     if (tabName === activeTab) return;
@@ -26,9 +43,13 @@ export default function BottomNav({ activeTab }: BottomNavProps) {
     } else if (tabName === 'Profile') {
       navigation.navigate(isLoggedIn ? 'Profile' : 'Login');
     } else if (tabName === 'Favorites') {
-      // TODO: Navigate to Favorites screen
+      navigation.navigate('Favorites');
     }
   };
+
+  if (isKeyboardVisible) {
+    return null;
+  }
 
   return (
     <View style={styles.bottomNav}>

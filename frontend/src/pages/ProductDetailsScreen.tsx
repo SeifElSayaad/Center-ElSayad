@@ -14,6 +14,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { useCartStore } from '../store/cartStore';
+import { useFavoritesStore } from '../store/favoritesStore';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -51,8 +53,10 @@ export default function ProductDetailsScreen() {
   const route = useRoute<RouteProps>();
   const { product } = route.params;
 
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavoritesStore();
+  const isFav = isFavorite(product.id);
   const [selectedQty, setSelectedQty] = useState(1);
+  const { addItem } = useCartStore();
 
   const incrementQty = () => setSelectedQty(prev => prev + 1);
   const decrementQty = () => setSelectedQty(prev => (prev > 1 ? prev - 1 : 1));
@@ -83,17 +87,16 @@ export default function ProductDetailsScreen() {
         </View>
 
         <View style={styles.headerRight}>
-          <TouchableOpacity
-            style={styles.iconBtn}
-            onPress={() => setIsFavorite(v => !v)}
-            accessibilityLabel="Toggle Favorite"
-          >
-            <MaterialIcons
-              name={isFavorite ? 'favorite' : 'favorite-border'}
-              size={24}
-              color={isFavorite ? '#D32F2F' : '#212121'}
-            />
-          </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.iconBtn}
+              onPress={() => toggleFavorite(product)}
+            >
+              <MaterialIcons 
+                name={isFav ? "favorite" : "favorite-border"} 
+                size={22} 
+                color={isFav ? "#db1f2f" : "#4B5563"} 
+              />
+            </TouchableOpacity>
           <TouchableOpacity style={styles.iconBtn} accessibilityLabel="Share">
             <MaterialIcons name="share" size={24} color="#212121" />
           </TouchableOpacity>
@@ -110,7 +113,7 @@ export default function ProductDetailsScreen() {
         <View style={styles.imageContainer}>
           <View style={styles.imageWrapper}>
             <Image
-              source={{ uri: product.images?.[0]?.url || 'https://placehold.co/400x400?text=No+Image' }}
+              source={{ uri: product.images?.[0]?.url || 'https://picsum.photos/seed/default/400/400' }}
               style={styles.productImage}
               resizeMode="contain"
             />
@@ -229,7 +232,10 @@ export default function ProductDetailsScreen() {
           <Text style={styles.cartTotalLabel}>Total</Text>
           <Text style={styles.cartTotalPrice}>${totalPrice}</Text>
         </View>
-        <TouchableOpacity style={styles.addToCartBtn}>
+        <TouchableOpacity 
+          style={styles.addToCartBtn}
+          onPress={() => addItem({ productId: product.id, name: product.name, price: product.retailPrice, imageUrl: product.images?.[0]?.url, quantity: selectedQty })}
+        >
           <MaterialIcons name="shopping-cart" size={20} color="#FFFFFF" />
           <Text style={styles.addToCartText}>Add to Cart</Text>
         </TouchableOpacity>

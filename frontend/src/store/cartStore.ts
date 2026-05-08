@@ -17,7 +17,7 @@ interface CartStore {
   isLoading: boolean;
   error: string | null;
   fetchCart: () => Promise<void>;
-  addItem: (item: Omit<CartItem, 'quantity' | 'id'> & { id?: string }) => Promise<void>;
+  addItem: (item: Omit<CartItem, 'id' | 'quantity'> & { id?: string, quantity?: number }) => Promise<void>;
   removeItem: (productId: string) => Promise<void>;
   updateQuantity: (productId: string, quantity: number) => Promise<void>;
   clearCart: () => Promise<void>;
@@ -44,22 +44,23 @@ export const useCartStore = create<CartStore>((set, get) => ({
   },
 
   addItem: async (item) => {
+    const qtyToAdd = item.quantity || 1;
     // Optimistic update
     set((state) => {
       const existing = state.items.find((i) => i.productId === item.productId);
       if (existing) {
         return {
           items: state.items.map((i) =>
-            i.productId === item.productId ? { ...i, quantity: i.quantity + 1 } : i
+            i.productId === item.productId ? { ...i, quantity: i.quantity + qtyToAdd } : i
           ),
         };
       }
-      return { items: [...state.items, { ...item, id: item.id || Math.random().toString(), quantity: 1 }] };
+      return { items: [...state.items, { ...item, id: item.id || Math.random().toString(), quantity: qtyToAdd }] };
     });
 
     // Background sync
     try {
-      await cartApi.addItem(item.productId, 1);
+      await cartApi.addItem(item.productId, qtyToAdd);
       // Re-fetch to guarantee correct IDs if it was newly created
       await get().fetchCart();
     } catch (err) {

@@ -28,11 +28,11 @@ services:
     container_name: elsayad-backend
     ports:
       - "3000:3000"
+    env_file:
+      - ./backend/.env
     environment:
       NODE_ENV: development
       DATABASE_URL: postgresql://elsayad:elsayad2024@database:5432/ecommerce
-      JWT_SECRET: your-super-secret-jwt-key-change-in-production
-      PORT: 3000
     depends_on:
       database:
         condition: service_healthy

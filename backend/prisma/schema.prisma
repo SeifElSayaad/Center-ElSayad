@@ -80,6 +80,7 @@ model User {
   cartItems        CartItem[]
   reviews          Review[]
   passwordResets   PasswordReset[]
+  favorites        Favorite[]
 
   @@map("users")
 }
@@ -166,6 +167,7 @@ model Product {
   orderItems OrderItem[]
   cartItems  CartItem[]
   reviews    Review[]
+  favorites  Favorite[]
 
   @@map("products")
 }
@@ -309,4 +311,20 @@ model PasswordReset {
   createdAt DateTime @default(now())
 
   @@map("password_resets")
+}
+
+// ─────────────────────────────────────────────
+// FAVORITE
+// ─────────────────────────────────────────────
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@map("favorites")
 }

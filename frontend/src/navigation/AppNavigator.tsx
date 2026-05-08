@@ -10,6 +10,7 @@ import ProductDetailsScreen from '../pages/ProductDetailsScreen';
 import ForgotPasswordScreen from '../pages/ForgotPasswordScreen';
 import ResetPasswordScreen from '../pages/ResetPasswordScreen';
 import CartScreen from '../pages/CartScreen';
+import FavoritesScreen from '../pages/FavoritesScreen';
 import CustomerOrderScreen from '../pages/CustomerOrderScreen';
 import CheckoutScreen from '../pages/CheckoutScreen';
 import AddressScreen from '../pages/AddressScreen';
@@ -29,6 +30,7 @@ export type RootStackParamList = {
   ForgotPassword: undefined;
   ResetPassword: { email: string };
   Cart: undefined;
+  Favorites: undefined;
   Checkout: undefined;
   Address: undefined;
   AddAddress: undefined;
@@ -55,6 +57,7 @@ export default function AppNavigator() {
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
       <Stack.Screen name="Cart" component={CartScreen} />
+      <Stack.Screen name="Favorites" component={FavoritesScreen} />
       <Stack.Screen name="Checkout" component={CheckoutScreen} />
       <Stack.Screen name="Address" component={AddressScreen} />
       <Stack.Screen name="AddAddress" component={AddAddressScreen} />
