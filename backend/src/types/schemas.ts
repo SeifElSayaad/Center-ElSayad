@@ -34,6 +34,16 @@ export const socialLoginSchema = z.object({
   idToken: z.string().min(1, 'ID token is required'),
 });
 
+// We allow updating name and phone, but NOT email.
+// Changing email requires a verification flow (send link to new email)
+// which we haven't built yet. Keeping it simple for now.
+export const updateProfileSchema = z.object({
+  firstName: z.string().min(1, 'First name is required').max(50).optional(),
+  lastName: z.string().min(1, 'Last name is required').max(50).optional(),
+  phone: z.string().max(20).optional().nullable(),
+});
+
+
 // ─── Product Schemas ──────────────────────────────────────────────────────────
 
 export const createProductSchema = z.object({

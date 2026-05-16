@@ -42,6 +42,19 @@ export async function me(req: AuthenticatedRequest, res: Response, next: NextFun
   }
 }
 
+// ─── PATCH /auth/me ───────────────────────────────────────────────────────────
+// Updates the logged-in user's profile (name, phone).
+// req.user is injected by the requireAuth middleware — it holds the userId from the JWT.
+
+export async function updateProfile(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  try {
+    const updated = await authService.updateProfile(req.user!.userId, req.body);
+    res.status(200).json(updated);
+  } catch (err) {
+    next(err);
+  }
+}
+
 // ─── POST /auth/social ───────────────────────────────────────────────────────
 
 export async function socialLogin(req: Request, res: Response, next: NextFunction) {

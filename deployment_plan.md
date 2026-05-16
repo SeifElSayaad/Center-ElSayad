@@ -147,20 +147,47 @@
 
 ---
 
-### 📱 Phase 3 — Frontend Polish (2–3 days)
+### 📱 Phase 3 — Frontend Polish (3–5 days)
 > Close all gaps in the mobile app
 
-**Tasks:**
-1. **Wire `ProfileScreen` save** — call `PATCH /auth/me` or a new `PUT /users/me` endpoint
-2. **Add Product Reviews screens:**
+#### 3A — Profile & Settings (1–2 days)
+
+**ProfileScreen fixes:**
+1. **Wire "Save Changes" button** — add `PATCH /users/me` backend endpoint, call it from the button with loading + success/error feedback
+2. **Wire "My Orders" link** → navigate to `OrderHistoryScreen` (new screen listing past orders with status badges)
+3. **Wire "Shipping Addresses" link** → navigate to existing `AddressScreen`
+4. **Avatar upload** — use `expo-image-picker` to let users pick a photo from camera roll
+
+**New: SettingsScreen** (`/settings`) — navigate from the Settings link in Profile:
+
+| Section | Settings |
+|---------|---------|
+| 🔔 Notifications | Order updates toggle, Promotions toggle |
+| 🔐 Security | "Change Password" row → `ChangePasswordScreen` |
+| 📱 App | Language selector (Arabic / English), App version display |
+| ⚠️ Danger Zone | "Delete Account" (with confirmation dialog) |
+
+**New: ChangePasswordScreen** — form with:
+- Current password field
+- New password field
+- Confirm new password field
+- Calls `PATCH /users/me/password` backend endpoint
+
+**Backend endpoints needed:**
+- `PATCH /users/me` — update firstName, lastName, phone
+- `PATCH /users/me/password` — verify current password, hash and save new one
+- `DELETE /users/me` — soft-delete account (set `isActive: false`)
+
+#### 3B — UX Polish (1–2 days)
+5. **Add Product Reviews screens:**
    - Build `POST /reviews` and `GET /products/:id/reviews` backend endpoints
    - Add a reviews section to `ProductDetailsScreen`
-3. **Skeleton loaders** for all list screens (HomeScreen, CategoriesScreen, FavoritesScreen)
-4. **Pull-to-refresh** on CartScreen, FavoritesScreen, CustomerOrderScreen
-5. **App icon + splash screen** — set in `app.json`
-6. **Configure Social Auth keys** (Google Cloud Console + Facebook Developers)
+6. **Skeleton loaders** for all list screens (HomeScreen, CategoriesScreen, FavoritesScreen)
+7. **Pull-to-refresh** on CartScreen, FavoritesScreen, CustomerOrderScreen
+8. **App icon + splash screen** — set in `app.json`
+9. **Configure Social Auth keys** (Google Cloud Console + Facebook Developers)
 
----
+
 
 ### 🖥️ Phase 4 — Admin Panel Completion (2–3 days)
 > Make the admin panel fully functional

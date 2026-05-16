@@ -81,6 +81,30 @@ export async function getMe(userId: string) {
   return excludePassword(user);
 }
 
+// ─── Update Profile ───────────────────────────────────────────────────────────
+//
+// Lets a logged-in user update their own first name, last name, and phone.
+// We deliberately do NOT allow changing the email here — that would require
+// sending a verification link to the new email first (a separate feature).
+
+export async function updateProfile(
+  userId: string,
+  data: { firstName?: string; lastName?: string; phone?: string | null }
+) {
+  const user = await prisma.user.update({
+    where: { id: userId },
+    // Only pass keys that were actually provided in the request body.
+    // If firstName is undefined (not sent), Prisma ignores it — no accidental overwrites.
+    data: {
+      ...(data.firstName !== undefined && { firstName: data.firstName }),
+      ...(data.lastName  !== undefined && { lastName:  data.lastName  }),
+      ...(data.phone     !== undefined && { phone:     data.phone     }),
+    },
+  });
+
+  return excludePassword(user);
+}
+
 // ─── Social Login ─────────────────────────────────────────────────────────────
 
 interface SocialUserInfo {

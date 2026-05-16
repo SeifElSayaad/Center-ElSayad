@@ -8,12 +8,15 @@ import {
   Platform,
   StatusBar,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useAuth } from '../auth/AuthContext';
+import { updateProfile } from '../services/authApi';
 
 import { FormInput } from '../components/FormInput';
 import { PrimaryButton } from '../components/PrimaryButton';
@@ -28,7 +31,36 @@ export default function ProfileScreen() {
     user ? `${user.firstName} ${user.lastName}` : 'John Doe'
   );
   const [email, setEmail] = useState(user?.email ?? 'johndoe@example.com');
-  const [phone, setPhone] = useState(user?.phone ?? '+20 123 456 7890');
+  const [phone, setPhone] = useState(user?.phone ?? '');
+
+  // Loading state so the button shows a spinner while the API call is in-flight
+  const [isSaving, setIsSaving] = useState(false);
+
+  async function handleSaveChanges() {
+    // Split "Seif ElSayad" → firstName: "Seif", lastName: "ElSayad"
+    // If the user only typed one word, it becomes the firstName and lastName is empty.
+    const parts = fullName.trim().split(' ');
+    const firstName = parts[0] ?? '';
+    const lastName = parts.slice(1).join(' ') || '';
+
+    if (!firstName) {
+      Alert.alert('Validation', 'Please enter at least a first name.');
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      await updateProfile({ firstName, lastName, phone: phone || null });
+      Alert.alert('Saved!', 'Your profile has been updated successfully.');
+    } catch (err: any) {
+      // Show the error message from the backend, or a generic fallback
+      const message = err?.response?.data?.message ?? 'Something went wrong. Please try again.';
+      Alert.alert('Error', message);
+    } finally {
+      // Always stop the loading spinner, even if there was an error
+      setIsSaving(false);
+    }
+  }
 
   async function handleLogout() {
     await signOut();
@@ -107,10 +139,13 @@ export default function ProfileScreen() {
               onChangeText={setPhone}
             />
             
-            <PrimaryButton 
-              label="Save Changes" 
+            <PrimaryButton
+              label={isSaving ? 'Saving...' : 'Save Changes'}
+              onPress={handleSaveChanges}
+              disabled={isSaving}
               style={{ marginTop: 8 }}
             />
+
           </View>
         </View>
 

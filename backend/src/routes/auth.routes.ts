@@ -8,6 +8,7 @@ import {
   socialLoginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
+  updateProfileSchema,
 } from '../types/schemas';
 
 const router = Router();
@@ -20,7 +21,10 @@ router.post('/forgot-password',  validate(forgotPasswordSchema),  authController
 router.post('/reset-password',   validate(resetPasswordSchema),   authController.resetPassword);
 
 // Protected routes (require valid JWT)
-router.post('/logout', requireAuth, authController.logout);
-router.get('/me',      requireAuth, authController.me);
+router.post('/logout',  requireAuth, authController.logout);
+router.get('/me',       requireAuth, authController.me);
+// PATCH /me — update the logged-in user's profile
+router.patch('/me',     requireAuth, validate(updateProfileSchema), authController.updateProfile);
 
 export default router;
+

@@ -77,3 +77,19 @@ export async function resetPassword(
   });
   return response.data;
 }
+
+// ─── Update Profile ───────────────────────────────────────────────────────────
+
+// Only firstName, lastName, phone can be changed.
+// Email changes are not supported yet (require email verification flow).
+export interface UpdateProfilePayload {
+  firstName?: string;
+  lastName?: string;
+  phone?: string | null;
+}
+
+export async function updateProfile(data: UpdateProfilePayload): Promise<AuthUser> {
+  // PATCH sends only the fields you want to change — the backend merges them.
+  const response = await apiClient.patch<AuthUser>('/auth/me', data);
+  return response.data;
+}
