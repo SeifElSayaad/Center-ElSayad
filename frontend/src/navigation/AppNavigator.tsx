@@ -12,6 +12,7 @@ import ResetPasswordScreen from '../pages/ResetPasswordScreen';
 import CartScreen from '../pages/CartScreen';
 import FavoritesScreen from '../pages/FavoritesScreen';
 import CustomerOrderScreen from '../pages/CustomerOrderScreen';
+import OrderHistoryScreen from '../pages/OrderHistoryScreen';
 import CheckoutScreen from '../pages/CheckoutScreen';
 import AddressScreen from '../pages/AddressScreen';
 import AddAddressScreen from '../pages/AddAddressScreen';
@@ -36,6 +37,7 @@ export type RootStackParamList = {
   AddAddress: undefined;
   OrderConfirm: { orderId: string; totalAmount: number };
   CustomerOrder: { orderId: string };
+  OrderHistory: undefined;
 };
 
 // ─── Navigator ────────────────────────────────────────────────────────────────
@@ -63,6 +65,7 @@ export default function AppNavigator() {
       <Stack.Screen name="AddAddress" component={AddAddressScreen} />
       <Stack.Screen name="OrderConfirm" component={OrderConfirmScreen} />
       <Stack.Screen name="CustomerOrder" component={CustomerOrderScreen} />
+      <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} />
     </Stack.Navigator>
   );
 }

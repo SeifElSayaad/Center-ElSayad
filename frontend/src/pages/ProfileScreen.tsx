@@ -154,7 +154,10 @@ export default function ProfileScreen() {
           <Text style={styles.sectionTitle}>Account Settings</Text>
           
           <View style={styles.linksContainer}>
-            <TouchableOpacity style={styles.linkItem}>
+            <TouchableOpacity
+              style={styles.linkItem}
+              onPress={() => navigation.navigate('OrderHistory')}
+            >
               <View style={styles.linkLeft}>
                 <View style={[styles.linkIconBox, { backgroundColor: 'rgba(219,31,47,0.1)' }]}>
                   <MaterialIcons name="shopping-bag" size={24} color="#db1f2f" />
@@ -166,10 +169,12 @@ export default function ProfileScreen() {
               </View>
               <MaterialIcons name="chevron-right" size={24} color="#94a3b8" />
             </TouchableOpacity>
+
             
-            <View style={styles.divider} />
-            
-            <TouchableOpacity style={styles.linkItem}>
+            <TouchableOpacity
+              style={styles.linkItem}
+              onPress={() => navigation.navigate('Address')}
+            >
               <View style={styles.linkLeft}>
                 <View style={styles.linkIconBox}>
                   <MaterialIcons name="location-on" size={24} color="#475569" />
