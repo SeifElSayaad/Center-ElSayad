@@ -35,15 +35,16 @@
 | ForgotPasswordScreen | ✅ Done | Sends OTP |
 | ResetPasswordScreen | ✅ Done | OTP + new password |
 | ProfileScreen | ✅ Done | View/edit user info |
+| GuestProfileScreen | ✅ Done | Displayed for unauthenticated users (custom red theme) |
 | CartScreen | ✅ Done | List, qty update, remove |
 | FavoritesScreen | ✅ Done | Grid, add to cart from favorites |
 | CheckoutScreen | ✅ Done | Address + payment method + place order |
-| AddressScreen | ✅ Done | List saved addresses, select for order |
-| AddAddressScreen | ✅ Done | Create new address form |
+| AddressScreen | ✅ Done | Redesigned via Stitch (matches Guest theme) |
+| AddAddressScreen | ✅ Done | Redesigned via Stitch (matches Guest theme) |
 | OrderConfirmScreen | ✅ Done | Post-order confirmation |
 | CustomerOrderScreen | ✅ Done | Order details view |
 | AppNavigator | ✅ Done | All screens registered |
-| BottomNav | ✅ Done | Home / Categories / Favorites / Profile tabs |
+| BottomNav | ✅ Done | Dynamic 'Profile' tab (shows GuestProfile if logged out) |
 | Stores (Zustand) | ✅ Done | cart, favorites, address, product, category |
 | API Services | ✅ Done | auth, cart, order, product, category, favorites, address |
 
