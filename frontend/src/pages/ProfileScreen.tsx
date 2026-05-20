@@ -21,11 +21,18 @@ import { updateProfile } from '../services/authApi';
 import { FormInput } from '../components/FormInput';
 import { PrimaryButton } from '../components/PrimaryButton';
 
+import GuestProfileScreen from './GuestProfileScreen';
+import BottomNav from '../components/BottomNav';
+
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Profile'>;
 
 export default function ProfileScreen() {
   const navigation = useNavigation<NavigationProp>();
   const { user, signOut } = useAuth();
+
+  if (!user) {
+    return <GuestProfileScreen />;
+  }
 
   const [fullName, setFullName] = useState(
     user ? `${user.firstName} ${user.lastName}` : 'John Doe'
@@ -189,7 +196,7 @@ export default function ProfileScreen() {
 
             <View style={styles.divider} />
             
-            <TouchableOpacity style={styles.linkItem}>
+            <TouchableOpacity style={styles.linkItem} onPress={() => navigation.navigate('Settings')}>
               <View style={styles.linkLeft}>
                 <View style={styles.linkIconBox}>
                   <MaterialIcons name="settings" size={24} color="#475569" />
@@ -221,38 +228,7 @@ export default function ProfileScreen() {
         <View style={{ height: 24 }} />
       </ScrollView>
 
-      {/* ── Bottom Navigation ── */}
-      <View style={styles.bottomNav}>
-        {[
-          { key: 'home', icon: 'home', label: 'Home' },
-          { key: 'categories', icon: 'grid-view', label: 'Categories' },
-          { key: 'favorites', icon: 'shopping-cart', label: 'Cart' },
-          { key: 'profile', icon: 'person', label: 'Profile' },
-        ].map((item) => (
-          <TouchableOpacity
-            key={item.key}
-            style={styles.navItem}
-            onPress={() => {
-              if (item.key === 'home') navigation.navigate('Home');
-              else if (item.key === 'profile') {} // Already here
-            }}
-          >
-            <MaterialIcons
-              name={item.icon as any}
-              size={26}
-              color={item.key === 'profile' ? '#db1f2f' : '#9ca3af'}
-            />
-            <Text
-              style={[
-                styles.navLabel,
-                { color: item.key === 'profile' ? '#db1f2f' : '#9ca3af' },
-              ]}
-            >
-              {item.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <BottomNav activeTab="Profile" />
     </View>
   );
 }
