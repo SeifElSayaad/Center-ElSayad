@@ -41,7 +41,7 @@ export default function BottomNav({ activeTab }: BottomNavProps) {
     } else if (tabName === 'Categories') {
       navigation.navigate('Categories', {});
     } else if (tabName === 'Profile') {
-      navigation.navigate(isLoggedIn ? 'Profile' : 'Login');
+      navigation.navigate('Profile');
     } else if (tabName === 'Favorites') {
       navigation.navigate('Favorites');
     }
