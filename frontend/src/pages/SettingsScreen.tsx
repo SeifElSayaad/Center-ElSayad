@@ -14,13 +14,13 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import ScreenHeader from '../components/ScreenHeader';
-import { useAuthStore } from '../store/authStore';
+import { useAuth } from '../auth/AuthContext';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Settings'>;
 
 export default function SettingsScreen() {
   const navigation = useNavigation<NavigationProp>();
-  const { logout } = useAuthStore();
+  const { signOut } = useAuth();
 
   // Local state for toggles
   const [orderUpdates, setOrderUpdates] = useState(true);
@@ -38,7 +38,7 @@ export default function SettingsScreen() {
           onPress: () => {
             // Placeholder for delete account API call
             Alert.alert('Account Deleted', 'Your account has been successfully deleted.');
-            logout();
+            signOut();
           }
         },
       ]
