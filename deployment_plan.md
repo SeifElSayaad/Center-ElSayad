@@ -187,6 +187,7 @@
 7. **Pull-to-refresh** on CartScreen, FavoritesScreen, CustomerOrderScreen
 8. **App icon + splash screen** — set in `app.json`
 9. **Configure Social Auth keys** (Google Cloud Console + Facebook Developers)
+10. **Localization (i18n)** — Add Arabic support (RTL layout auto-flip, `i18next`, language toggle)
 
 
 
