@@ -30,10 +30,6 @@ export default function ProfileScreen() {
   const navigation = useNavigation<NavigationProp>();
   const { user, signOut } = useAuth();
 
-  if (!user) {
-    return <GuestProfileScreen />;
-  }
-
   const [fullName, setFullName] = useState(
     user ? `${user.firstName} ${user.lastName}` : 'John Doe'
   );
@@ -42,6 +38,10 @@ export default function ProfileScreen() {
 
   // Loading state so the button shows a spinner while the API call is in-flight
   const [isSaving, setIsSaving] = useState(false);
+
+  if (!user) {
+    return <GuestProfileScreen />;
+  }
 
   async function handleSaveChanges() {
     // Split "Seif ElSayad" → firstName: "Seif", lastName: "ElSayad"
