@@ -33,12 +33,12 @@ export default function AddressScreen() {
 
   return (
     <View style={styles.root}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F5F5F7" />
-      <ScreenHeader title="Select Address" backgroundColor="#F5F5F7" />
+      <StatusBar barStyle="dark-content" backgroundColor="#f8f6f6" />
+      <ScreenHeader title="Select Address" backgroundColor="#f8f6f6" />
 
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {isLoading ? (
-          <ActivityIndicator color="#D32F2F" style={{ marginTop: 40 }} />
+          <ActivityIndicator color="#db1f2f" style={{ marginTop: 40 }} />
         ) : error ? (
           <Text style={styles.errorText}>{error}</Text>
         ) : addresses.length === 0 ? (
@@ -81,7 +81,7 @@ export default function AddressScreen() {
                   <Text style={styles.addressPhone}>{address.phone}</Text>
                 </View>
                 {isSelected && (
-                  <MaterialIcons name="check-circle" size={22} color="#D32F2F" />
+                  <MaterialIcons name="check-circle" size={22} color="#db1f2f" />
                 )}
               </TouchableOpacity>
             );
@@ -94,7 +94,7 @@ export default function AddressScreen() {
           onPress={() => navigation.navigate('AddAddress')}
           activeOpacity={0.8}
         >
-          <MaterialIcons name="add-location-alt" size={22} color="#D32F2F" />
+          <MaterialIcons name="add-location-alt" size={22} color="#db1f2f" />
           <Text style={styles.addBtnText}>Add New Address</Text>
         </TouchableOpacity>
 
@@ -105,7 +105,7 @@ export default function AddressScreen() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#F5F5F7' },
+  root: { flex: 1, backgroundColor: '#f8f6f6' },
   scroll: { flex: 1 },
   content: { paddingHorizontal: 16, paddingTop: 16 },
   addressCard: {
@@ -115,22 +115,22 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOpacity: 0.04, shadowRadius: 8, shadowOffset: { width: 0, height: 2 },
     elevation: 2,
   },
-  addressCardSelected: { borderColor: '#D32F2F' },
+  addressCardSelected: { borderColor: '#db1f2f' },
   cardLeft: { paddingTop: 2, marginRight: 14 },
   radioOuter: {
     width: 22, height: 22, borderRadius: 11,
     borderWidth: 2, borderColor: '#D1D5DB',
     alignItems: 'center', justifyContent: 'center',
   },
-  radioOuterSelected: { borderColor: '#D32F2F' },
-  radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#D32F2F' },
+  radioOuterSelected: { borderColor: '#db1f2f' },
+  radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#db1f2f' },
   cardInfo: { flex: 1 },
   nameRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6, marginBottom: 4 },
   addressName: { fontSize: 15, fontWeight: '700', color: '#1F2937' },
   defaultBadge: {
     backgroundColor: '#FFF0F0', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10,
   },
-  defaultBadgeText: { fontSize: 10, fontWeight: '700', color: '#D32F2F' },
+  defaultBadgeText: { fontSize: 10, fontWeight: '700', color: '#db1f2f' },
   labelBadge: {
     backgroundColor: '#F3F4F6', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10,
   },
@@ -140,12 +140,12 @@ const styles = StyleSheet.create({
   emptyContainer: { alignItems: 'center', marginTop: 60, gap: 8 },
   emptyText: { fontSize: 16, fontWeight: '700', color: '#374151', marginTop: 8 },
   emptySubText: { fontSize: 13, color: '#9CA3AF' },
-  errorText: { textAlign: 'center', color: '#D32F2F', marginTop: 40, fontSize: 14 },
+  errorText: { textAlign: 'center', color: '#db1f2f', marginTop: 40, fontSize: 14 },
   addBtn: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: 10, backgroundColor: '#FFF',
     borderRadius: 16, padding: 16, marginTop: 4,
-    borderWidth: 1.5, borderColor: '#D32F2F', borderStyle: 'dashed',
+    borderWidth: 1.5, borderColor: '#db1f2f', borderStyle: 'dashed',
   },
-  addBtnText: { fontSize: 15, fontWeight: '700', color: '#D32F2F' },
+  addBtnText: { fontSize: 15, fontWeight: '700', color: '#db1f2f' },
 });

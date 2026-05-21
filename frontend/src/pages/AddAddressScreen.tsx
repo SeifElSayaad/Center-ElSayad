@@ -68,8 +68,8 @@ export default function AddAddressScreen() {
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={styles.root}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F5F5F7" />
-        <ScreenHeader title="New Address" backgroundColor="#F5F5F7" />
+        <StatusBar barStyle="dark-content" backgroundColor="#f8f6f6" />
+        <ScreenHeader title="New Address" backgroundColor="#f8f6f6" />
 
         <ScrollView style={styles.scroll} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
 
@@ -144,7 +144,7 @@ export default function AddAddressScreen() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#F5F5F7' },
+  root: { flex: 1, backgroundColor: '#f8f6f6' },
   scroll: { flex: 1 },
   content: { paddingHorizontal: 16, paddingTop: 16 },
   sectionLabel: {
@@ -157,8 +157,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20,
     backgroundColor: '#F3F4F6', borderWidth: 1.5, borderColor: 'transparent',
   },
-  chipSelected: { backgroundColor: '#D32F2F', borderColor: '#D32F2F' },
+  chipSelected: { backgroundColor: '#db1f2f', borderColor: '#db1f2f' },
   chipText: { fontSize: 13, fontWeight: '600', color: '#6B7280' },
   chipTextSelected: { color: '#FFF' },
-  errorText: { fontSize: 12, color: '#D32F2F', marginTop: -8, marginBottom: 12, marginLeft: 4 },
+  errorText: { fontSize: 12, color: '#db1f2f', marginTop: -8, marginBottom: 12, marginLeft: 4 },
 });
