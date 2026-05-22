@@ -87,3 +87,14 @@ export async function resetPassword(req: Request, res: Response, next: NextFunct
     next(err);
   }
 }
+
+// ─── PATCH /auth/me/password ──────────────────────────────────────────────────
+
+export async function changePassword(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  try {
+    const result = await authService.changePassword(req.user!.userId, req.body);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+}

@@ -32,6 +32,11 @@ export interface ResetPasswordBody {
   newPassword: string;
 }
 
+export interface ChangePasswordBody {
+  currentPassword: string;
+  newPassword: string;
+}
+
 // ─── JWT ─────────────────────────────────────────────────────────────────────
 
 export interface JwtPayload {

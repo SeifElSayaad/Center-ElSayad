@@ -43,6 +43,10 @@ export const updateProfileSchema = z.object({
   phone: z.string().max(20).optional().nullable(),
 });
 
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, 'Current password is required'),
+  newPassword: z.string().min(8, 'New password must be at least 8 characters').max(72),
+});
 
 // ─── Product Schemas ──────────────────────────────────────────────────────────
 

@@ -9,6 +9,7 @@ import {
   forgotPasswordSchema,
   resetPasswordSchema,
   updateProfileSchema,
+  changePasswordSchema,
 } from '../types/schemas';
 
 const router = Router();
@@ -25,6 +26,8 @@ router.post('/logout',  requireAuth, authController.logout);
 router.get('/me',       requireAuth, authController.me);
 // PATCH /me — update the logged-in user's profile
 router.patch('/me',     requireAuth, validate(updateProfileSchema), authController.updateProfile);
+// PATCH /me/password — update the logged-in user's password
+router.patch('/me/password', requireAuth, validate(changePasswordSchema), authController.changePassword);
 
 export default router;
 

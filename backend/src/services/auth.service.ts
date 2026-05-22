@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import prisma from '../lib/prisma';
 import { signToken } from '../utils/jwt';
 import { sendOtpEmail } from '../utils/email';
-import { RegisterB2CBody, LoginBody, SocialLoginBody, ForgotPasswordBody, ResetPasswordBody } from '../types/auth.types';
+import { RegisterB2CBody, LoginBody, SocialLoginBody, ForgotPasswordBody, ResetPasswordBody, ChangePasswordBody } from '../types/auth.types';
 
 const SALT_ROUNDS = 12;
 
@@ -256,4 +256,29 @@ export async function resetPassword(body: ResetPasswordBody) {
   ]);
 
   return { message: 'Password has been reset successfully.' };
+}
+
+// ─── Change Password ──────────────────────────────────────────────────────────
+
+export async function changePassword(userId: string, body: ChangePasswordBody) {
+  const { currentPassword, newPassword } = body;
+
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user || !user.passwordHash) {
+    throw Object.assign(new Error('Invalid user or password not set'), { status: 400 });
+  }
+
+  const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
+  if (!isValid) {
+    throw Object.assign(new Error('Incorrect current password'), { status: 400 });
+  }
+
+  const passwordHash = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { passwordHash },
+  });
+
+  return { message: 'Password has been updated successfully.' };
 }

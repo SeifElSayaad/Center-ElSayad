@@ -93,3 +93,15 @@ export async function updateProfile(data: UpdateProfilePayload): Promise<AuthUse
   const response = await apiClient.patch<AuthUser>('/auth/me', data);
   return response.data;
 }
+
+// ─── Change Password ──────────────────────────────────────────────────────────
+
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export async function changePassword(data: ChangePasswordPayload): Promise<{ message: string }> {
+  const response = await apiClient.patch<{ message: string }>('/auth/me/password', data);
+  return response.data;
+}
