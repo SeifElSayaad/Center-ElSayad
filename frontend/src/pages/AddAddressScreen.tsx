@@ -113,7 +113,13 @@ export default function AddAddressScreen() {
       setMapLoading(true);
       // Reverse geocoding using free Nominatim API
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${selectedCoords.lat}&lon=${selectedCoords.lng}&accept-language=en`
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${selectedCoords.lat}&lon=${selectedCoords.lng}&accept-language=en`,
+        {
+          headers: {
+            'User-Agent': 'CenterElSayadApp/1.0',
+            'Accept': 'application/json'
+          }
+        }
       );
       const data = await response.json();
       

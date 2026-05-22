@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -8,18 +8,13 @@ import {
   Platform,
   StatusBar,
   ScrollView,
-  Alert,
-  ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useAuth } from '../auth/AuthContext';
-import { updateProfile } from '../services/authApi';
-
-import { FormInput } from '../components/FormInput';
-import { PrimaryButton } from '../components/PrimaryButton';
 
 import GuestProfileScreen from './GuestProfileScreen';
 import BottomNav from '../components/BottomNav';
@@ -30,44 +25,12 @@ export default function ProfileScreen() {
   const navigation = useNavigation<NavigationProp>();
   const { user, signOut } = useAuth();
 
-  const [fullName, setFullName] = useState(
-    user ? `${user.firstName} ${user.lastName}` : 'John Doe'
-  );
-  const [email, setEmail] = useState(user?.email ?? 'johndoe@example.com');
-  const [phone, setPhone] = useState(user?.phone ?? '');
-
-  // Loading state so the button shows a spinner while the API call is in-flight
-  const [isSaving, setIsSaving] = useState(false);
-
   if (!user) {
     return <GuestProfileScreen />;
   }
 
-  async function handleSaveChanges() {
-    // Split "Seif ElSayad" → firstName: "Seif", lastName: "ElSayad"
-    // If the user only typed one word, it becomes the firstName and lastName is empty.
-    const parts = fullName.trim().split(' ');
-    const firstName = parts[0] ?? '';
-    const lastName = parts.slice(1).join(' ') || '';
-
-    if (!firstName) {
-      Alert.alert('Validation', 'Please enter at least a first name.');
-      return;
-    }
-
-    setIsSaving(true);
-    try {
-      await updateProfile({ firstName, lastName, phone: phone || null });
-      Alert.alert('Saved!', 'Your profile has been updated successfully.');
-    } catch (err: any) {
-      // Show the error message from the backend, or a generic fallback
-      const message = err?.response?.data?.message ?? 'Something went wrong. Please try again.';
-      Alert.alert('Error', message);
-    } finally {
-      // Always stop the loading spinner, even if there was an error
-      setIsSaving(false);
-    }
-  }
+  const fullName = `${user.firstName} ${user.lastName}`.trim();
+  const initial = user.firstName ? user.firstName.charAt(0).toUpperCase() : 'U';
 
   async function handleLogout() {
     await signOut();
@@ -75,23 +38,30 @@ export default function ProfileScreen() {
   }
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.root}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
 
-      {/* ── Top Navigation Bar ── */}
-      <View style={styles.header}>
-        <View style={styles.headerTitleRow}>
+      {/* ── Header Section ── */}
+      <View style={styles.headerContainer}>
+        {/* Top Icons & Avatar */}
+        <View style={styles.topRow}>
           <TouchableOpacity 
-            style={styles.iconBtn} 
-            onPress={() => navigation.canGoBack() ? navigation.goBack() : navigation.navigate('Home')}
+            style={styles.iconBtn}
+            onPress={() => navigation.navigate('Settings')}
           >
-            <MaterialIcons name="arrow-back" size={24} color="#0f172a" />
+            <MaterialIcons name="settings" size={26} color="#0f172a" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Profile</Text>
+
+          <View style={styles.avatarCircle}>
+            <Text style={styles.avatarText}>{initial}</Text>
+          </View>
         </View>
-        <TouchableOpacity style={styles.iconBtn}>
-          <MaterialIcons name="more-vert" size={24} color="#0f172a" />
-        </TouchableOpacity>
+
+        {/* User Info */}
+        <View style={styles.userInfo}>
+          <Text style={styles.userName}>{fullName}</Text>
+          <Text style={styles.userLocation}>Egypt 🇪🇬</Text>
+        </View>
       </View>
 
       <ScrollView 
@@ -99,137 +69,92 @@ export default function ProfileScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* ── Profile Picture Section ── */}
-        <View style={styles.profileSection}>
-          <View style={styles.avatarWrapper}>
-            <View style={styles.avatarContainer}>
-              <Image 
-                source={{ uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCz5evXIdtLmAuqM7iK47Tf-9scOCEBu2duyFKqhXPrjMz7pWsM07b03IAHr08D6L6lo7D4KFVlDTSqCoryklc383rxjD_TfJuYcvoenYzrTPX5QKPpFpvFQlDzbt9Qlca87pb8unZddWPNL2zBRrtSFC7z75jUOaamMwpAa7A_ijl9QeKPaSwnmfIq8dKUim1c2TfEqREH5Y6zS1UkMJ0sK0ZqTzbdjljmoDcT2JKNz794Vm2zhVis0ULrKNLvMZZ5wb41tm9QCGo' }} 
-                style={styles.avatar} 
-                resizeMode="cover"
-              />
+        {/* ── Promotional Banner ── */}
+        <View style={styles.promoBanner}>
+          <View style={styles.promoContent}>
+            <Text style={styles.promoTitle}>Exclusive Member Deals</Text>
+            <Text style={styles.promoSubtitle}>Free shipping & special offers</Text>
+          </View>
+          <View style={styles.promoImageContainer}>
+            {/* Using a placeholder generic shopping illustration/icon for the banner */}
+            <MaterialCommunityIcons name="shopping-search" size={60} color="rgba(255,255,255,0.4)" />
+          </View>
+        </View>
+
+        {/* ── Flat Menu List ── */}
+        <View style={styles.menuContainer}>
+          
+          <TouchableOpacity style={styles.menuRow}>
+            <View style={styles.menuRowLeft}>
+              <MaterialCommunityIcons name="gift-outline" size={24} color="#0f172a" />
+              <Text style={styles.menuText}>My Rewards</Text>
             </View>
-            <TouchableOpacity style={styles.editAvatarBtn}>
-              <MaterialIcons name="edit" size={16} color="#fff" />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.userName}>{fullName}</Text>
-          <Text style={styles.userEmail}>{email}</Text>
-        </View>
+            <Text style={styles.menuBadge}>0 points</Text>
+          </TouchableOpacity>
+          <View style={styles.divider} />
 
-        {/* ── Personal Information Form ── */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Personal Information</Text>
-          
-          <View style={styles.form}>
-            <FormInput
-              label="Full Name"
-              icon="person"
-              value={fullName}
-              onChangeText={setFullName}
-            />
-            
-            <FormInput
-              label="Email Address"
-              icon="mail"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={email}
-              onChangeText={setEmail}
-            />
-            
-            <FormInput
-              label="Phone Number"
-              icon="call"
-              keyboardType="phone-pad"
-              value={phone}
-              onChangeText={setPhone}
-            />
-            
-            <PrimaryButton
-              label={isSaving ? 'Saving...' : 'Save Changes'}
-              onPress={handleSaveChanges}
-              disabled={isSaving}
-              style={{ marginTop: 8 }}
-            />
+          <TouchableOpacity 
+            style={styles.menuRow}
+            onPress={() => navigation.navigate('OrderHistory')}
+          >
+            <View style={styles.menuRowLeft}>
+              <MaterialCommunityIcons name="receipt" size={24} color="#0f172a" />
+              <Text style={styles.menuText}>My Orders</Text>
+            </View>
+          </TouchableOpacity>
+          <View style={styles.divider} />
 
-          </View>
-        </View>
+          <TouchableOpacity style={styles.menuRow}>
+            <View style={styles.menuRowLeft}>
+              <MaterialCommunityIcons name="account-group-outline" size={24} color="#0f172a" />
+              <Text style={styles.menuText}>Invite Friends</Text>
+            </View>
+            <Text style={styles.menuBadge}>Earn 50 EGP</Text>
+          </TouchableOpacity>
+          <View style={styles.divider} />
 
-        {/* ── Quick Links / Account Settings ── */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Account Settings</Text>
-          
-          <View style={styles.linksContainer}>
-            <TouchableOpacity
-              style={styles.linkItem}
-              onPress={() => navigation.navigate('OrderHistory')}
-            >
-              <View style={styles.linkLeft}>
-                <View style={[styles.linkIconBox, { backgroundColor: 'rgba(219,31,47,0.1)' }]}>
-                  <MaterialIcons name="shopping-bag" size={24} color="#db1f2f" />
-                </View>
-                <View>
-                  <Text style={styles.linkTitle}>My Orders</Text>
-                  <Text style={styles.linkSubtitle}>Track and manage your purchases</Text>
-                </View>
-              </View>
-              <MaterialIcons name="chevron-right" size={24} color="#94a3b8" />
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.menuRow}>
+            <View style={styles.menuRowLeft}>
+              <MaterialCommunityIcons name="ticket-percent-outline" size={24} color="#0f172a" />
+              <Text style={styles.menuText}>Coupons</Text>
+            </View>
+          </TouchableOpacity>
+          <View style={styles.divider} />
 
-            
-            <TouchableOpacity
-              style={styles.linkItem}
-              onPress={() => navigation.navigate('Address')}
-            >
-              <View style={styles.linkLeft}>
-                <View style={styles.linkIconBox}>
-                  <MaterialIcons name="location-on" size={24} color="#475569" />
-                </View>
-                <View>
-                  <Text style={styles.linkTitle}>Shipping Addresses</Text>
-                  <Text style={styles.linkSubtitle}>Manage delivery locations</Text>
-                </View>
-              </View>
-              <MaterialIcons name="chevron-right" size={24} color="#94a3b8" />
-            </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.menuRow}
+            onPress={() => navigation.navigate('Settings')}
+          >
+            <View style={styles.menuRowLeft}>
+              <MaterialIcons name="settings" size={24} color="#0f172a" />
+              <Text style={styles.menuText}>Settings</Text>
+            </View>
+          </TouchableOpacity>
+          <View style={styles.divider} />
 
-            <View style={styles.divider} />
-            
-            <TouchableOpacity style={styles.linkItem} onPress={() => navigation.navigate('Settings')}>
-              <View style={styles.linkLeft}>
-                <View style={styles.linkIconBox}>
-                  <MaterialIcons name="settings" size={24} color="#475569" />
-                </View>
-                <View>
-                  <Text style={styles.linkTitle}>Settings</Text>
-                  <Text style={styles.linkSubtitle}>App preferences and security</Text>
-                </View>
-              </View>
-              <MaterialIcons name="chevron-right" size={24} color="#94a3b8" />
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.menuRow}>
+            <View style={styles.menuRowLeft}>
+              <MaterialCommunityIcons name="help-circle-outline" size={24} color="#0f172a" />
+              <Text style={styles.menuText}>Help & Support</Text>
+            </View>
+          </TouchableOpacity>
+          <View style={styles.divider} />
 
-            <View style={styles.divider} />
-            
-            <TouchableOpacity style={styles.linkItem} onPress={handleLogout}>
-              <View style={styles.linkLeft}>
-                <View style={[styles.linkIconBox, { backgroundColor: 'rgba(220,38,38,0.1)' }]}>
-                  <MaterialIcons name="logout" size={24} color="#dc2626" />
-                </View>
-                <View>
-                  <Text style={[styles.linkTitle, { color: '#dc2626' }]}>Logout</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity style={styles.menuRow} onPress={handleLogout}>
+            <View style={styles.menuRowLeft}>
+              <MaterialCommunityIcons name="logout" size={24} color="#dc2626" />
+              <Text style={[styles.menuText, { color: '#dc2626' }]}>Logout</Text>
+            </View>
+          </TouchableOpacity>
+
         </View>
 
         {/* Bottom spacer */}
-        <View style={{ height: 24 }} />
+        <View style={{ height: 40 }} />
       </ScrollView>
 
       <BottomNav activeTab="Profile" />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -238,170 +163,131 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#f8f6f6',
+    backgroundColor: '#ffffff', // Clean white background throughout
   },
+  
   // Header
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e2e8f0',
-    paddingHorizontal: 16,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight ?? 24 : 44,
-    paddingBottom: 16,
-    zIndex: 50,
+  headerContainer: {
+    paddingHorizontal: 20,
+    paddingTop: Platform.OS === 'android' ? 16 : 0,
+    backgroundColor: '#ffffff',
   },
-  headerTitleRow: {
+  topRow: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 12,
+    marginBottom: 8,
   },
   iconBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    padding: 8,
+    marginLeft: -8, // visually align left
+  },
+  avatarCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#0f172a',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headerTitle: {
+  avatarText: {
+    color: '#ffffff',
     fontSize: 20,
     fontWeight: '700',
+  },
+  userInfo: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  userName: {
+    fontSize: 24,
+    fontWeight: '800',
     color: '#0f172a',
     letterSpacing: -0.5,
   },
+  userLocation: {
+    fontSize: 14,
+    color: '#64748b',
+    marginTop: 4,
+    fontWeight: '500',
+  },
+
   // Scroll
-  scrollView: { flex: 1 },
-  scrollContent: { paddingBottom: 80, paddingHorizontal: 16 },
-  // Profile Section
-  profileSection: {
-    alignItems: 'center',
-    paddingVertical: 32,
+  scrollView: { 
+    flex: 1,
+    backgroundColor: '#f8f6f6', // Light gray background for the scroll area to make cards pop
   },
-  avatarWrapper: {
-    position: 'relative',
+  scrollContent: { 
+    paddingTop: 16,
+    paddingBottom: 80, 
   },
-  avatarContainer: {
-    width: 128,
-    height: 128,
-    borderRadius: 64,
-    borderWidth: 4,
-    borderColor: '#fff',
-    overflow: 'hidden',
-    backgroundColor: '#e2e8f0',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  avatar: {
-    width: '100%',
-    height: '100%',
-  },
-  editAvatarBtn: {
-    position: 'absolute',
-    bottom: 4,
-    right: 4,
+
+  // Promo Banner
+  promoBanner: {
+    marginHorizontal: 16,
+    marginBottom: 20,
     backgroundColor: '#db1f2f',
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    borderRadius: 16,
+    flexDirection: 'row',
+    overflow: 'hidden',
+    height: 100,
+  },
+  promoContent: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'center',
+  },
+  promoTitle: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '800',
+    marginBottom: 4,
+  },
+  promoSubtitle: {
+    color: '#ffffff',
+    fontSize: 12,
+    opacity: 0.9,
+  },
+  promoImageContainer: {
+    width: 100,
+    backgroundColor: 'rgba(0,0,0,0.1)',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
   },
-  userName: {
-    marginTop: 16,
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#0f172a',
+
+  // Menu Container
+  menuContainer: {
+    backgroundColor: '#ffffff',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: '#f1f5f9',
   },
-  userEmail: {
-    marginTop: 4,
-    fontSize: 15,
-    color: '#64748b',
-  },
-  // Sections
-  section: {
-    marginBottom: 40,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#0f172a',
-    marginBottom: 16,
-  },
-  form: {
-    gap: 4,
-  },
-  // Links
-  linksContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-    overflow: 'hidden',
-  },
-  linkItem: {
+  menuRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
+    paddingVertical: 18,
+    paddingHorizontal: 20,
+    backgroundColor: '#ffffff',
   },
-  linkLeft: {
+  menuRowLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
   },
-  linkIconBox: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    backgroundColor: '#f1f5f9',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  linkTitle: {
-    fontSize: 15,
+  menuText: {
+    fontSize: 16,
     fontWeight: '600',
     color: '#0f172a',
-    marginBottom: 2,
   },
-  linkSubtitle: {
-    fontSize: 12,
+  menuBadge: {
+    fontSize: 14,
     color: '#64748b',
+    fontWeight: '500',
   },
   divider: {
     height: 1,
     backgroundColor: '#f1f5f9',
-  },
-  // Bottom Nav
-  bottomNav: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
-    paddingTop: 10,
-    paddingBottom: Platform.OS === 'ios' ? 24 : 12,
-    paddingHorizontal: 16,
-  },
-  navItem: {
-    alignItems: 'center',
-    gap: 2,
-    flex: 1,
-  },
-  navLabel: {
-    fontSize: 10,
-    fontWeight: '700',
+    marginLeft: 60, // Align with text, skipping the icon
   },
 });
