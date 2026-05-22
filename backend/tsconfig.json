@@ -3,11 +3,9 @@
     // Language and Environment
     "target": "ES2020", // Modern JavaScript features
     "module": "commonjs", // Node.js module system
-    "lib": [
-      "ES2020"
-    ], // Standard library
+    "lib": ["ES2020"], // Standard library
     // Module Resolution
-    "moduleResolution": "node", // Use Node.js resolution
+    "moduleResolution": "node10", // Use Node.js resolution
     "esModuleInterop": true, // Better compatibility with ES modules
     "allowSyntheticDefaultImports": true, // Allow default imports
     // File Structure
@@ -31,11 +29,6 @@
     "declaration": true, // Generate .d.ts files
     "removeComments": true // Remove comments in output
   },
-  "include": [
-    "src/**/*"
-  ], // Include all files in src
-  "exclude": [
-    "node_modules",
-    "dist"
-  ] // Exclude these folders
+  "include": ["src/**/*"], // Include all files in src
+  "exclude": ["node_modules", "dist"] // Exclude these folders
 }

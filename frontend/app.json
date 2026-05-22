@@ -29,7 +29,13 @@
     },
     "plugins": [
       "expo-secure-store",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Center El-Sayad to use your location to find nearby stores and set shipping addresses."
+        }
+      ]
     ]
   }
 }
