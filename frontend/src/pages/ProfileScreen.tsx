@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -9,17 +9,17 @@ import {
   StatusBar,
   ScrollView,
   SafeAreaView,
-} from 'react-native';
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../navigation/AppNavigator';
-import { useAuth } from '../auth/AuthContext';
+} from "react-native";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../navigation/AppNavigator";
+import { useAuth } from "../auth/AuthContext";
 
-import GuestProfileScreen from './GuestProfileScreen';
-import BottomNav from '../components/BottomNav';
+import GuestProfileScreen from "./GuestProfileScreen";
+import BottomNav from "../components/BottomNav";
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Profile'>;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Profile">;
 
 export default function ProfileScreen() {
   const navigation = useNavigation<NavigationProp>();
@@ -30,11 +30,11 @@ export default function ProfileScreen() {
   }
 
   const fullName = `${user.firstName} ${user.lastName}`.trim();
-  const initial = user.firstName ? user.firstName.charAt(0).toUpperCase() : 'U';
+  const initial = user.firstName ? user.firstName.charAt(0).toUpperCase() : "U";
 
   async function handleLogout() {
     await signOut();
-    navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+    navigation.reset({ index: 0, routes: [{ name: "Home" }] });
   }
 
   return (
@@ -43,29 +43,31 @@ export default function ProfileScreen() {
 
       {/* ── Header Section ── */}
       <View style={styles.headerContainer}>
-        {/* Top Icons & Avatar */}
         <View style={styles.topRow}>
           <TouchableOpacity 
+            style={styles.userInfoLeft}
+            onPress={() => navigation.navigate("EditProfile")}
+          >
+            <View style={styles.avatarCircle}>
+              <Text style={styles.avatarText}>{initial}</Text>
+            </View>
+            <View style={styles.userInfoText}>
+              <Text style={styles.userName}>{fullName}</Text>
+              <Text style={styles.userLocation}>Egypt 🇪🇬</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
             style={styles.iconBtn}
-            onPress={() => navigation.navigate('Settings')}
+            onPress={() => navigation.navigate("Settings")}
           >
             <MaterialIcons name="settings" size={26} color="#0f172a" />
           </TouchableOpacity>
-
-          <View style={styles.avatarCircle}>
-            <Text style={styles.avatarText}>{initial}</Text>
-          </View>
-        </View>
-
-        {/* User Info */}
-        <View style={styles.userInfo}>
-          <Text style={styles.userName}>{fullName}</Text>
-          <Text style={styles.userLocation}>Egypt 🇪🇬</Text>
         </View>
       </View>
 
-      <ScrollView 
-        style={styles.scrollView} 
+      <ScrollView
+        style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
@@ -73,32 +75,45 @@ export default function ProfileScreen() {
         <View style={styles.promoBanner}>
           <View style={styles.promoContent}>
             <Text style={styles.promoTitle}>Exclusive Member Deals</Text>
-            <Text style={styles.promoSubtitle}>Free shipping & special offers</Text>
+            <Text style={styles.promoSubtitle}>
+              Free shipping & special offers
+            </Text>
           </View>
           <View style={styles.promoImageContainer}>
             {/* Using a placeholder generic shopping illustration/icon for the banner */}
-            <MaterialCommunityIcons name="shopping-search" size={60} color="rgba(255,255,255,0.4)" />
+            <MaterialCommunityIcons
+              name="shopping-search"
+              size={60}
+              color="rgba(255,255,255,0.4)"
+            />
           </View>
         </View>
 
         {/* ── Flat Menu List ── */}
         <View style={styles.menuContainer}>
-          
           <TouchableOpacity style={styles.menuRow}>
             <View style={styles.menuRowLeft}>
-              <MaterialCommunityIcons name="gift-outline" size={24} color="#0f172a" />
+              <MaterialCommunityIcons
+                name="gift-outline"
+                size={24}
+                color="#0f172a"
+              />
               <Text style={styles.menuText}>My Rewards</Text>
             </View>
             <Text style={styles.menuBadge}>0 points</Text>
           </TouchableOpacity>
           <View style={styles.divider} />
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => navigation.navigate('OrderHistory')}
+            onPress={() => navigation.navigate("OrderHistory")}
           >
             <View style={styles.menuRowLeft}>
-              <MaterialCommunityIcons name="receipt" size={24} color="#0f172a" />
+              <MaterialCommunityIcons
+                name="receipt"
+                size={24}
+                color="#0f172a"
+              />
               <Text style={styles.menuText}>My Orders</Text>
             </View>
           </TouchableOpacity>
@@ -106,7 +121,11 @@ export default function ProfileScreen() {
 
           <TouchableOpacity style={styles.menuRow}>
             <View style={styles.menuRowLeft}>
-              <MaterialCommunityIcons name="account-group-outline" size={24} color="#0f172a" />
+              <MaterialCommunityIcons
+                name="account-group-outline"
+                size={24}
+                color="#0f172a"
+              />
               <Text style={styles.menuText}>Invite Friends</Text>
             </View>
             <Text style={styles.menuBadge}>Earn 50 EGP</Text>
@@ -115,15 +134,19 @@ export default function ProfileScreen() {
 
           <TouchableOpacity style={styles.menuRow}>
             <View style={styles.menuRowLeft}>
-              <MaterialCommunityIcons name="ticket-percent-outline" size={24} color="#0f172a" />
+              <MaterialCommunityIcons
+                name="ticket-percent-outline"
+                size={24}
+                color="#0f172a"
+              />
               <Text style={styles.menuText}>Coupons</Text>
             </View>
           </TouchableOpacity>
           <View style={styles.divider} />
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.menuRow}
-            onPress={() => navigation.navigate('Settings')}
+            onPress={() => navigation.navigate("Settings")}
           >
             <View style={styles.menuRowLeft}>
               <MaterialIcons name="settings" size={24} color="#0f172a" />
@@ -134,7 +157,11 @@ export default function ProfileScreen() {
 
           <TouchableOpacity style={styles.menuRow}>
             <View style={styles.menuRowLeft}>
-              <MaterialCommunityIcons name="help-circle-outline" size={24} color="#0f172a" />
+              <MaterialCommunityIcons
+                name="help-circle-outline"
+                size={24}
+                color="#0f172a"
+              />
               <Text style={styles.menuText}>Help & Support</Text>
             </View>
           </TouchableOpacity>
@@ -143,10 +170,11 @@ export default function ProfileScreen() {
           <TouchableOpacity style={styles.menuRow} onPress={handleLogout}>
             <View style={styles.menuRowLeft}>
               <MaterialCommunityIcons name="logout" size={24} color="#dc2626" />
-              <Text style={[styles.menuText, { color: '#dc2626' }]}>Logout</Text>
+              <Text style={[styles.menuText, { color: "#dc2626" }]}>
+                Logout
+              </Text>
             </View>
           </TouchableOpacity>
-
         </View>
 
         {/* Bottom spacer */}
@@ -163,131 +191,136 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#ffffff', // Clean white background throughout
+    backgroundColor: "#ffffff", // Clean white background throughout
   },
-  
+
   // Header
   headerContainer: {
     paddingHorizontal: 20,
-    paddingTop: Platform.OS === 'android' ? 16 : 0,
-    backgroundColor: '#ffffff',
+    paddingTop:
+      Platform.OS === "android" ? (StatusBar.currentHeight ?? 24) + 16 : 16,
+    backgroundColor: "#ffffff",
   },
   topRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 24,
   },
   iconBtn: {
     padding: 8,
-    marginLeft: -8, // visually align left
+    marginRight: -8, // visually align right
+  },
+  userInfoLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  userInfoText: {
+    justifyContent: "center",
   },
   avatarCircle: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#0f172a',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#0f172a",
+    alignItems: "center",
+    justifyContent: "center",
   },
   avatarText: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 20,
-    fontWeight: '700',
-  },
-  userInfo: {
-    alignItems: 'center',
-    marginBottom: 20,
+    fontWeight: "700",
   },
   userName: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#0f172a',
+    fontSize: 20,
+    fontWeight: "800",
+    color: "#0f172a",
     letterSpacing: -0.5,
   },
   userLocation: {
     fontSize: 14,
-    color: '#64748b',
+    color: "#64748b",
     marginTop: 4,
-    fontWeight: '500',
+    fontWeight: "500",
   },
 
   // Scroll
-  scrollView: { 
+  scrollView: {
     flex: 1,
-    backgroundColor: '#f8f6f6', // Light gray background for the scroll area to make cards pop
+    backgroundColor: "#f8f6f6", // Light gray background for the scroll area to make cards pop
   },
-  scrollContent: { 
+  scrollContent: {
     paddingTop: 16,
-    paddingBottom: 80, 
+    paddingBottom: 80,
   },
 
   // Promo Banner
   promoBanner: {
     marginHorizontal: 16,
     marginBottom: 20,
-    backgroundColor: '#db1f2f',
+    backgroundColor: "#db1f2f",
     borderRadius: 16,
-    flexDirection: 'row',
-    overflow: 'hidden',
+    flexDirection: "row",
+    overflow: "hidden",
     height: 100,
   },
   promoContent: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   promoTitle: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 16,
-    fontWeight: '800',
+    fontWeight: "800",
     marginBottom: 4,
   },
   promoSubtitle: {
-    color: '#ffffff',
+    color: "#ffffff",
     fontSize: 12,
     opacity: 0.9,
   },
   promoImageContainer: {
     width: 100,
-    backgroundColor: 'rgba(0,0,0,0.1)',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "rgba(0,0,0,0.1)",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   // Menu Container
   menuContainer: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: '#f1f5f9',
+    borderColor: "#f1f5f9",
   },
   menuRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingVertical: 18,
     paddingHorizontal: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
   },
   menuRowLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 16,
   },
   menuText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#0f172a',
+    fontWeight: "600",
+    color: "#0f172a",
   },
   menuBadge: {
     fontSize: 14,
-    color: '#64748b',
-    fontWeight: '500',
+    color: "#64748b",
+    fontWeight: "500",
   },
   divider: {
     height: 1,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: "#f1f5f9",
     marginLeft: 60, // Align with text, skipping the icon
   },
 });

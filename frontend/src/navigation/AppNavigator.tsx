@@ -15,6 +15,7 @@ import CustomerOrderScreen from '../pages/CustomerOrderScreen';
 import OrderHistoryScreen from '../pages/OrderHistoryScreen';
 import SettingsScreen from '../pages/SettingsScreen';
 import ChangePasswordScreen from '../pages/ChangePasswordScreen';
+import EditProfileScreen from '../pages/EditProfileScreen';
 import CheckoutScreen from '../pages/CheckoutScreen';
 import AddressScreen from '../pages/AddressScreen';
 import AddAddressScreen from '../pages/AddAddressScreen';
@@ -42,6 +43,7 @@ export type RootStackParamList = {
   OrderHistory: undefined;
   Settings: undefined;
   ChangePassword: undefined;
+  EditProfile: undefined;
 };
 
 // ─── Navigator ────────────────────────────────────────────────────────────────
@@ -72,6 +74,7 @@ export default function AppNavigator() {
       <Stack.Screen name="OrderHistory" component={OrderHistoryScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+      <Stack.Screen name="EditProfile" component={EditProfileScreen} />
     </Stack.Navigator>
   );
 }
