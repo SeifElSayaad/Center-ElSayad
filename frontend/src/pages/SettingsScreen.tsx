@@ -15,12 +15,17 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import ScreenHeader from '../components/ScreenHeader';
 import { useAuth } from '../auth/AuthContext';
+import { useTranslation } from 'react-i18next';
+import i18next from 'i18next';
+import { changeLanguage } from '../i18n';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Settings'>;
 
 export default function SettingsScreen() {
   const navigation = useNavigation<NavigationProp>();
   const { signOut } = useAuth();
+  const { t } = useTranslation();
+  const currentLang = i18next.language;
 
   // Local state for toggles
   const [orderUpdates, setOrderUpdates] = useState(true);
@@ -45,16 +50,31 @@ export default function SettingsScreen() {
     );
   };
 
+  const handleLanguageChange = () => {
+    const newLang = currentLang === 'ar' ? 'en' : 'ar';
+    Alert.alert(
+      t('settings.language'),
+      t('settings.restartRequired'),
+      [
+        { text: t('settings.cancel'), style: 'cancel' },
+        { 
+          text: t('settings.yes'), 
+          onPress: () => changeLanguage(newLang)
+        },
+      ]
+    );
+  };
+
   return (
     <View style={styles.root}>
       <StatusBar barStyle="dark-content" backgroundColor="#f8f6f6" />
-      <ScreenHeader title="Settings" />
+      <ScreenHeader title={t('settings.title')} />
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
         
         {/* ── Notifications ── */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Notifications</Text>
+          <Text style={styles.sectionTitle}>{t('settings.notifications')}</Text>
           <View style={styles.card}>
             <View style={[styles.row, styles.rowBorder]}>
               <View style={styles.rowLeft}>
@@ -90,7 +110,7 @@ export default function SettingsScreen() {
 
         {/* ── Security ── */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Security</Text>
+          <Text style={styles.sectionTitle}>{t('settings.security')}</Text>
           <View style={styles.card}>
             <TouchableOpacity 
               style={styles.row}
@@ -111,15 +131,15 @@ export default function SettingsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>App Preferences</Text>
           <View style={styles.card}>
-            <TouchableOpacity style={[styles.row, styles.rowBorder]}>
+            <TouchableOpacity style={[styles.row, styles.rowBorder]} onPress={handleLanguageChange}>
               <View style={styles.rowLeft}>
                 <View style={[styles.iconBox, { backgroundColor: '#f1f5f9' }]}>
                   <MaterialIcons name="language" size={22} color="#475569" />
                 </View>
-                <Text style={styles.rowText}>Language</Text>
+                <Text style={styles.rowText}>{t('settings.language')}</Text>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={styles.valueText}>English</Text>
+                <Text style={styles.valueText}>{currentLang === 'ar' ? t('settings.arabic') : t('settings.english')}</Text>
                 <MaterialIcons name="chevron-right" size={24} color="#94a3b8" />
               </View>
             </TouchableOpacity>
@@ -129,7 +149,7 @@ export default function SettingsScreen() {
                 <View style={[styles.iconBox, { backgroundColor: '#f1f5f9' }]}>
                   <MaterialIcons name="info-outline" size={22} color="#475569" />
                 </View>
-                <Text style={styles.rowText}>App Version</Text>
+                <Text style={styles.rowText}>{t('settings.appVersion')}</Text>
               </View>
               <Text style={styles.valueText}>v1.0.0</Text>
             </View>

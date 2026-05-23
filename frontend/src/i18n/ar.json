@@ -1,0 +1,34 @@
+{
+  "bottomNav": {
+    "home": "الرئيسية",
+    "categories": "الفئات",
+    "favorites": "المفضلة",
+    "profile": "حسابي"
+  },
+  "profile": {
+    "title": "الحساب",
+    "exclusiveDeals": "عروض الأعضاء الحصرية",
+    "freeShipping": "توصيل مجاني وعروض خاصة",
+    "myRewards": "مكافآتي",
+    "points": "{{count}} نقطة",
+    "myOrders": "طلباتي السابقة",
+    "inviteFriends": "ادعُ أصدقاءك",
+    "earn": "اربح 50 ج.م.",
+    "coupons": "القسائم",
+    "settings": "الإعدادات",
+    "helpSupport": "احصل على المساعدة",
+    "logout": "تسجيل الخروج"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "language": "اللغة",
+    "english": "English",
+    "arabic": "العربية",
+    "notifications": "الإشعارات",
+    "security": "الأمان",
+    "appVersion": "إصدار التطبيق",
+    "restartRequired": "تغيير اللغة يتطلب إعادة تشغيل التطبيق. هل تريد المتابعة؟",
+    "yes": "نعم",
+    "cancel": "إلغاء"
+  }
+}

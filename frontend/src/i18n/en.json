@@ -1,0 +1,34 @@
+{
+  "bottomNav": {
+    "home": "Home",
+    "categories": "Categories",
+    "favorites": "Favorites",
+    "profile": "Profile"
+  },
+  "profile": {
+    "title": "Profile",
+    "exclusiveDeals": "Exclusive Member Deals",
+    "freeShipping": "Free shipping & special offers",
+    "myRewards": "My Rewards",
+    "points": "{{count}} points",
+    "myOrders": "My Orders",
+    "inviteFriends": "Invite Friends",
+    "earn": "Earn 50 EGP",
+    "coupons": "Coupons",
+    "settings": "Settings",
+    "helpSupport": "Help & Support",
+    "logout": "Logout"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "english": "English",
+    "arabic": "العربية",
+    "notifications": "Notifications",
+    "security": "Security",
+    "appVersion": "App Version",
+    "restartRequired": "Changing language requires an app restart. Do you want to proceed?",
+    "yes": "Yes",
+    "cancel": "Cancel"
+  }
+}

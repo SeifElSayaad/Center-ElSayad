@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useAuth } from '../auth/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -15,6 +16,7 @@ interface BottomNavProps {
 export default function BottomNav({ activeTab }: BottomNavProps) {
   const navigation = useNavigation<NavigationProp>();
   const { isLoggedIn } = useAuth();
+  const { t } = useTranslation();
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   useEffect(() => {
@@ -54,10 +56,10 @@ export default function BottomNav({ activeTab }: BottomNavProps) {
   return (
     <View style={styles.bottomNav}>
       {[
-        { key: 'Home' as const, icon: 'home', label: 'Home' },
-        { key: 'Categories' as const, icon: 'grid-view', label: 'Categories' },
-        { key: 'Favorites' as const, icon: 'favorite-border', label: 'Favorites' },
-        { key: 'Profile' as const, icon: 'person', label: 'Profile' },
+        { key: 'Home' as const, icon: 'home', label: t('bottomNav.home') },
+        { key: 'Categories' as const, icon: 'grid-view', label: t('bottomNav.categories') },
+        { key: 'Favorites' as const, icon: 'favorite-border', label: t('bottomNav.favorites') },
+        { key: 'Profile' as const, icon: 'person', label: t('bottomNav.profile') },
       ].map((item) => (
         <TouchableOpacity
           key={item.key}

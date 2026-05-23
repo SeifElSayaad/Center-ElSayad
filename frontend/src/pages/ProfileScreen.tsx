@@ -15,6 +15,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { useAuth } from "../auth/AuthContext";
+import { useTranslation } from "react-i18next";
 
 import GuestProfileScreen from "./GuestProfileScreen";
 import BottomNav from "../components/BottomNav";
@@ -24,6 +25,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Profile">;
 export default function ProfileScreen() {
   const navigation = useNavigation<NavigationProp>();
   const { user, signOut } = useAuth();
+  const { t } = useTranslation();
 
   if (!user) {
     return <GuestProfileScreen />;
@@ -74,9 +76,9 @@ export default function ProfileScreen() {
         {/* ── Promotional Banner ── */}
         <View style={styles.promoBanner}>
           <View style={styles.promoContent}>
-            <Text style={styles.promoTitle}>Exclusive Member Deals</Text>
+            <Text style={styles.promoTitle}>{t("profile.exclusiveDeals")}</Text>
             <Text style={styles.promoSubtitle}>
-              Free shipping & special offers
+              {t("profile.freeShipping")}
             </Text>
           </View>
           <View style={styles.promoImageContainer}>
@@ -98,9 +100,9 @@ export default function ProfileScreen() {
                 size={24}
                 color="#0f172a"
               />
-              <Text style={styles.menuText}>My Rewards</Text>
+              <Text style={styles.menuText}>{t("profile.myRewards")}</Text>
             </View>
-            <Text style={styles.menuBadge}>0 points</Text>
+            <Text style={styles.menuBadge}>{t("profile.points", { count: 0 })}</Text>
           </TouchableOpacity>
           <View style={styles.divider} />
 
@@ -114,7 +116,7 @@ export default function ProfileScreen() {
                 size={24}
                 color="#0f172a"
               />
-              <Text style={styles.menuText}>My Orders</Text>
+              <Text style={styles.menuText}>{t("profile.myOrders")}</Text>
             </View>
           </TouchableOpacity>
           <View style={styles.divider} />
@@ -126,9 +128,9 @@ export default function ProfileScreen() {
                 size={24}
                 color="#0f172a"
               />
-              <Text style={styles.menuText}>Invite Friends</Text>
+              <Text style={styles.menuText}>{t("profile.inviteFriends")}</Text>
             </View>
-            <Text style={styles.menuBadge}>Earn 50 EGP</Text>
+            <Text style={styles.menuBadge}>{t("profile.earn")}</Text>
           </TouchableOpacity>
           <View style={styles.divider} />
 
@@ -139,7 +141,7 @@ export default function ProfileScreen() {
                 size={24}
                 color="#0f172a"
               />
-              <Text style={styles.menuText}>Coupons</Text>
+              <Text style={styles.menuText}>{t("profile.coupons")}</Text>
             </View>
           </TouchableOpacity>
           <View style={styles.divider} />
@@ -150,7 +152,7 @@ export default function ProfileScreen() {
           >
             <View style={styles.menuRowLeft}>
               <MaterialIcons name="settings" size={24} color="#0f172a" />
-              <Text style={styles.menuText}>Settings</Text>
+              <Text style={styles.menuText}>{t("profile.settings")}</Text>
             </View>
           </TouchableOpacity>
           <View style={styles.divider} />
@@ -162,7 +164,7 @@ export default function ProfileScreen() {
                 size={24}
                 color="#0f172a"
               />
-              <Text style={styles.menuText}>Help & Support</Text>
+              <Text style={styles.menuText}>{t("profile.helpSupport")}</Text>
             </View>
           </TouchableOpacity>
           <View style={styles.divider} />
@@ -170,9 +172,7 @@ export default function ProfileScreen() {
           <TouchableOpacity style={styles.menuRow} onPress={handleLogout}>
             <View style={styles.menuRowLeft}>
               <MaterialCommunityIcons name="logout" size={24} color="#dc2626" />
-              <Text style={[styles.menuText, { color: "#dc2626" }]}>
-                Logout
-              </Text>
+              <Text style={[styles.menuText, { color: "#dc2626" }]}>{t("profile.logout")}</Text>
             </View>
           </TouchableOpacity>
         </View>
