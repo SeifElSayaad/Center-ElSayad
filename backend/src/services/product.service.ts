@@ -5,7 +5,7 @@ export class ProductService {
   static async getAllProducts(filters: ProductQueryFilters) {
     // The frontend sends `category` (the category id), the backend type uses `categoryId`.
     // Support both to avoid a mismatch.
-    const { category, categoryId, minPrice, maxPrice, search, isFeatured, isActive } = filters as any;
+    const { category, categoryId, minPrice, maxPrice, search, isFeatured, isActive, page, limit } = filters as any;
     const resolvedCategoryId = categoryId || category;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -31,14 +31,33 @@ export class ProductService {
       ];
     }
 
-    return prisma.product.findMany({
-      where,
-      include: {
-        category: true,
-        images: true,
+    const pageNum = parseInt(page as string) || 1;
+    const limitNum = parseInt(limit as string) || 20;
+    const skip = (pageNum - 1) * limitNum;
+
+    const [data, totalItems] = await prisma.$transaction([
+      prisma.product.findMany({
+        where,
+        include: {
+          category: true,
+          images: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limitNum,
+      }),
+      prisma.product.count({ where }),
+    ]);
+
+    return {
+      data,
+      metadata: {
+        totalItems,
+        currentPage: pageNum,
+        totalPages: Math.ceil(totalItems / limitNum),
+        limit: limitNum,
       },
-      orderBy: { createdAt: 'desc' },
-    });
+    };
   }
 
   static async getProductById(id: string) {

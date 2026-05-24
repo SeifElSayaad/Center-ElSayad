@@ -387,10 +387,11 @@ export default function Products() {
     setLoading(true);
     try {
       const [productsRes, categoriesRes] = await Promise.all([
-        apiClient.get('/products?isActive=all'),
+        apiClient.get('/products?isActive=all&limit=1000'),
         apiClient.get('/categories'),
       ]);
-      setProducts(productsRes.data);
+      // Handle the new paginated API format { data, metadata }
+      setProducts(productsRes.data.data || productsRes.data);
       setCategories(categoriesRes.data);
     } catch {
       toast.error('Failed to load data');

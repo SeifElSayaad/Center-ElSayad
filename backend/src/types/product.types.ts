@@ -18,4 +18,6 @@ export interface ProductQueryFilters {
   search?: string;
   isFeatured?: string;
   isActive?: string;
+  page?: string | number;
+  limit?: string | number;
 }

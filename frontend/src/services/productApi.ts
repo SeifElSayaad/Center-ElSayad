@@ -6,6 +6,8 @@ export interface ProductQueryFilters {
   minPrice?: number;
   maxPrice?: number;
   featured?: boolean;
+  page?: number;
+  limit?: number;
 }
 
 export const productApi = {

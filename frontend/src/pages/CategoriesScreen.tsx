@@ -11,6 +11,8 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -40,7 +42,7 @@ export default function CategoriesScreen() {
   const categoryName = route.params?.categoryName ?? 'All Products';
 
   const { categories, fetchCategories } = useCategoryStore();
-  const { products, fetchProducts, isLoading } = useProductStore();
+  const { products, fetchProducts, fetchNextPage, isLoading, isFetchingNextPage } = useProductStore();
   const { addItem, totalItems } = useCartStore();
 
   const [activeFilter, setActiveFilter] = useState('All');
@@ -156,42 +158,45 @@ export default function CategoriesScreen() {
         </ScrollView>
       </View>
 
-      <ScrollView
-        style={styles.scrollView}
+      <FlatList
+        data={products}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
-      >
-        {/* ── Promo Banner ── */}
-        
-
-        {/* ── Popular Items Header ── */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Popular Items</Text>
-          <TouchableOpacity style={styles.viewAllBtn}>
-            <Text style={styles.viewAllText}>View All</Text>
-            <MaterialIcons name="arrow-forward" size={16} color="#db1f2f" />
+        columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 12 }}
+        onEndReached={() => {
+          const c = categories.find(cat => cat.name === activeFilter);
+          fetchNextPage({
+            ...(c ? { category: c.id } : {}),
+            ...(debouncedSearch ? { search: debouncedSearch } : {}),
+          });
+        }}
+        onEndReachedThreshold={0.5}
+        ListHeaderComponent={(
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Popular Items</Text>
+          </View>
+        )}
+        renderItem={({ item: product }) => (
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate('ProductDetails', { product })}
+          >
+            <ProductCard
+              product={product as any}
+              containerStyle={{ width: (SCREEN_WIDTH - 32 - 12) / 2 }}
+              onPressAdd={() => addItem({ productId: product.id, name: product.name, price: product.retailPrice, imageUrl: product.images?.[0]?.url })}
+            />
           </TouchableOpacity>
-        </View>
-
-        {/* ── Product Grid ── */}
-        <View style={styles.productGrid}>
-            {isLoading ? <Text style={{ padding: 16 }}>Loading products...</Text> : products.map((product) => (
-              <TouchableOpacity
-                key={product.id}
-                activeOpacity={0.85}
-                onPress={() => navigation.navigate('ProductDetails', { product })}
-              >
-                <ProductCard
-                  product={product as any}
-                  containerStyle={{ width: (SCREEN_WIDTH - 32 - 12) / 2 }}
-                  onPressAdd={() => addItem({ productId: product.id, name: product.name, price: product.retailPrice, imageUrl: product.images?.[0]?.url })}
-                />
-              </TouchableOpacity>
-            ))}
-            {!isLoading && products.length === 0 && <Text style={{ padding: 16 }}>No products found.</Text>}
-        </View>
-
-      </ScrollView>
+        )}
+        ListFooterComponent={(
+          <View style={{ padding: 16, alignItems: 'center' }}>
+            {isFetchingNextPage && <ActivityIndicator size="small" color="#db1f2f" />}
+            {!isLoading && products.length === 0 && <Text>No products found.</Text>}
+          </View>
+        )}
+      />
 
       {/* ── Bottom Navigation ── */}
       <BottomNav activeTab="Categories" />
