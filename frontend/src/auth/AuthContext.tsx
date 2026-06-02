@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { authStorage } from './storage';
-import { AuthUser } from '../services/authApi';
+import { AuthUser, getCurrentUser } from '../services/authApi';
 import { useCartStore } from '../store/cartStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 
@@ -38,18 +38,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     (async () => {
       try {
-        const stored = await authStorage.getToken();
-        setState({
-          isLoading: false,
-          isLoggedIn: !!stored,
-          token: stored,
-          user: null, // We don't persist the user object (could be added later)
-        });
-        if (stored) {
+        const storedToken = await authStorage.getToken();
+        
+        if (storedToken) {
+          // Fetch the user data with the token
+          const user = await getCurrentUser();
+          setState({
+            isLoading: false,
+            isLoggedIn: true,
+            token: storedToken,
+            user,
+          });
           useCartStore.getState().fetchCart();
           useFavoritesStore.getState().fetchFavorites();
+        } else {
+          setState({ isLoading: false, isLoggedIn: false, token: null, user: null });
         }
-      } catch {
+      } catch (error) {
+        // Token might be invalid or expired
+        await authStorage.removeToken();
         setState({ isLoading: false, isLoggedIn: false, token: null, user: null });
       }
     })();

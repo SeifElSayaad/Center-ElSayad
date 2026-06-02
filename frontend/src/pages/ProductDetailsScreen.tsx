@@ -11,11 +11,13 @@ import {
   Dimensions,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useCartStore } from '../store/cartStore';
 import { useFavoritesStore } from '../store/favoritesStore';
+import { productApi } from '../services/productApi';
+import { useAuth } from '../auth/AuthContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -23,23 +25,6 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const DESCRIPTION =
   'Crafted with premium materials and built to last, this product combines superior quality with elegant design. Perfect for everyday use at the office, school, or home. Each item is carefully inspected to ensure it meets the highest standards of craftsmanship and durability.';
-
-const REVIEWS = [
-  {
-    id: '1',
-    name: 'Ahmed K.',
-    date: '2 Days Ago',
-    rating: 5,
-    comment: 'Excellent quality, exactly what I was looking for. The paper is smooth and ink doesn\'t bleed through.',
-  },
-  {
-    id: '2',
-    name: 'Sara M.',
-    date: '1 Week Ago',
-    rating: 4,
-    comment: 'Good product overall, but delivery was a bit slow. Still satisfied with the purchase.',
-  }
-];
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -52,11 +37,38 @@ export default function ProductDetailsScreen() {
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteProps>();
   const { product } = route.params;
+  const { user } = useAuth();
 
   const { isFavorite, toggleFavorite } = useFavoritesStore();
   const isFav = isFavorite(product.id);
   const [selectedQty, setSelectedQty] = useState(1);
   const { addItem } = useCartStore();
+
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviewsMeta, setReviewsMeta] = useState({ totalItems: 0, averageRating: 0 });
+  const [isLoadingReviews, setIsLoadingReviews] = useState(true);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      productApi.getReviews(product.id)
+        .then(res => {
+          setReviews(res.data);
+          setReviewsMeta(res.metadata);
+        })
+        .catch(console.error)
+        .finally(() => setIsLoadingReviews(false));
+    }, [product.id])
+  );
+
+  const handleWriteReview = () => {
+    if (!user) {
+      // Typically you'd redirect to Login, but for now we'll just navigate to Profile
+      // which acts as the guest profile screen
+      navigation.navigate('Profile');
+      return;
+    }
+    navigation.navigate('WriteReview', { product });
+  };
 
   const incrementQty = () => setSelectedQty(prev => prev + 1);
   const decrementQty = () => setSelectedQty(prev => (prev > 1 ? prev - 1 : 1));
@@ -142,13 +154,13 @@ export default function ProductDetailsScreen() {
             {[1, 2, 3, 4, 5].map((star) => (
               <MaterialIcons
                 key={star}
-                name={star <= 4 ? 'star' : 'star-half'}
+                name={star <= reviewsMeta.averageRating ? 'star' : (star - 0.5 <= reviewsMeta.averageRating ? 'star-half' : 'star-border')}
                 size={18}
                 color="#D32F2F"
               />
             ))}
-            <Text style={styles.ratingText}>4.5</Text>
-            <Text style={styles.reviewCount}>(128 reviews)</Text>
+            <Text style={styles.ratingText}>{reviewsMeta.averageRating > 0 ? reviewsMeta.averageRating.toFixed(1) : 'No Ratings'}</Text>
+            <Text style={styles.reviewCount}>({reviewsMeta.totalItems} reviews)</Text>
           </View>
 
           <View style={styles.divider} />
@@ -191,20 +203,24 @@ export default function ProductDetailsScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeaderRow}>
             <Text style={styles.sectionHeader}>User Reviews</Text>
-            <TouchableOpacity>
-              <Text style={styles.seeAllText}>See All</Text>
+            <TouchableOpacity onPress={handleWriteReview}>
+              <Text style={styles.seeAllText}>Write a Review</Text>
             </TouchableOpacity>
           </View>
           
-          {REVIEWS.map((review) => (
+          {isLoadingReviews ? (
+            <Text style={{ paddingVertical: 16, color: '#757575' }}>Loading reviews...</Text>
+          ) : reviews.length === 0 ? (
+            <Text style={{ paddingVertical: 16, color: '#757575' }}>No reviews yet. Be the first to review this product!</Text>
+          ) : reviews.map((review) => (
             <View key={review.id} style={styles.reviewItem}>
               <View style={styles.reviewAvatar}>
-                <Text style={styles.reviewAvatarText}>{review.name.charAt(0)}</Text>
+                <Text style={styles.reviewAvatarText}>{review.user?.firstName?.charAt(0) || '?'}</Text>
               </View>
               <View style={styles.reviewContent}>
                 <View style={styles.reviewHeader}>
-                  <Text style={styles.reviewName}>{review.name}</Text>
-                  <Text style={styles.reviewDate}>{review.date}</Text>
+                  <Text style={styles.reviewName}>{review.user?.firstName} {review.user?.lastName}</Text>
+                  <Text style={styles.reviewDate}>{new Date(review.createdAt).toLocaleDateString()}</Text>
                 </View>
                 <View style={styles.reviewStars}>
                   {[1, 2, 3, 4, 5].map((star) => (

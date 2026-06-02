@@ -46,6 +46,11 @@ export async function login(data: LoginPayload): Promise<AuthResponse> {
   return response.data;
 }
 
+export async function getCurrentUser(): Promise<AuthUser> {
+  const response = await apiClient.get<AuthUser>('/auth/me');
+  return response.data;
+}
+
 // ─── Social Login ─────────────────────────────────────────────────────────────
 
 export interface SocialLoginPayload {

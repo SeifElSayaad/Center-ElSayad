@@ -20,6 +20,7 @@ import CheckoutScreen from '../pages/CheckoutScreen';
 import AddressScreen from '../pages/AddressScreen';
 import AddAddressScreen from '../pages/AddAddressScreen';
 import OrderConfirmScreen from '../pages/OrderConfirmScreen';
+import WriteReviewScreen from '../pages/WriteReviewScreen';
 import { Product } from '../components/ProductCard';
 
 // ─── Route Types ──────────────────────────────────────────────────────────────
@@ -44,6 +45,7 @@ export type RootStackParamList = {
   Settings: undefined;
   ChangePassword: undefined;
   EditProfile: undefined;
+  WriteReview: { product: Product };
 };
 
 // ─── Navigator ────────────────────────────────────────────────────────────────
@@ -75,6 +77,7 @@ export default function AppNavigator() {
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+      <Stack.Screen name="WriteReview" component={WriteReviewScreen} />
     </Stack.Navigator>
   );
 }

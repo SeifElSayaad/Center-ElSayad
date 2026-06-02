@@ -110,3 +110,10 @@ export const createCategorySchema = z.object({
 });
 
 export const updateCategorySchema = createCategorySchema.partial();
+
+// ─── Review Schemas ──────────────────────────────────────────────────────────
+
+export const createReviewSchema = z.object({
+  rating: z.number().int().min(1, 'Rating must be at least 1').max(5, 'Rating must be at most 5'),
+  comment: z.string().max(500, 'Comment is too long').optional(),
+});

@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import * as Localization from 'expo-localization';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { I18nManager } from 'react-native';
+import { I18nManager, NativeModules } from 'react-native';
 import * as Updates from 'expo-updates';
 
 import en from './en.json';
@@ -56,7 +56,14 @@ export const changeLanguage = async (lng: 'en' | 'ar') => {
   await i18n.changeLanguage(lng);
   
   // Reload app to apply RTL layout changes
-  await Updates.reloadAsync();
+  try {
+    await Updates.reloadAsync();
+  } catch (error) {
+    // Fallback for Expo Go / Dev mode
+    if (__DEV__ && NativeModules.DevSettings) {
+      NativeModules.DevSettings.reload();
+    }
+  }
 };
 
 export default i18n;
