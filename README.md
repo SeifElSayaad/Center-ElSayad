@@ -208,9 +208,4 @@ This project is for educational purposes.
 
 ## 👨‍💻 Developer
 
-Created by [Your Name] as a learning project to master full-stack mobile development.
-
----
-
-**Status**: 🚧 In Development
-**Last Updated**: February 2026
+Created by Seif ElSayaad as a learning project to master full-stack mobile development.
