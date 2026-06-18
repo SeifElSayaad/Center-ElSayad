@@ -145,3 +145,7 @@ vite.config.ts.timestamp-*
 .expo
 .specify
 .gemini
+
+# Project-specific ignored folders
+specs/main/
+docs/
