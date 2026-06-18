@@ -19,9 +19,11 @@ import { RootStackParamList } from '../navigation/AppNavigator';
 import BottomNav from '../components/BottomNav';
 import SearchBar from '../components/SearchBar';
 import ProductCard from '../components/ProductCard';
+import ProductCardSkeleton from '../components/ProductCardSkeleton';
 import { useCategoryStore } from '../store/categoryStore';
 import { useProductStore } from '../store/productStore';
 import { useCartStore } from '../store/cartStore';
+import { useTranslation } from 'react-i18next';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -31,19 +33,19 @@ const BANNERS = [
   {
     id: '1',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD7nmXgM2mY2zngaIpCAvMZF3Nx-6TSNuD5C_7KMnwPnA0KpbiC2WeYCupeAk3hK_HHA2-J3s9yhIvYQCKoAPZS0B-xZC6DSNlc2YiN0kgRwH9DV1-xGCtyTJ67crwPtII2f0YqxtSqoUdn-GGFfNGEQDFy0EyrAsWa1tAJsGZf9nYnLTo493pA68ltEVBLsaLlkJRgaDN37Z6D9sL-3cJTIn2IBRAOnU79PSfBOz_vkMoaN6Zsjcj-QhNVp6QBCpbPdI2TzBsqEAc',
-    badge: 'Seasonal Offer',
-    title: 'Back to School Essentials',
-    subtitle: 'Up to 50% off on all notebooks and backpacks',
-    cta: 'Shop Now',
+    badgeKey: 'home.banner1Badge',
+    titleKey: 'home.banner1Title',
+    subtitleKey: 'home.banner1Subtitle',
+    ctaKey: 'home.banner1Cta',
     ctaStyle: 'white',
   },
   {
     id: '2',
     image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB5V0EeaZVJmkgd87ZbMoguxvWtd-gSNVhTKjctpN4jRD3fQsBvkzX7NBATDD7R7jI2FJhaucOcvukhmc6uSUm6Y5-anpFnBV4JhBtVjclpK16KDey_Zvo81MzRpeBrO7PEEFJ2aLVTiPJvmYXA7lEKCrY1-yNiObH1HD3q1rxLWXmGimNyn5r7OpI5YAPUW-5N8ApwcFIc9EFVl_rtw_T4Gatw0LgmwIaBpoQNGYHRedED1QqKXh3TQWwcnwQA-lHYHlKzedVierY',
-    badge: null,
-    title: 'Modern Office Upgrade',
-    subtitle: 'Premium desk tech & ergonomic accessories',
-    cta: 'Explore Tech',
+    badgeKey: null,
+    titleKey: 'home.banner2Title',
+    subtitleKey: 'home.banner2Subtitle',
+    ctaKey: 'home.banner2Cta',
     ctaStyle: 'primary',
   },
 ];
@@ -53,9 +55,10 @@ const BANNERS = [
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 export default function HomeScreen() {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp>();
   const { categories, fetchCategories } = useCategoryStore();
-  const { featuredProducts, fetchFeaturedProducts } = useProductStore();
+  const { featuredProducts, fetchFeaturedProducts, isLoading } = useProductStore();
   const { addItem, totalItems } = useCartStore();
 
   React.useEffect(() => {
@@ -111,13 +114,13 @@ export default function HomeScreen() {
             >
               <View style={styles.bannerOverlay} />
               <View style={styles.bannerContent}>
-                {banner.badge && (
+                {banner.badgeKey && (
                   <View style={styles.badgeContainer}>
-                    <Text style={styles.badgeText}>{banner.badge.toUpperCase()}</Text>
+                    <Text style={styles.badgeText}>{t(banner.badgeKey).toUpperCase()}</Text>
                   </View>
                 )}
-                <Text style={styles.bannerTitle}>{banner.title}</Text>
-                <Text style={styles.bannerSubtitle}>{banner.subtitle}</Text>
+                <Text style={styles.bannerTitle}>{t(banner.titleKey)}</Text>
+                <Text style={styles.bannerSubtitle}>{t(banner.subtitleKey)}</Text>
                 <TouchableOpacity
                   style={[
                     styles.bannerBtn,
@@ -130,7 +133,7 @@ export default function HomeScreen() {
                       banner.ctaStyle === 'white' ? { color: '#db1f2f' } : { color: '#fff' },
                     ]}
                   >
-                    {banner.cta}
+                    {t(banner.ctaKey)}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -141,9 +144,9 @@ export default function HomeScreen() {
         {/* ── Category Grid ── */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Categories</Text>
+            <Text style={styles.sectionTitle}>{t('home.categories')}</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Categories', {})}>
-              <Text style={styles.seeAll}>See All</Text>
+              <Text style={styles.seeAll}>{t('home.seeAll')}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.categoryGrid}>
@@ -176,7 +179,7 @@ export default function HomeScreen() {
         {/* ── Featured Products ── */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Featured Products</Text>
+            <Text style={styles.sectionTitle}>{t('home.featuredProducts')}</Text>
             <View style={styles.arrowButtons}>
               <TouchableOpacity style={styles.arrowBtn}>
                 <MaterialIcons name="chevron-left" size={20} color="#1b0e0f" />
@@ -191,31 +194,39 @@ export default function HomeScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.productsRow}
           >
-            {featuredProducts.length > 0 ? featuredProducts.map((product) => (
-              <TouchableOpacity
-                key={product.id}
-                activeOpacity={0.85}
-                onPress={() => navigation.navigate('ProductDetails', { product })}
-              >
-                <ProductCard
-                  product={product as any}
-                  containerStyle={{ width: 155 }}
-                  onPressAdd={() => addItem({ productId: product.id, name: product.name, price: product.retailPrice, imageUrl: product.images?.[0]?.url })}
-                />
-              </TouchableOpacity>
-            )) : <Text style={{ padding: 16 }}>Loading featured products...</Text>}
+            {isLoading ? (
+              [1, 2, 3].map((key) => (
+                <ProductCardSkeleton key={key} containerStyle={{ width: 155 }} />
+              ))
+            ) : featuredProducts.length > 0 ? (
+              featuredProducts.map((product) => (
+                <TouchableOpacity
+                  key={product.id}
+                  activeOpacity={0.85}
+                  onPress={() => navigation.navigate('ProductDetails', { product })}
+                >
+                  <ProductCard
+                    product={product as any}
+                    containerStyle={{ width: 155 }}
+                    onPressAdd={() => addItem({ productId: product.id, name: product.name, price: product.retailPrice, imageUrl: product.images?.[0]?.url, quantity: 1 })}
+                  />
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={{ padding: 16 }}>{t('home.noFeaturedProducts')}</Text>
+            )}
           </ScrollView>
         </View>
 
         {/* ── Promo Banner ── */}
         <View style={[styles.section, styles.promoBanner]}>
           <View>
-            <Text style={styles.promoTitle}>Office Essentials Kit</Text>
+            <Text style={styles.promoTitle}>{t('home.promoTitle')}</Text>
             <Text style={styles.promoSubtitle}>
-              Get everything you need for your new workspace in one curated pack.
+              {t('home.promoSubtitle')}
             </Text>
             <TouchableOpacity style={styles.promoBtn}>
-              <Text style={styles.promoBtnText}>Browse Pack</Text>
+              <Text style={styles.promoBtnText}>{t('home.browsePack')}</Text>
             </TouchableOpacity>
           </View>
           <MaterialCommunityIcons

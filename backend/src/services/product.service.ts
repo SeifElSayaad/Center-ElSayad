@@ -71,15 +71,45 @@ export class ProductService {
   }
 
   static async createProduct(data: CreateProductBody) {
+    const { imageUrl, ...productData } = data;
+    
     return prisma.product.create({
-      data,
+      data: {
+        ...productData,
+        ...(imageUrl ? {
+          images: {
+            create: [{ url: imageUrl, sortOrder: 0 }]
+          }
+        } : {})
+      },
+      include: {
+        images: true,
+      }
     });
   }
 
   static async updateProduct(id: string, data: UpdateProductBody) {
+    const { imageUrl, ...productData } = data;
+    
+    // If an imageUrl is provided, we replace the first image (or add it if none exist)
+    if (imageUrl) {
+      // Delete existing images first for simplicity (assuming 1 image per product for now)
+      await prisma.productImage.deleteMany({ where: { productId: id } });
+    }
+
     return prisma.product.update({
       where: { id },
-      data,
+      data: {
+        ...productData,
+        ...(imageUrl ? {
+          images: {
+            create: [{ url: imageUrl, sortOrder: 0 }]
+          }
+        } : {})
+      },
+      include: {
+        images: true,
+      }
     });
   }
 

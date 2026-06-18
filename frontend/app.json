@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "frontend",
-    "slug": "frontend",
+    "name": "Center El-Sayad",
+    "slug": "center-elsayad",
     "scheme": "center-elsayad",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,18 +11,26 @@
     "splash": {
       "image": "./src/assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#db1f2f"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.elsayad.center",
+      "buildNumber": "1"
     },
     "android": {
+      "package": "com.elsayad.center",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#db1f2f"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
@@ -36,7 +44,14 @@
           "locationAlwaysAndWhenInUsePermission": "Allow Center El-Sayad to use your location to find nearby stores and set shipping addresses."
         }
       ],
-      "expo-localization"
-    ]
+      "expo-localization",
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "21a5f5d7-782a-4f76-bfe5-46b7e07125e8"
+      }
+    },
+    "owner": "sayaad1"
   }
 }

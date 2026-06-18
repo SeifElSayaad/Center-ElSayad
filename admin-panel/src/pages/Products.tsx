@@ -34,7 +34,6 @@ interface ProductForm {
   categoryId: string;
   isFeatured: boolean;
   isActive: boolean;
-  imageUrl: string;
 }
 
 const emptyForm: ProductForm = {
@@ -46,7 +45,6 @@ const emptyForm: ProductForm = {
   categoryId: '',
   isFeatured: false,
   isActive: true,
-  imageUrl: '',
 };
 
 // ─── Helper: auto-generate slug from name ────────────────────────────────────
@@ -81,10 +79,10 @@ function ProductModal({ product, categories, onClose, onSaved }: ProductModalPro
           categoryId: product.categoryId,
           isFeatured: product.isFeatured,
           isActive: product.isActive,
-          imageUrl: product.images?.[0]?.url ?? '',
         }
       : emptyForm
   );
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -119,33 +117,29 @@ function ProductModal({ product, categories, onClose, onSaved }: ProductModalPro
 
     setSaving(true);
     try {
-      const payload: Record<string, unknown> = {
-        name: form.name.trim(),
-        slug: form.slug.trim(),
-        description: form.description.trim() || undefined,
-        retailPrice: parseFloat(form.retailPrice),
-        stockQuantity: parseInt(form.stockQuantity),
-        categoryId: form.categoryId,
-        isFeatured: form.isFeatured,
-        isActive: form.isActive,
-      };
+      const formData = new FormData();
+      formData.append('name', form.name.trim());
+      formData.append('slug', form.slug.trim());
+      if (form.description.trim()) formData.append('description', form.description.trim());
+      formData.append('retailPrice', form.retailPrice);
+      formData.append('stockQuantity', form.stockQuantity);
+      formData.append('categoryId', form.categoryId);
+      formData.append('isFeatured', String(form.isFeatured));
+      formData.append('isActive', String(form.isActive));
+
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
 
       if (isEdit) {
-        await apiClient.put(`/products/${product.id}`, payload);
-        // Handle image URL separately if changed
-        if (form.imageUrl && form.imageUrl !== (product.images?.[0]?.url ?? '')) {
-          // For now: we just note it — full image CRUD would use a separate endpoint
-          toast('Image URL noted — image API coming in Phase 4');
-        }
+        await apiClient.put(`/products/${product.id}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
         toast.success('Product updated');
       } else {
-        const res = await apiClient.post('/products', payload);
-        // If image URL provided, add it — uses a simple workaround via update
-        if (form.imageUrl.trim()) {
-          await apiClient.put(`/products/${res.data.id}`, {
-            images: [{ url: form.imageUrl.trim() }],
-          }).catch(() => {}); // non-blocking
-        }
+        await apiClient.post('/products', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
         toast.success('Product created');
       }
 
@@ -293,28 +287,36 @@ function ProductModal({ product, categories, onClose, onSaved }: ProductModalPro
             {errors.categoryId && <p className="mt-1 text-xs text-red-500">{errors.categoryId}</p>}
           </div>
 
-          {/* Image URL */}
+          {/* Image Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Image URL
+              Product Image
             </label>
             <input
-              type="url"
-              value={form.imageUrl}
-              onChange={(e) => handleChange('imageUrl', e.target.value)}
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                if (e.target.files && e.target.files.length > 0) {
+                  setImageFile(e.target.files[0]);
+                }
+              }}
               className="block w-full rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="https://example.com/image.jpg"
             />
-            {form.imageUrl && (
+            {imageFile ? (
+              <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Selected: {imageFile.name}
+              </div>
+            ) : product?.images?.[0]?.url ? (
               <div className="mt-2">
+                <p className="text-xs text-gray-500 mb-1">Current Image:</p>
                 <img
-                  src={form.imageUrl}
-                  alt="Preview"
+                  src={product.images[0].url}
+                  alt="Current"
                   className="h-20 w-20 object-cover rounded-lg border border-gray-200 dark:border-gray-600"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                 />
               </div>
-            )}
+            ) : null}
           </div>
 
           {/* Toggles Row */}

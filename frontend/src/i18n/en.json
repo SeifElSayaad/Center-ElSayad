@@ -30,5 +30,76 @@
     "restartRequired": "Changing language requires an app restart. Do you want to proceed?",
     "yes": "Yes",
     "cancel": "Cancel"
+  },
+  "home": {
+    "categories": "Categories",
+    "seeAll": "See All",
+    "featuredProducts": "Featured Products",
+    "noFeaturedProducts": "No featured products found.",
+    "promoTitle": "Office Essentials Kit",
+    "promoSubtitle": "Get everything you need for your new workspace in one curated pack.",
+    "browsePack": "Browse Pack",
+    "banner1Badge": "Seasonal Offer",
+    "banner1Title": "Back to School Essentials",
+    "banner1Subtitle": "Up to 50% off on all notebooks and backpacks",
+    "banner1Cta": "Shop Now",
+    "banner2Title": "Modern Office Upgrade",
+    "banner2Subtitle": "Premium desk tech & ergonomic accessories",
+    "banner2Cta": "Explore Tech"
+  },
+  "categories_screen": {
+    "allProducts": "All Products",
+    "searchPlaceholder": "Search notebooks, pens...",
+    "popularItems": "Popular Items",
+    "noProducts": "No products found."
+  },
+  "productDetails": {
+    "premiumCollection": "PREMIUM COLLECTION",
+    "inStock": "IN STOCK",
+    "noRatings": "No Ratings",
+    "reviews": "reviews",
+    "totalPrice": "TOTAL PRICE",
+    "description": "Description",
+    "category": "CATEGORY",
+    "userReviews": "User Reviews",
+    "writeReview": "Write a Review",
+    "noReviewsYet": "No reviews yet. Be the first to review this product!",
+    "total": "Total",
+    "addToCart": "Add to Cart"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "yourItems": "YOUR ITEMS ({{count}})",
+    "qty": "Qty",
+    "deliveryAddress": "DELIVERY ADDRESS",
+    "addDeliveryAddress": "Add a delivery address",
+    "paymentMethod": "PAYMENT METHOD",
+    "cashOnDelivery": "Cash on Delivery",
+    "mockPayment": "Mock Card Payment",
+    "orderSummary": "ORDER SUMMARY",
+    "subtotal": "Subtotal",
+    "deliveryFee": "Delivery Fee",
+    "free": "Free",
+    "total": "Total",
+    "placeOrder": "Place Order",
+    "emptyCart": "Your cart is empty.",
+    "noAddress": "Please select a delivery address before placing your order.",
+    "noAddressTitle": "No address",
+    "emptyCartTitle": "Empty cart",
+    "orderFailed": "Order failed",
+    "orderFailedMessage": "Something went wrong. Please try again."
+  },
+  "productCard": {
+    "hot": "HOT"
+  },
+  "orderConfirm": {
+    "title": "Order Placed!",
+    "subtitle": "Your order has been successfully placed and is being processed.",
+    "orderId": "Order ID",
+    "totalPaid": "Total Paid",
+    "status": "Status",
+    "pending": "PENDING",
+    "trackOrder": "Track Order",
+    "continueShopping": "Continue Shopping"
   }
 }

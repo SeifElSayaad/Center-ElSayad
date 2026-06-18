@@ -98,3 +98,14 @@ export async function changePassword(req: AuthenticatedRequest, res: Response, n
     next(err);
   }
 }
+
+// ─── DELETE /auth/me ──────────────────────────────────────────────────────────
+
+export async function deleteAccount(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  try {
+    const result = await authService.deleteAccount(req.user!.userId);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+}

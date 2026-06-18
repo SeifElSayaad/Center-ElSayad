@@ -24,4 +24,8 @@ router.post('/products/bulk-sync', upload.single('file'), AdminController.bulkSy
 // Orders
 router.get('/orders', AdminController.getAllOrders);
 
+// Customers
+router.get('/customers', AdminController.getCustomers);
+router.patch('/customers/:id/status', AdminController.toggleCustomerStatus);
+
 export default router;

@@ -58,11 +58,11 @@ export const createProductSchema = z.object({
     .max(200)
     .regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
   description: z.string().optional(),
-  retailPrice: z.number().positive('Price must be positive'),
-  stockQuantity: z.number().int().min(0).default(0),
+  retailPrice: z.coerce.number().positive('Price must be positive'),
+  stockQuantity: z.coerce.number().int().min(0).default(0),
   categoryId: z.string().min(1, 'Category is required'),
-  isFeatured: z.boolean().default(false),
-  isActive: z.boolean().default(true),
+  isFeatured: z.union([z.boolean(), z.literal('true'), z.literal('false')]).transform((v) => v === true || v === 'true').default(false),
+  isActive: z.union([z.boolean(), z.literal('true'), z.literal('false')]).transform((v) => v === true || v === 'true').default(true),
 });
 
 export const updateProductSchema = createProductSchema.partial();
@@ -105,8 +105,13 @@ export const createCategorySchema = z.object({
     .max(100)
     .regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens'),
   description: z.string().optional(),
+  // imageUrl is handled by multer file upload — not required in body schema
   imageUrl: z.string().url().optional().or(z.literal('')),
-  sortOrder: z.number().int().min(0).default(0),
+  // sortOrder comes as string from form-data, coerce to int
+  sortOrder: z.coerce.number().int().min(0).default(0),
+  isActive: z.union([z.boolean(), z.literal('true'), z.literal('false')])
+    .transform((v) => v === true || v === 'true')
+    .default(true),
 });
 
 export const updateCategorySchema = createCategorySchema.partial();

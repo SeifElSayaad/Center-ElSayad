@@ -7,6 +7,7 @@ export interface CreateProductBody {
   stockQuantity?: number;
   isFeatured?: boolean;
   isActive?: boolean;
+  imageUrl?: string;
 }
 
 export interface UpdateProductBody extends Partial<CreateProductBody> {}

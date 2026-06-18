@@ -18,10 +18,12 @@ import ScreenHeader from '../components/ScreenHeader';
 import { useCartStore } from '../store/cartStore';
 import { useAddressStore } from '../store/addressStore';
 import { placeOrder, PaymentMethod } from '../services/orderApi';
+import { useTranslation } from 'react-i18next';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Checkout'>;
 
 export default function CheckoutScreen() {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp>();
   const { items, subtotal, clearCart } = useCartStore();
   const { addresses, selectedAddressId, fetchAddresses, isLoading: addressLoading } = useAddressStore();
@@ -40,11 +42,11 @@ export default function CheckoutScreen() {
 
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
-      Alert.alert('No address', 'Please select a delivery address before placing your order.');
+      Alert.alert(t('checkout.noAddressTitle'), t('checkout.noAddress'));
       return;
     }
     if (items.length === 0) {
-      Alert.alert('Empty cart', 'Your cart is empty.');
+      Alert.alert(t('checkout.emptyCartTitle'), t('checkout.emptyCart'));
       return;
     }
 
@@ -58,8 +60,8 @@ export default function CheckoutScreen() {
       clearCart();
       navigation.replace('OrderConfirm', { orderId: order.id, totalAmount: order.totalAmount });
     } catch (err: any) {
-      const msg = err?.response?.data?.error ?? err?.message ?? 'Something went wrong. Please try again.';
-      Alert.alert('Order failed', msg);
+      const msg = err?.response?.data?.error ?? err?.message ?? t('checkout.orderFailedMessage');
+      Alert.alert(t('checkout.orderFailed'), msg);
     } finally {
       setPlacing(false);
     }
@@ -68,12 +70,12 @@ export default function CheckoutScreen() {
   return (
     <View style={styles.root}>
       <StatusBar barStyle="dark-content" backgroundColor="#F5F5F7" />
-      <ScreenHeader title="Checkout" backgroundColor="#F5F5F7" />
+      <ScreenHeader title={t('checkout.title')} backgroundColor="#F5F5F7" />
 
       <ScrollView style={styles.scroll} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
 
         {/* ── Items Summary ── */}
-        <Text style={styles.sectionLabel}>YOUR ITEMS ({items.length})</Text>
+        <Text style={styles.sectionLabel}>{t('checkout.yourItems', { count: items.length })}</Text>
         <View style={styles.card}>
           {items.map((item, idx) => (
             <View key={item.productId}>
@@ -87,7 +89,7 @@ export default function CheckoutScreen() {
                 )}
                 <View style={styles.itemDetails}>
                   <Text style={styles.itemName} numberOfLines={2}>{item.name}</Text>
-                  <Text style={styles.itemMeta}>Qty: {item.quantity}</Text>
+                  <Text style={styles.itemMeta}>{t('checkout.qty')}: {item.quantity}</Text>
                 </View>
                 <Text style={styles.itemPrice}>EGP {(item.price * item.quantity).toFixed(2)}</Text>
               </View>
@@ -97,7 +99,7 @@ export default function CheckoutScreen() {
         </View>
 
         {/* ── Delivery Address ── */}
-        <Text style={styles.sectionLabel}>DELIVERY ADDRESS</Text>
+        <Text style={styles.sectionLabel}>{t('checkout.deliveryAddress')}</Text>
         <TouchableOpacity
           style={styles.card}
           onPress={() => navigation.navigate('Address')}
@@ -123,14 +125,14 @@ export default function CheckoutScreen() {
               <View style={styles.addressIcon}>
                 <MaterialIcons name="add-location-alt" size={22} color="#D32F2F" />
               </View>
-              <Text style={styles.addAddressText}>Add a delivery address</Text>
+              <Text style={styles.addAddressText}>{t('checkout.addDeliveryAddress')}</Text>
               <MaterialIcons name="chevron-right" size={22} color="#9CA3AF" />
             </View>
           )}
         </TouchableOpacity>
 
         {/* ── Payment Method ── */}
-        <Text style={styles.sectionLabel}>PAYMENT METHOD</Text>
+        <Text style={styles.sectionLabel}>{t('checkout.paymentMethod')}</Text>
         <View style={styles.card}>
           {(['CASH_ON_DELIVERY', 'MOCK_PAYMENT'] as PaymentMethod[]).map((method) => (
             <TouchableOpacity
@@ -146,7 +148,7 @@ export default function CheckoutScreen() {
                   color="#D32F2F"
                 />
                 <Text style={styles.paymentLabel}>
-                  {method === 'CASH_ON_DELIVERY' ? 'Cash on Delivery' : 'Mock Card Payment'}
+                  {method === 'CASH_ON_DELIVERY' ? t('checkout.cashOnDelivery') : t('checkout.mockPayment')}
                 </Text>
               </View>
               <View style={[styles.radio, paymentMethod === method && styles.radioSelected]}>
@@ -157,19 +159,19 @@ export default function CheckoutScreen() {
         </View>
 
         {/* ── Price Breakdown ── */}
-        <Text style={styles.sectionLabel}>ORDER SUMMARY</Text>
+        <Text style={styles.sectionLabel}>{t('checkout.orderSummary')}</Text>
         <View style={styles.card}>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Subtotal</Text>
+            <Text style={styles.summaryLabel}>{t('checkout.subtotal')}</Text>
             <Text style={styles.summaryValue}>EGP {sub.toFixed(2)}</Text>
           </View>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Delivery Fee</Text>
-            <Text style={[styles.summaryValue, { color: '#2E7D32' }]}>Free</Text>
+            <Text style={styles.summaryLabel}>{t('checkout.deliveryFee')}</Text>
+            <Text style={[styles.summaryValue, { color: '#2E7D32' }]}>{t('checkout.free')}</Text>
           </View>
           <View style={styles.separator} />
           <View style={styles.summaryRow}>
-            <Text style={styles.totalLabel}>Total</Text>
+            <Text style={styles.totalLabel}>{t('checkout.total')}</Text>
             <Text style={styles.totalValue}>EGP {total.toFixed(2)}</Text>
           </View>
         </View>
@@ -180,7 +182,7 @@ export default function CheckoutScreen() {
       {/* ── Fixed Footer ── */}
       <View style={styles.footer}>
         <View style={styles.footerTotal}>
-          <Text style={styles.footerTotalLabel}>Total</Text>
+          <Text style={styles.footerTotalLabel}>{t('checkout.total')}</Text>
           <Text style={styles.footerTotalValue}>EGP {total.toFixed(2)}</Text>
         </View>
         <TouchableOpacity
@@ -194,7 +196,7 @@ export default function CheckoutScreen() {
           ) : (
             <>
               <MaterialIcons name="check-circle" size={20} color="#FFF" style={{ marginRight: 8 }} />
-              <Text style={styles.placeOrderBtnText}>Place Order</Text>
+              <Text style={styles.placeOrderBtnText}>{t('checkout.placeOrder')}</Text>
             </>
           )}
         </TouchableOpacity>

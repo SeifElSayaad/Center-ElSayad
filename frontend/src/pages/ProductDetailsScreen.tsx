@@ -18,6 +18,8 @@ import { useCartStore } from '../store/cartStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { productApi } from '../services/productApi';
 import { useAuth } from '../auth/AuthContext';
+import Skeleton from '../components/Skeleton';
+import { useTranslation } from 'react-i18next';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -34,6 +36,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ProductDeta
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function ProductDetailsScreen() {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<RouteProps>();
   const { product } = route.params;
@@ -140,12 +143,12 @@ export default function ProductDetailsScreen() {
 
         {/* ── Product Info ── */}
         <View style={styles.infoSection}>
-          <Text style={styles.brandText}>{'PREMIUM COLLECTION'}</Text>
+          <Text style={styles.brandText}>{t('productDetails.premiumCollection')}</Text>
           
           <View style={styles.titleRow}>
             <Text style={styles.productName}>{product.name}</Text>
             <View style={styles.inStockBadge}>
-              <Text style={styles.inStockText}>IN STOCK</Text>
+              <Text style={styles.inStockText}>{t('productDetails.inStock')}</Text>
             </View>
           </View>
 
@@ -159,8 +162,8 @@ export default function ProductDetailsScreen() {
                 color="#D32F2F"
               />
             ))}
-            <Text style={styles.ratingText}>{reviewsMeta.averageRating > 0 ? reviewsMeta.averageRating.toFixed(1) : 'No Ratings'}</Text>
-            <Text style={styles.reviewCount}>({reviewsMeta.totalItems} reviews)</Text>
+            <Text style={styles.ratingText}>{reviewsMeta.averageRating > 0 ? reviewsMeta.averageRating.toFixed(1) : t('productDetails.noRatings')}</Text>
+            <Text style={styles.reviewCount}>({reviewsMeta.totalItems} {t('productDetails.reviews')})</Text>
           </View>
 
           <View style={styles.divider} />
@@ -168,7 +171,7 @@ export default function ProductDetailsScreen() {
           {/* Price & Quantity */}
           <View style={styles.priceQtyRow}>
             <View>
-              <Text style={styles.totalPriceLabel}>TOTAL PRICE</Text>
+              <Text style={styles.totalPriceLabel}>{t('productDetails.totalPrice')}</Text>
               <Text style={styles.price}>${totalPrice}</Text>
             </View>
             
@@ -186,7 +189,7 @@ export default function ProductDetailsScreen() {
 
         {/* ── Description ── */}
         <View style={styles.section}>
-          <Text style={styles.sectionHeader}>Description</Text>
+          <Text style={styles.sectionHeader}>{t('productDetails.description')}</Text>
           <Text style={styles.descriptionText}>{DESCRIPTION}</Text>
         </View>
 
@@ -194,7 +197,7 @@ export default function ProductDetailsScreen() {
         <View style={styles.attributesRow}>
           <View style={styles.attributeCard}>
             <MaterialIcons name="category" size={24} color="#D32F2F" style={styles.attrIcon} />
-            <Text style={styles.attrLabel}>CATEGORY</Text>
+            <Text style={styles.attrLabel}>{t('productDetails.category')}</Text>
             <Text style={styles.attrValue}>Stationery</Text>
           </View>
         </View> 
@@ -202,16 +205,31 @@ export default function ProductDetailsScreen() {
         {/* ── User Reviews ── */}
         <View style={styles.section}>
           <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionHeader}>User Reviews</Text>
+            <Text style={styles.sectionHeader}>{t('productDetails.userReviews')}</Text>
             <TouchableOpacity onPress={handleWriteReview}>
-              <Text style={styles.seeAllText}>Write a Review</Text>
+              <Text style={styles.seeAllText}>{t('productDetails.writeReview')}</Text>
             </TouchableOpacity>
           </View>
           
           {isLoadingReviews ? (
-            <Text style={{ paddingVertical: 16, color: '#757575' }}>Loading reviews...</Text>
+            <View>
+              {[1, 2].map((key) => (
+                <View key={key} style={styles.reviewItem}>
+                  <Skeleton width={40} height={40} borderRadius={20} style={{ marginRight: 12 }} />
+                  <View style={{ flex: 1 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
+                      <Skeleton width={100} height={14} borderRadius={4} />
+                      <Skeleton width={60} height={12} borderRadius={4} />
+                    </View>
+                    <Skeleton width={80} height={12} borderRadius={4} style={{ marginBottom: 10 }} />
+                    <Skeleton width="100%" height={12} borderRadius={4} style={{ marginBottom: 4 }} />
+                    <Skeleton width="80%" height={12} borderRadius={4} />
+                  </View>
+                </View>
+              ))}
+            </View>
           ) : reviews.length === 0 ? (
-            <Text style={{ paddingVertical: 16, color: '#757575' }}>No reviews yet. Be the first to review this product!</Text>
+            <Text style={{ paddingVertical: 16, color: '#757575' }}>{t('productDetails.noReviewsYet')}</Text>
           ) : reviews.map((review) => (
             <View key={review.id} style={styles.reviewItem}>
               <View style={styles.reviewAvatar}>
@@ -245,7 +263,7 @@ export default function ProductDetailsScreen() {
       {/* ── Sticky Bottom Action ── */}
       <View style={styles.bottomBar}>
         <View style={styles.cartInfo}>
-          <Text style={styles.cartTotalLabel}>Total</Text>
+          <Text style={styles.cartTotalLabel}>{t('productDetails.total')}</Text>
           <Text style={styles.cartTotalPrice}>${totalPrice}</Text>
         </View>
         <TouchableOpacity 
@@ -253,7 +271,7 @@ export default function ProductDetailsScreen() {
           onPress={() => addItem({ productId: product.id, name: product.name, price: product.retailPrice, imageUrl: product.images?.[0]?.url, quantity: selectedQty })}
         >
           <MaterialIcons name="shopping-cart" size={20} color="#FFFFFF" />
-          <Text style={styles.addToCartText}>Add to Cart</Text>
+          <Text style={styles.addToCartText}>{t('productDetails.addToCart')}</Text>
         </TouchableOpacity>
       </View>
     </View>

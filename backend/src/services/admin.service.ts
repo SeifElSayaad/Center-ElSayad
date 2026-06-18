@@ -203,4 +203,63 @@ export class AdminService {
       recentOrders,
     };
   }
+
+  /**
+   * Fetch B2C customers with optional search filter and pagination.
+   */
+  static async getCustomers(
+    where: Record<string, unknown>,
+    skip: number,
+    limit: number
+  ) {
+    const [customers, total] = await Promise.all([
+      prisma.user.findMany({
+        where,
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          phone: true,
+          isActive: true,
+          userType: true,
+          createdAt: true,
+          _count: { select: { orders: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.user.count({ where }),
+    ]);
+
+    return {
+      customers,
+      pagination: {
+        total,
+        page: Math.floor(skip / limit) + 1,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  /**
+   * Toggle isActive on a user (suspend / reactivate).
+   */
+  static async toggleCustomerStatus(userId: string) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, isActive: true, userType: true },
+    });
+
+    if (!user) throw new Error('User not found');
+    if (user.userType === 'ADMIN') throw new Error('Cannot change status of an admin user');
+
+    return prisma.user.update({
+      where: { id: userId },
+      data: { isActive: !user.isActive },
+      select: { id: true, email: true, firstName: true, lastName: true, isActive: true },
+    });
+  }
 }

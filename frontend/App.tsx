@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import AppNavigator from './src/navigation/AppNavigator';
 import { AuthProvider } from './src/auth/AuthContext';
+import { ErrorBoundary } from './src/components/ErrorBoundary';
 import { initI18n } from './src/i18n';
 import './src/i18n'; // import to ensure it's bundled
 
@@ -23,10 +24,12 @@ export default function App() {
   }
 
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

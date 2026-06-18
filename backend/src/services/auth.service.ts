@@ -282,3 +282,14 @@ export async function changePassword(userId: string, body: ChangePasswordBody) {
 
   return { message: 'Password has been updated successfully.' };
 }
+
+// ─── Delete Account ───────────────────────────────────────────────────────────
+
+export async function deleteAccount(userId: string) {
+  // Soft delete by setting isActive to false
+  await prisma.user.update({
+    where: { id: userId },
+    data: { isActive: false },
+  });
+  return { message: 'Account has been deleted successfully.' };
+}

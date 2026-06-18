@@ -28,6 +28,8 @@ router.get('/me',       requireAuth, authController.me);
 router.patch('/me',     requireAuth, validate(updateProfileSchema), authController.updateProfile);
 // PATCH /me/password — update the logged-in user's password
 router.patch('/me/password', requireAuth, validate(changePasswordSchema), authController.changePassword);
+// DELETE /me — soft delete the logged-in user's account
+router.delete('/me', requireAuth, authController.deleteAccount);
 
 export default router;
 

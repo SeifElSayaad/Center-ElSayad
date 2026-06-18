@@ -18,6 +18,7 @@ import { useAuth } from '../auth/AuthContext';
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
 import { changeLanguage } from '../i18n';
+import { deleteAccount } from '../services/authApi';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Settings'>;
 
@@ -40,10 +41,14 @@ export default function SettingsScreen() {
         { 
           text: 'Delete', 
           style: 'destructive',
-          onPress: () => {
-            // Placeholder for delete account API call
-            Alert.alert('Account Deleted', 'Your account has been successfully deleted.');
-            signOut();
+          onPress: async () => {
+            try {
+              await deleteAccount();
+              Alert.alert('Account Deleted', 'Your account has been successfully deleted.');
+              signOut();
+            } catch (err) {
+              Alert.alert('Error', 'Failed to delete account. Please try again later.');
+            }
           }
         },
       ]

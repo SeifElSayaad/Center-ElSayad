@@ -7,6 +7,7 @@ import {
   StyleSheet,
   StatusBar,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -91,21 +92,31 @@ export default function OrderHistoryScreen() {
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const fetchOrders = async () => {
+    try {
+      const data = await getUserOrders();
+      setOrders(data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+      setError(null);
+    } catch (err: any) {
+      setError(err?.response?.data?.message ?? 'Failed to load orders. Please try again.');
+    }
+  };
 
   useEffect(() => {
     (async () => {
-      try {
-        const data = await getUserOrders();
-        // Show newest orders first
-        setOrders(data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
-      } catch (err: any) {
-        setError(err?.response?.data?.message ?? 'Failed to load orders. Please try again.');
-      } finally {
-        setLoading(false);
-      }
+      await fetchOrders();
+      setLoading(false);
     })();
   }, []);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchOrders();
+    setRefreshing(false);
+  };
 
   return (
     <View style={styles.root}>
@@ -138,6 +149,14 @@ export default function OrderHistoryScreen() {
             />
           )}
           ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={['#db1f2f']}
+              tintColor="#db1f2f"
+            />
+          }
         />
       )}
     </View>

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { cartApi } from '../services/cartApi';
+import { authStorage } from '../auth/storage';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -33,13 +34,15 @@ export const useCartStore = create<CartStore>((set, get) => ({
   error: null,
 
   fetchCart: async () => {
+    const token = await authStorage.getToken();
+    if (!token) return;
+
     set({ isLoading: true, error: null });
     try {
       const items = await cartApi.getCart();
       set({ items, isLoading: false });
     } catch (err: any) {
       set({ error: err.response?.data?.message || 'Failed to fetch cart', isLoading: false });
-      // If unauthorized, we don't clear local cart strictly, but maybe we should. Let's keep it robust.
     }
   },
 
@@ -59,12 +62,15 @@ export const useCartStore = create<CartStore>((set, get) => ({
     });
 
     // Background sync
-    try {
-      await cartApi.addItem(item.productId, qtyToAdd);
-      // Re-fetch to guarantee correct IDs if it was newly created
-      await get().fetchCart();
-    } catch (err) {
-      console.error('Failed to sync addItem to cart', err);
+    const token = await authStorage.getToken();
+    if (token) {
+      try {
+        await cartApi.addItem(item.productId, qtyToAdd);
+        // Re-fetch to guarantee correct IDs if it was newly created
+        await get().fetchCart();
+      } catch (err) {
+        console.error('Failed to sync addItem to cart', err);
+      }
     }
   },
 
@@ -72,10 +78,13 @@ export const useCartStore = create<CartStore>((set, get) => ({
     // Optimistic update
     set((state) => ({ items: state.items.filter((i) => i.productId !== productId) }));
 
-    try {
-      await cartApi.removeItem(productId);
-    } catch (err) {
-      console.error('Failed to sync removeItem from cart', err);
+    const token = await authStorage.getToken();
+    if (token) {
+      try {
+        await cartApi.removeItem(productId);
+      } catch (err) {
+        console.error('Failed to sync removeItem from cart', err);
+      }
     }
   },
 
@@ -88,19 +97,26 @@ export const useCartStore = create<CartStore>((set, get) => ({
       items: state.items.map((i) => (i.productId === productId ? { ...i, quantity } : i)),
     }));
 
-    try {
-      await cartApi.updateQuantity(productId, quantity);
-    } catch (err) {
-      console.error('Failed to sync updateQuantity', err);
+    const token = await authStorage.getToken();
+    if (token) {
+      try {
+        await cartApi.updateQuantity(productId, quantity);
+      } catch (err) {
+        console.error('Failed to sync updateQuantity', err);
+      }
     }
   },
 
   clearCart: async () => {
     set({ items: [] });
-    try {
-      await cartApi.clearCart();
-    } catch (err) {
-      console.error('Failed to sync clearCart', err);
+    
+    const token = await authStorage.getToken();
+    if (token) {
+      try {
+        await cartApi.clearCart();
+      } catch (err) {
+        console.error('Failed to sync clearCart', err);
+      }
     }
   },
 

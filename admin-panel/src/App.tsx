@@ -1,13 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet, Link, useLocation } from 'react-router-dom';
-import { Package, ShoppingCart, LayoutDashboard, LogOut, Sun, Moon } from 'lucide-react';
+import { Package, ShoppingCart, LayoutDashboard, LogOut, Sun, Moon, Tag, Users } from 'lucide-react';
 import { Toaster } from 'react-hot-toast';
 
-// ─── Dummy / Placeholder Pages (to be implemented) ────────────────────────────
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
 import BulkSync from './pages/BulkSync';
 import Orders from './pages/Orders';
+import Categories from './pages/Categories';
+import Customers from './pages/Customers';
 import { useTheme } from './providers/ThemeProvider';
 
 // ─── Auth Guard ───────────────────────────────────────────────────────────────
@@ -31,7 +32,9 @@ function AdminLayout() {
   const navItems = [
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
     { name: 'Products', path: '/products', icon: Package },
+    { name: 'Categories', path: '/categories', icon: Tag },
     { name: 'Orders', path: '/orders', icon: ShoppingCart },
+    { name: 'Customers', path: '/customers', icon: Users },
   ];
 
   return (
@@ -120,7 +123,9 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/products" element={<Products />} />
             <Route path="/products/bulk-sync" element={<BulkSync />} />
+            <Route path="/categories" element={<Categories />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/customers" element={<Customers />} />
           </Route>
         </Route>
       </Routes>
@@ -129,3 +134,4 @@ function App() {
 }
 
 export default App;
+

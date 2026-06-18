@@ -62,4 +62,50 @@ export class AdminController {
       res.status(500).json({ error: message });
     }
   }
+
+  /**
+   * List all B2C customers with basic order stats.
+   */
+  static async getCustomers(req: Request, res: Response): Promise<void> {
+    try {
+      const { search, page, limit } = req.query;
+
+      const pageNum = parseInt(page as string, 10) || 1;
+      const limitNum = parseInt(limit as string, 10) || 20;
+      const skip = (pageNum - 1) * limitNum;
+
+      const searchStr = Array.isArray(search) ? search[0] : (search as string | undefined);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const where: any = { userType: 'B2C' };
+      if (searchStr) {
+        where.OR = [
+          { firstName: { contains: searchStr, mode: 'insensitive' } },
+          { lastName: { contains: searchStr, mode: 'insensitive' } },
+          { email: { contains: searchStr, mode: 'insensitive' } },
+        ];
+      }
+
+      const { AdminService: AS } = await import('../services/admin.service');
+      const result = await AS.getCustomers(where, skip, limitNum);
+      res.json(result);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Error fetching customers';
+      res.status(500).json({ error: message });
+    }
+  }
+
+  /**
+   * Toggle a customer's isActive status (suspend / reactivate).
+   */
+  static async toggleCustomerStatus(req: Request, res: Response): Promise<void> {
+    try {
+      const id = String(req.params.id);
+      const { AdminService: AS } = await import('../services/admin.service');
+      const updated = await AS.toggleCustomerStatus(id);
+      res.json(updated);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Error updating customer status';
+      res.status(500).json({ error: message });
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ProductService } from '../services/product.service';
 import { CreateProductBody, UpdateProductBody, ProductQueryFilters } from '../types/product.types';
+import { uploadImageBuffer } from '../utils/cloudinary';
 
 export class ProductController {
   static async getProducts(
@@ -44,6 +45,11 @@ export class ProductController {
   ): Promise<void> {
     try {
       const body = req.body as CreateProductBody;
+      
+      if (req.file) {
+        body.imageUrl = await uploadImageBuffer(req.file.buffer, 'products');
+      }
+
       const newProduct = await ProductService.createProduct(body);
       res.status(201).json(newProduct);
     } catch (error) {
@@ -59,6 +65,11 @@ export class ProductController {
     try {
       const id = req.params.id as string;
       const body = req.body as UpdateProductBody;
+      
+      if (req.file) {
+        body.imageUrl = await uploadImageBuffer(req.file.buffer, 'products');
+      }
+
       const updatedProduct = await ProductService.updateProduct(id, body);
       res.json(updatedProduct);
     } catch (error) {

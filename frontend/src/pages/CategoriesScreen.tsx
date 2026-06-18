@@ -21,9 +21,11 @@ import { RootStackParamList } from '../navigation/AppNavigator';
 import BottomNav from '../components/BottomNav';
 import SearchBar from '../components/SearchBar';
 import ProductCard from '../components/ProductCard';
+import ProductCardSkeleton from '../components/ProductCardSkeleton';
 import { useCategoryStore } from '../store/categoryStore';
 import { useProductStore } from '../store/productStore';
 import { useCartStore } from '../store/cartStore';
+import { useTranslation } from 'react-i18next';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -37,15 +39,16 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Categories'
 type CategoriesRouteProp = RouteProp<RootStackParamList, 'Categories'>;
 
 export default function CategoriesScreen() {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp>();
   const route = useRoute<CategoriesRouteProp>();
-  const categoryName = route.params?.categoryName ?? 'All Products';
+  const categoryName = route.params?.categoryName ?? t('categories_screen.allProducts');
 
   const { categories, fetchCategories } = useCategoryStore();
   const { products, fetchProducts, fetchNextPage, isLoading, isFetchingNextPage } = useProductStore();
   const { addItem, totalItems } = useCartStore();
 
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [activeFilter, setActiveFilter] = useState(t('categories_screen.allProducts'));
   const [userChangedFilter, setUserChangedFilter] = useState(false);
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -78,7 +81,7 @@ export default function CategoriesScreen() {
     });
   }, [activeFilter, categories, debouncedSearch]);
 
-  const filters = ['All', ...categories.map(c => c.name)];
+  const filters = [t('categories_screen.allProducts'), ...categories.map(c => c.name)];
 
   const handleFilterPress = (filter: string) => {
     setUserChangedFilter(true);
@@ -119,7 +122,7 @@ export default function CategoriesScreen() {
         {/* Search and Filter */}
         <View style={styles.searchRow}>
           <SearchBar 
-            placeholder="Search notebooks, pens..."
+            placeholder={t('categories_screen.searchPlaceholder')}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
@@ -175,7 +178,7 @@ export default function CategoriesScreen() {
         onEndReachedThreshold={0.5}
         ListHeaderComponent={(
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Popular Items</Text>
+            <Text style={styles.sectionTitle}>{t('categories_screen.popularItems')}</Text>
           </View>
         )}
         renderItem={({ item: product }) => (
@@ -190,10 +193,22 @@ export default function CategoriesScreen() {
             />
           </TouchableOpacity>
         )}
+        ListEmptyComponent={
+          isLoading ? (
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 12 }}>
+              {[1, 2, 3, 4, 5, 6].map((key) => (
+                <ProductCardSkeleton key={key} containerStyle={{ width: (SCREEN_WIDTH - 32 - 12) / 2 }} />
+              ))}
+            </View>
+          ) : (
+            <View style={{ padding: 16, alignItems: 'center' }}>
+              <Text>{t('categories_screen.noProducts')}</Text>
+            </View>
+          )
+        }
         ListFooterComponent={(
           <View style={{ padding: 16, alignItems: 'center' }}>
             {isFetchingNextPage && <ActivityIndicator size="small" color="#db1f2f" />}
-            {!isLoading && products.length === 0 && <Text>No products found.</Text>}
           </View>
         )}
       />

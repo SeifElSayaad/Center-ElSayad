@@ -37,16 +37,34 @@ export default function CustomerOrderScreen() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    (async () => {
+    let intervalId: NodeJS.Timeout;
+
+    const fetchOrder = async () => {
       try {
         const data = await getOrderById(orderId);
         setOrder(data);
+        
+        // Stop polling if order has reached a terminal state
+        if (data.status === 'DELIVERED' || data.status === 'CANCELLED') {
+          if (intervalId) clearInterval(intervalId);
+        }
       } catch (err: any) {
         setError(err?.response?.data?.error ?? err?.message ?? 'Failed to load order');
+        if (intervalId) clearInterval(intervalId); // Stop polling on error
       } finally {
         setLoading(false);
       }
-    })();
+    };
+
+    // Initial fetch
+    fetchOrder();
+
+    // Poll every 10 seconds
+    intervalId = setInterval(fetchOrder, 10000);
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, [orderId]);
 
   const formatDate = (dateStr: string) => {

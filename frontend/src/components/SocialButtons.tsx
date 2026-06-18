@@ -10,9 +10,20 @@ import { socialLogin, AuthResponse } from '../services/authApi';
 WebBrowser.maybeCompleteAuthSession();
 
 // ─── CREDENTIALS ──────────────────────────────────────────────────────────────
-// Replace these with your real OAuth Client IDs.
-// Google: https://console.cloud.google.com/apis/credentials
-// Facebook: https://developers.facebook.com/apps/
+// ACTION REQUIRED BEFORE PUBLISHING:
+// You MUST replace these placeholder strings with your actual OAuth Client IDs.
+// 
+// For Google (Requires 3 separate Client IDs):
+// 1. Go to https://console.cloud.google.com/apis/credentials
+// 2. Create an OAuth Client ID for Web (Web Application)
+// 3. Create an OAuth Client ID for Android
+// 4. Create an OAuth Client ID for iOS
+// 
+// For Facebook (Requires 1 App ID):
+// 1. Go to https://developers.facebook.com/apps/
+// 2. Create an app and copy the App ID
+// 
+// Paste the keys below:
 
 const GOOGLE_WEB_CLIENT_ID    = 'YOUR_GOOGLE_WEB_CLIENT_ID';
 const GOOGLE_ANDROID_CLIENT_ID = 'YOUR_GOOGLE_ANDROID_CLIENT_ID';

@@ -110,3 +110,10 @@ export async function changePassword(data: ChangePasswordPayload): Promise<{ mes
   const response = await apiClient.patch<{ message: string }>('/auth/me/password', data);
   return response.data;
 }
+
+// ─── Delete Account ───────────────────────────────────────────────────────────
+
+export async function deleteAccount(): Promise<{ message: string }> {
+  const response = await apiClient.delete<{ message: string }>('/auth/me');
+  return response.data;
+}

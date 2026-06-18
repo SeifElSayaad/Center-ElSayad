@@ -30,5 +30,76 @@
     "restartRequired": "تغيير اللغة يتطلب إعادة تشغيل التطبيق. هل تريد المتابعة؟",
     "yes": "نعم",
     "cancel": "إلغاء"
+  },
+  "home": {
+    "categories": "الفئات",
+    "seeAll": "عرض الكل",
+    "featuredProducts": "المنتجات المميزة",
+    "noFeaturedProducts": "لا توجد منتجات مميزة.",
+    "promoTitle": "مجموعة المكتب الأساسية",
+    "promoSubtitle": "احصل على كل ما تحتاجه لمساحة عملك الجديدة في حزمة واحدة.",
+    "browsePack": "تصفح الحزمة",
+    "banner1Badge": "عرض موسمي",
+    "banner1Title": "أساسيات العودة إلى المدارس",
+    "banner1Subtitle": "خصم يصل إلى 50% على جميع الدفاتر والحقائب",
+    "banner1Cta": "تسوق الآن",
+    "banner2Title": "ترقية المكتب الحديث",
+    "banner2Subtitle": "تكنولوجيا المكاتب المتميزة والإكسسوارات المريحة",
+    "banner2Cta": "استكشف التكنولوجيا"
+  },
+  "categories_screen": {
+    "allProducts": "جميع المنتجات",
+    "searchPlaceholder": "ابحث عن الدفاتر والأقلام...",
+    "popularItems": "العناصر الشائعة",
+    "noProducts": "لا توجد منتجات."
+  },
+  "productDetails": {
+    "premiumCollection": "تشكيلة متميزة",
+    "inStock": "متوفر",
+    "noRatings": "لا توجد تقييمات",
+    "reviews": "تقييمات",
+    "totalPrice": "السعر الإجمالي",
+    "description": "الوصف",
+    "category": "الفئة",
+    "userReviews": "تقييمات المستخدمين",
+    "writeReview": "اكتب تقييم",
+    "noReviewsYet": "لا توجد تقييمات بعد. كن أول من يقيّم هذا المنتج!",
+    "total": "الإجمالي",
+    "addToCart": "أضف إلى السلة"
+  },
+  "checkout": {
+    "title": "إتمام الشراء",
+    "yourItems": "منتجاتك ({{count}})",
+    "qty": "الكمية",
+    "deliveryAddress": "عنوان التوصيل",
+    "addDeliveryAddress": "أضف عنوان توصيل",
+    "paymentMethod": "طريقة الدفع",
+    "cashOnDelivery": "الدفع عند الاستلام",
+    "mockPayment": "بطاقة ائتمان (تجريبي)",
+    "orderSummary": "ملخص الطلب",
+    "subtotal": "المجموع الفرعي",
+    "deliveryFee": "رسوم التوصيل",
+    "free": "مجاني",
+    "total": "الإجمالي",
+    "placeOrder": "تأكيد الطلب",
+    "emptyCart": "سلة التسوق فارغة.",
+    "noAddress": "يرجى تحديد عنوان التوصيل قبل تقديم طلبك.",
+    "noAddressTitle": "لا يوجد عنوان",
+    "emptyCartTitle": "عربة التسوق فارغة",
+    "orderFailed": "فشل الطلب",
+    "orderFailedMessage": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+  },
+  "productCard": {
+    "hot": "مميز"
+  },
+  "orderConfirm": {
+    "title": "تم تأكيد الطلب!",
+    "subtitle": "تم تقديم طلبك بنجاح وجاري معالجته.",
+    "orderId": "رقم الطلب",
+    "totalPaid": "إجمالي المدفوع",
+    "status": "الحالة",
+    "pending": "قيد الانتظار",
+    "trackOrder": "تتبع الطلب",
+    "continueShopping": "مواصلة التسوق"
   }
 }

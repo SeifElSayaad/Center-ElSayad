@@ -4,6 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 import { Product } from '../store/productStore';
 import { useFavoritesStore } from '../store/favoritesStore';
+import { useTranslation } from 'react-i18next';
 
 export type { Product };
 
@@ -20,6 +21,7 @@ export default function ProductCard({
   onPressFavorite,
   onPressAdd
 }: ProductCardProps) {
+  const { t } = useTranslation();
   const isFav = useFavoritesStore(state => state.isFavorite(product.id));
   const toggleFavorite = useFavoritesStore(state => state.toggleFavorite);
 
@@ -33,7 +35,7 @@ export default function ProductCard({
       <View style={styles.imageContainer}>
         {product.isFeatured && (
           <View style={styles.saleBadge}>
-            <Text style={styles.saleBadgeText}>HOT</Text>
+            <Text style={styles.saleBadgeText}>{t('productCard.hot')}</Text>
           </View>
         )}
         <Image
